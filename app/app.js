@@ -885,7 +885,7 @@
   }
 
   /* ================= الصور والرسوم التوضيحية ================= */
-  const deckPhoto = s => { const d = DECK[s.id]; return d && BY[d] && BY[d].photo ? img(BY[d].photo) : ''; };
+  const deckPhoto = s => { const d = DECK[s.id]; return d && BY[d] && BY[d].photo && !/^sp_/.test(BY[d].photo) ? img(BY[d].photo) : ''; };
   /* صور حقيقية مضمّنة دائمًا (imgs.json بمفتاح sp_<id>)، بدون علامات مائية أو أشخاص — بياناتها في data_credits.js */
   const gPhoto = s => deckPhoto(s) || img('sp_' + s.id);
   const gthumb = (s, big) => {
