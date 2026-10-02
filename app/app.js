@@ -100,7 +100,8 @@
   const BUILD_ID = (typeof window !== 'undefined' && window.__BUILD_ID__) || 'SYD-DEV';
 
   /* ---------- تحضير البيانات ---------- */
-  const KIND = { 58: 'fresh', 168: 'fresh', 129: 'shell', 30: 'shell', 31: 'shell' };
+  const KIND = { 58: 'fresh', 168: 'fresh', 162: 'fresh', 129: 'shell', 30: 'shell', 31: 'shell' };
+  const FRESH_TOO = [42]; /* البوري بيعيش في البحر وبيدخل النيل والبحيرات والمصارف */
   const KIND_L = { fish: 'أسماك بحرية', shell: 'رخويات وقشريات', fresh: 'مياه عذبة' };
   const SIZE_L = { L: 'كمية / أحجام كبيرة', M: 'كمية / أحجام متوسطة', S: 'كمية / أحجام صغيرة' };
   const SIZE_C = { L: 'var(--lv3)', M: 'var(--lv2)', S: 'var(--lv1)' };
@@ -255,9 +256,16 @@
     const el = $('#flist'); if (!el) return;
     const toks = norm(fishQ).split(' ').filter(Boolean), qf = norm(fishQ).replace(/ /g, '').length <= 2 ? 'nameHay' : 'hay';
     let list = SP.filter(s => toks.every(t => s[qf].indexOf(t) > -1));
-    if (fishF === 'now') list = list.filter(inSeason); else if (fishF !== 'all') list = list.filter(s => s.kind === fishF);
+    if (fishF === 'now') list = list.filter(inSeason); else if (fishF !== 'all') list = list.filter(s => s.kind === fishF || (fishF === 'fresh' && FRESH_TOO.indexOf(s.id) > -1));
     list.sort((x, y) => (y.lv[CUR] - x.lv[CUR]) || x.name.localeCompare(y.name, 'ar'));
-    el.innerHTML = list.length ? list.map(fcard).join('') : '<div class="empty" style="grid-column:1/-1">لا نتائج. جرّب كلمة أقصر أو فلترًا آخر.</div>';
+    /* أنواع تانية موجودة في مصر (البحر المتوسط والأحمر والنيل) من الدليل العالمي، مش موجودة في الملف الأصلي */
+    const kindG = g => g.s ? (g.s.R.has('f_naf') && g.s.h !== 'm' ? 'fresh' : (['shell', 'crt'].indexOf(grpOf(g.s)) > -1 ? 'shell' : 'fish')) : '';
+    let extra = fishF === 'now' ? [] : SG.filter(g => inEgypt(g) && !DECK[g.id] && grpOf(g) !== 'orn' && toks.every(t => g[qf].indexOf(t) > -1)).map(g => ({ s: g }));
+    if (fishF !== 'all') extra = extra.filter(x => kindG(x) === fishF || (fishF === 'fresh' && x.s.R.has('f_naf')));
+    extra.sort((x, y) => x.s.ar.localeCompare(y.s.ar, 'ar'));
+    el.innerHTML = (list.length ? list.map(fcard).join('') : (extra.length ? '' : '<div class="empty" style="grid-column:1/-1">لا نتائج. جرّب كلمة أقصر أو فلترًا آخر.</div>')) +
+      (extra.length ? '<h2 class="h2" style="grid-column:1/-1;margin-top:18px">أنواع تانية في مصر (من الدليل العالمي)</h2>' + extra.map(x => '<a class="card gcard stack" href="#/sp/' + x.s.id + '" style="gap:6px"><div class="gtop">' + gthumb(x.s) + '<div class="gnm"><b class="h3" style="margin:0">' + esc(dispName(x.s)) + '</b><div class="muted small latin">' + esc(x.s.en) + '</div></div></div></a>').join('') : '');
+    hydratePhotos();
   }
 
   V.fish = function (a) {
@@ -285,8 +293,8 @@
       '<header class="stack"><div><h1 class="h1">' + esc(s.name) + '</h1>' + (s.en ? '<div class="muted latin" style="margin-top:2px">' + esc(s.en) + '</div>' : '') + '</div><div class="chips"><span class="tag">' + KIND_L[s.kind] + '</span></div></header>' +
       (s.photo ? '<button class="fishhero figure" data-zoom="' + s.photo + '" aria-label="تكبير صورة ' + esc(s.name) + '"><img src="' + img(s.photo) + '" alt="' + esc(s.name) + '"><span class="figmag">' + ico('search', 18) + '</span></button>' + (PHOTO_CREDITS[s.photo] ? '<div class="muted small">' + credit(s.photo) + '</div>' : '') :
         (fishPhotoTitles(s) ? '<button class="fishhero figure" data-fph="' + s.id + '" aria-label="صورة ' + esc(s.name) + '"><span class="muted small fphload" style="display:block;padding:24px;text-align:center">' + (STANDALONE ? 'جارٍ تحميل صورة حقيقية موثوقة…' : 'الصورة الحقيقية تظهر في النسخة المتصلة بالإنترنت') + '</span></button>'
-          : '<div class="notice">صورة الملف الأصلي لهذا النوع كانت عليها علامة جهة تانية أو مش دقيقة، فشلناها لحد ما نجيب صورة حقيقية نظيفة بدالها. واسمها بالإنجليزي مش مؤكد عندنا لسه عشان نجيب صورتها الحقيقية تلقائيًا.</div>')) +
-      vidHtml(DECK_REV[s.id]) +
+          : '')) +
+      vidHtml(DECK_REV[s.id]) + varHtml(DECK_REV[s.id]) +
       chart +
       (() => { const cl = CAUTION[s.id] || 2; return '<div class="notice ' + (cl >= 3 ? 'warn' : '') + '"><b>مستوى حذر ' + esc(s.name) + ': ' + CAUTION_L[cl] + ' (' + cl + '/4).</b> ' + CAUTION_TXT[cl] + '</div>'; })() +
       (facts.length ? '<section class="card"><dl class="kv" style="margin:0">' + facts.map(f => '<dt>' + f[0] + '</dt><dd>' + esc(f[1]) + '</dd>').join('') + '</dl></section>' : '') +
@@ -500,7 +508,7 @@
     s.nameHay = norm([s.ar, altNames, s.en, s.sci].join(' '));
   });
   /* أسماك ملف مصر المقابلة لأنواع القاعدة العالمية */
-  const DECK = { seabass: 23, gilthead: 76, mullet: 42, tilapia: 58, clarias: 168, barracuda: 36, squid: 129, octopus: 30, lobster: 31, sardine: 93, dorado: 22, spanishmackerel: 19, emperor: 155, rabbitfish: 54 };
+  const DECK = { lizardfish: 151, nagil: 152, triggerfish: 144, sargo: 97, redporgy: 124, grouper_dusky: 126, nileperch: 162, bonito: 146, seabass: 23, gilthead: 76, mullet: 42, tilapia: 58, clarias: 168, barracuda: 36, squid: 129, octopus: 30, lobster: 31, sardine: 93, dorado: 22, spanishmackerel: 19, emperor: 155, rabbitfish: 54 };
   /* درجة حذر كل نوع (1 جريء إلى 4 حذر جدًا) — تقدير عام مبني على سلوك معروف لكل فصيلة، وليس قياسًا دقيقًا لكل سمكة بعينها. مبدئي وقابل للتصحيح. */
   const CAUTION = {
     17: 2, 18: 2, 19: 1, 20: 2, 21: 3, 22: 1, 23: 3, 24: 2, 29: 2, 30: 2, 31: 3, 36: 1, 42: 4, 48: 2, 54: 2, 58: 2,
@@ -516,7 +524,7 @@
   };
   const SC_L = ['غير متاح غالبًا', 'ضعيف', 'جيد', 'ذروة'];
   const SC_CLS = ['bad', '', 'ok', 'gold'];
-  const WARN_L = { cr: ['قوانين أو حصص أو حماية: راجع قانون بلدك قبل الصيد أو الإبقاء', 'warn'], cig: ['قد يحمل سم السيجواتيرا في بعض المناطق (الكبيرة خصوصًا)', 'warn'], tox: ['سام: لا تأكله', 'bad'], inv: ['نوع دخيل أو مقلق بيئيًا: اتبع الإرشاد المحلي', 'warn'] };
+  const WARN_L = { cr: ['قوانين أو حصص أو حماية: راجع قانون بلدك قبل الصيد أو الإبقاء', 'warn'], cig: ['قد يحمل سم السيجواتيرا في بعض المناطق (الكبيرة خصوصًا)', 'warn'], tox: ['سام أو له أشواك سامة: تعامل معه بحذر شديد', 'bad'], inv: ['نوع دخيل أو مقلق بيئيًا: اتبع الإرشاد المحلي', 'warn'] };
 
   const inBox = (b, la, lo) => la >= b[0] && la <= b[1] && lo >= b[2] && lo <= b[3];
   const boxDist = (b, la, lo) => {
@@ -714,6 +722,11 @@
 
   /* ---------- الأنواع العالمية ---------- */
   let spQ = '', spF = 'all';
+  /* تصنيف المجموعات: رخويات وقشريات / كائنات بحرية / قروش وراي / زينة */
+  const SHELL_IDS = ['squid', 'cuttlefish', 'octopus', 'lobster', 'bluecrab', 'oyster', 'mussel', 'clam', 'seasnail', 'scallop', 'cockle', 'razor', 'limpet', 'abalone', 'whelk', 'conch'];
+  const grpOf = s => s.g || (SHELL_IDS.indexOf(s.id) > -1 ? 'shell' : s.id === 'mako' ? 'shark' : 'fish');
+  const inEgypt = s => s.R && (s.R.has ? (s.R.has('med') || s.R.has('redsea') || s.R.has('f_naf')) : false);
+  const SPF_L = [['all', 'الكل'], ['mine', 'في منطقتي'], ['now', 'ذروتها الآن'], ['egypt', 'في مصر'], ['redsea', 'البحر الأحمر'], ['m', 'بحري'], ['f', 'مياه عذبة'], ['shell', 'رخويات وقشريات'], ['shark', 'قروش وراي'], ['crt', 'كائنات بحرية'], ['orn', 'أسماك الزينة']];
   /* اسم النوع باللهجة المختارة: مصر/الخليج (الافتراضي) أو المغرب العربي إن وُجد بديل موثّق له، وإلا نرجع للاسم الأساسي */
   let dialect = store.get('dialect', 'eg');
   const dispName = s => (dialect === 'mag' && s.names && s.names.mag) || s.ar;
@@ -721,7 +734,7 @@
     if (qs.q != null) spQ = qs.q;
     return '<div class="stack"><div class="row between"><div><div class="eyebrow">قاعدة أنواع عالمية</div><h1 class="h1">الأنواع</h1></div><a class="btn ghost small" href="#/compare">' + ico('search', 16) + ' قارن بين الأنواع</a></div>' +
       searchForm('sq', spQ, 'اسم عربي أو إنجليزي أو علمي أو طُعم', 'بحث في الأنواع') +
-      '<div class="row between" style="flex-wrap:wrap;gap:8px"><div class="chips" id="sf">' + [['all', 'الكل'], ['mine', 'في منطقتي'], ['now', 'ذروتها الآن'], ['m', 'بحري'], ['f', 'مياه عذبة']].map(([k, l]) => '<button class="chip" data-sf="' + k + '" aria-pressed="' + (spF === k) + '">' + l + '</button>').join('') + '</div>' +
+      '<div class="row between" style="flex-wrap:wrap;gap:8px"><div class="chips" id="sf">' + SPF_L.map(([k, l]) => '<button class="chip" data-sf="' + k + '" aria-pressed="' + (spF === k) + '">' + l + '</button>').join('') + '</div>' +
       '<div class="chips" id="dl"><span class="muted small" style="align-self:center">الأسماء بلهجة:</span>' + [['eg', 'مصر والخليج'], ['mag', 'المغرب العربي']].map(([k, l]) => '<button class="chip" data-dl="' + k + '" aria-pressed="' + (dialect === k) + '">' + l + '</button>').join('') + '</div></div>' +
       '<p class="muted small">أسماء المغرب العربي موثّقة حاليًا لعدد محدود من الأنواع الشائعة (كاللوب والدوراد والروجي)، وتُستكمل تباعًا لباقي الأنواع.</p>' +
       '<div id="splist" class="gridg"></div>' +
@@ -731,10 +744,10 @@
     const el = $('#splist'); if (!el) return;
     const loc = getLoc(), regs = regionsAt(loc), toks = norm(spQ).split(' ').filter(Boolean), qf = norm(spQ).replace(/ /g, '').length <= 2 ? 'nameHay' : 'hay';
     let rows = SG.filter(s => toks.every(t => s[qf].indexOf(t) > -1)).map(s => ({ s, sc: monthScores(s, loc, regs, null) }));
-    if (spF === 'mine') rows = rows.filter(r => r.sc); else if (spF === 'now') rows = rows.filter(r => r.sc && r.sc[CUR] === 3); else if (spF === 'm') rows = rows.filter(r => r.s.h !== 'f'); else if (spF === 'f') rows = rows.filter(r => r.s.h !== 'm');
+    if (spF === 'mine') rows = rows.filter(r => r.sc); else if (spF === 'now') rows = rows.filter(r => r.sc && r.sc[CUR] === 3); else if (spF === 'm') rows = rows.filter(r => r.s.h !== 'f' && grpOf(r.s) !== 'orn'); else if (spF === 'f') rows = rows.filter(r => r.s.h !== 'm' && grpOf(r.s) !== 'orn'); else if (spF === 'egypt') rows = rows.filter(r => inEgypt(r.s) && grpOf(r.s) !== 'orn'); else if (spF === 'redsea') rows = rows.filter(r => r.s.R.has('redsea')); else if (['shell', 'shark', 'crt', 'orn'].indexOf(spF) > -1) rows = rows.filter(r => grpOf(r.s) === spF);
     rows.sort((x, y) => ((y.sc ? y.sc[CUR] : -1) - (x.sc ? x.sc[CUR] : -1)) || x.s.ar.localeCompare(y.s.ar, 'ar'));
     el.innerHTML = rows.length ? rows.map(r => { const s = r.s, sc = r.sc;
-      return '<a class="card gcard stack" href="#/sp/' + s.id + '" style="gap:6px"><div class="gtop">' + gthumb(s) + '<div class="gnm"><div class="row between"><b class="h3" style="margin:0">' + esc(dispName(s)) + '</b>' + (sc ? '<span class="tag ' + SC_CLS[sc[CUR]] + '">' + SC_L[sc[CUR]] + '</span>' : '<span class="tag">خارج منطقتك</span>') + '</div><div class="muted small latin">' + esc(s.en) + ' · <i>' + esc(s.sci) + '</i></div></div></div>' + (sc ? stripG(sc) : '') + '</a>'; }).join('') : '<div class="empty" style="grid-column:1/-1">لا نتائج. جرّب كلمة أقصر أو فلترًا آخر.</div>';
+      return '<a class="card gcard stack" href="#/sp/' + s.id + '" style="gap:6px"><div class="gtop">' + gthumb(s) + '<div class="gnm"><div class="row between"><b class="h3" style="margin:0">' + esc(dispName(s)) + '</b>' + (grpOf(s) === 'orn' ? '<span class="tag gold">أحواض زينة</span>' : sc ? '<span class="tag ' + SC_CLS[sc[CUR]] + '">' + SC_L[sc[CUR]] + '</span>' : '<span class="tag">خارج منطقتك</span>') + '</div><div class="muted small latin">' + esc(s.en) + ' · <i>' + esc(s.sci) + '</i></div></div></div>' + (sc ? stripG(sc) : '') + '</a>'; }).join('') : '<div class="empty" style="grid-column:1/-1">لا نتائج. جرّب كلمة أقصر أو فلترًا آخر.</div>';
   }
 
   V.sp = function (a, qs) {
@@ -757,7 +770,7 @@
     const howHtml = howGroupsHtml(s.how);
     return '<div class="stack-lg"><div class="row between"><a class="btn ghost small" href="#/species">كل الأنواع</a>' + (real ? '<span class="tag ' + SC_CLS[real[CUR]] + '">' + SC_L[real[CUR]] + ' الآن هنا</span>' : '') + '</div>' +
       '<header class="stack"><div><h1 class="h1">' + esc(dispName(s)) + '</h1>' + (dialect === 'mag' && s.names && s.names.mag ? '<div class="muted small">الاسم الأساسي: ' + esc(s.ar) + '</div>' : '') + '<div class="muted latin" style="margin-top:2px">' + esc(s.en) + '</div><div class="muted small latin"><i>' + esc(s.sci) + '</i></div>' + (s.fam ? '<div class="muted small">' + esc(s.fam) + '</div>' : '') + '</div><div class="chips"><span class="tag">' + HAB_L[s.h] + '</span>' + (s.o ? '<span class="tag gold">موسمي صارم</span>' : '') + '</div></header>' +
-      '<div class="sphero"><div style="position:relative">' + gthumb(s, true) + '<span class="figmag">' + ico('zoomin', 18) + '</span></div>' + '<div class="muted small" id="phcredit" data-sp="' + esc(s.id) + '">' + (deckPhoto(s) ? 'الصورة من ملف «مساعد الصيد».' : IMGS['sp_' + s.id] ? credit('sp_' + s.id) : (STANDALONE ? 'جارٍ تحميل صورة حقيقية للنوع من ويكيبيديا…' : 'الصورة الحقيقية تظهر في النسخة المحمّلة عند الاتصال بالإنترنت.')) + '</div></div>' + vidHtml(s.id) +
+      '<div class="sphero"><div style="position:relative">' + gthumb(s, true) + '<span class="figmag">' + ico('zoomin', 18) + '</span></div>' + '<div class="muted small" id="phcredit" data-sp="' + esc(s.id) + '">' + (deckPhoto(s) ? 'الصورة من ملف «مساعد الصيد».' : IMGS['sp_' + s.id] ? credit('sp_' + s.id) : (STANDALONE ? 'جارٍ تحميل صورة حقيقية للنوع من ويكيبيديا…' : 'الصورة الحقيقية تظهر في النسخة المحمّلة عند الاتصال بالإنترنت.')) + '</div></div>' + vidHtml(s.id) + varHtml(s.id) +
       (s.w ? s.w.split(',').map(w => '<div class="notice ' + (WARN_L[w][1] === 'bad' ? 'bad' : 'warn') + '">' + esc(WARN_L[w][0]) + '.</div>').join('') : '') +
       (real ? '' : '<div class="notice info">هذا النوع <b>غير مسجَّل في منطقتك الحالية</b>. الأرقام في الجدول أدناه افتراضية لموطنه الأصلي حسب نصف الكرة المختار فقط، وليست تقييمًا لفرصك الفعلية عندك. <a href="#/here">غيّر موقعك</a></div>') +
       '<section class="card stack"><div class="row between"><h2 class="h2" style="margin:0">' + (real ? 'الموسم على مدار السنة' : 'موسمه الافتراضي في موطنه الأصلي (ليس عندك)') + '</h2><div class="chips"><a class="chip" href="#/sp/' + s.id + '?h=n" aria-pressed="' + (hem === 'n') + '">شمال</a><a class="chip" href="#/sp/' + s.id + '?h=s" aria-pressed="' + (hem === 's') + '">جنوب</a></div></div>' +
@@ -815,6 +828,15 @@
   const deckPhoto = s => { const d = DECK[s.id]; return d && BY[d] && BY[d].photo && !/^sp_/.test(BY[d].photo) ? img(BY[d].photo) : ''; };
   /* صور حقيقية مضمّنة دائمًا (imgs.json بمفتاح sp_<id>)، بدون علامات مائية أو أشخاص — بياناتها في data_credits.js */
   const gPhoto = s => deckPhoto(s) || img('sp_' + s.id);
+  /* الأنواع والسلالات المرتبطة بالنوع، بصورها لو موجودة */
+  const varHtml = id => {
+    const v = VARIANTS[id]; if (!v || !v.length) return '';
+    return '<section class="stack"><h2 class="h2" style="margin:0">الأنواع والسلالات</h2><div class="vargrid">' + v.map(x => {
+      const g = x[3] && BYG[x[3]], ph = g ? gPhoto(g) : '', cur = x[3] === id;
+      const inner = '<div class="varimg">' + (ph ? '<img loading="lazy" alt="" src="' + ph + '">' : '<svg viewBox="0 0 64 40" width="54" aria-hidden="true"><path d="M6 20 Q22 4 44 14 L58 6 V34 L44 26 Q22 36 6 20Z" fill="none" stroke="currentColor" stroke-width="2.4"/><circle cx="16" cy="18" r="2" fill="currentColor"/></svg>') + '</div><div><b>' + esc(x[0]) + (cur ? ' <span class="tag ok">هذه الصفحة</span>' : '') + '</b><div class="muted small latin"><i>' + esc(x[1]) + '</i></div>' + (x[2] ? '<div class="small">' + esc(x[2]) + '</div>' : '') + '</div>';
+      return g && !cur ? '<a class="card varcard" href="#/sp/' + x[3] + '">' + inner + '</a>' : '<div class="card varcard">' + inner + '</div>';
+    }).join('') + '</div></section>';
+  };
   /* مقطع فيديو قصير حقيقي للنوع (vids.json) — صامت ويتكرر، بلا علامات مائية ولا أشخاص */
   const vidHtml = id => id && VIDS[id] ? '<figure class="spvid" style="margin:0"><video autoplay muted loop playsinline preload="metadata" controls style="width:100%;border-radius:16px;display:block;background:#000" aria-label="فيديو قصير للنوع"><source src="' + VIDS[id].webm + '" type="video/webm"><source src="' + VIDS[id].mp4 + '" type="video/mp4"></video>' + (VIDEO_CREDITS[id] && VIDEO_CREDITS[id].by ? '<figcaption class="muted small">فيديو: ' + esc(VIDEO_CREDITS[id].by) + '.</figcaption>' : '') + '</figure>' : '';
   const gthumb = (s, big) => {

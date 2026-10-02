@@ -11,9 +11,9 @@ const PHOTO_CREDITS = {
 "src": "inat:227538020"
 },
 "sp_mullet": {
-"by": "Abby Darrah",
+"by": "LPB",
 "lic": "CC-BY",
-"src": "inat:143029120"
+"src": "inat:349131728"
 },
 "sp_bluefin": {
 "by": "Leonard Wägele",
@@ -91,9 +91,9 @@ const PHOTO_CREDITS = {
 "src": "inat:74638241"
 },
 "sp_barracuda": {
-"by": "Jean-Paul Boerekamps",
-"lic": "CC0",
-"src": "inat:128453163"
+"by": "Yarramalong",
+"lic": "Pixabay",
+"src": "pixabay:779382"
 },
 "sp_spanishmackerel": {
 "by": "Rui Ribeiro",
@@ -211,9 +211,9 @@ const PHOTO_CREDITS = {
 "src": "inat:150548488"
 },
 "sp_conger": {
-"by": "Vsevolod Rudyi",
+"by": "Nico Hernandez",
 "lic": "CC-BY",
-"src": "inat:488825338"
+"src": "inat:93571567"
 },
 "sp_grouper_dusky": {
 "by": "Julien Renoult",
@@ -599,6 +599,186 @@ const PHOTO_CREDITS = {
 "by": "mariya_m",
 "lic": "Pixabay",
 "src": "pixabay:7850627"
+},
+"sp_goldsardine": {
+"by": "sarangib",
+"lic": "Pixabay",
+"src": "pixabay:752825"
+},
+"sp_nagil": {
+"by": "R_Winkelmann",
+"lic": "Pixabay",
+"src": "pixabay:4567749"
+},
+"sp_parrotfish": {
+"by": "jbwilder75",
+"lic": "Pixabay",
+"src": "pixabay:2793631"
+},
+"sp_napoleon": {
+"by": "ClickerHappy",
+"lic": "Pixabay",
+"src": "pixabay:1645389"
+},
+"sp_moray": {
+"by": "topochart_app",
+"lic": "Pixabay",
+"src": "pixabay:10495140"
+},
+"sp_surgeon": {
+"by": "DavidClode",
+"lic": "Pixabay",
+"src": "pixabay:10446524"
+},
+"sp_titantrigger": {
+"by": "Efraimstochter",
+"lic": "Pixabay",
+"src": "pixabay:486061"
+},
+"sp_blueshark": {
+"by": "RuiPAOliveira",
+"lic": "Pixabay",
+"src": "pixabay:8182315"
+},
+"sp_hammerhead": {
+"by": "Took",
+"lic": "Pixabay",
+"src": "pixabay:266014"
+},
+"sp_blacktip": {
+"by": "ubcmio",
+"lic": "Pixabay",
+"src": "pixabay:5485362"
+},
+"sp_tigershark": {
+"by": "Franziska_Stier",
+"lic": "Pixabay",
+"src": "pixabay:9741131"
+},
+"sp_whaleshark": {
+"by": "Lekies",
+"lic": "Pixabay",
+"src": "pixabay:207401"
+},
+"sp_stingray": {
+"by": "ignartonosbg",
+"lic": "Pixabay",
+"src": "pixabay:8557063"
+},
+"sp_scorpionfish": {
+"by": "lillolillolillo",
+"lic": "Pixabay",
+"src": "pixabay:6355551"
+},
+"sp_stonefish": {
+"by": "Franziska_Stier",
+"lic": "Pixabay",
+"src": "pixabay:8939204"
+},
+"sp_seahorse": {
+"by": "kasiaczernik",
+"lic": "Pixabay",
+"src": "pixabay:2649230"
+},
+"sp_starfish": {
+"by": "Berger-Team",
+"lic": "Pixabay",
+"src": "pixabay:74535"
+},
+"sp_seaurchin": {
+"by": "timvb1990",
+"lic": "Pixabay",
+"src": "pixabay:1536812"
+},
+"sp_seacucumber": {
+"by": "kevskoot",
+"lic": "Pixabay",
+"src": "pixabay:2064541"
+},
+"sp_shrimp": {
+"by": "stux",
+"lic": "Pixabay",
+"src": "pixabay:83295"
+},
+"sp_mantis": {
+"by": "2427999",
+"lic": "Pixabay",
+"src": "pixabay:3019784"
+},
+"sp_crayfish": {
+"by": "Ylvers",
+"lic": "Pixabay",
+"src": "pixabay:423251"
+},
+"sp_giantclam": {
+"by": "DavidClode",
+"lic": "Pixabay",
+"src": "pixabay:10426352"
+},
+"sp_cowrie": {
+"by": "InspiredImages",
+"lic": "Pixabay",
+"src": "pixabay:1327080"
+},
+"sp_clownfish": {
+"by": "MartinStr",
+"lic": "Pixabay",
+"src": "pixabay:225421"
+},
+"sp_masked": {
+"by": "joakant",
+"lic": "Pixabay",
+"src": "pixabay:380037"
+},
+"sp_emperorangel": {
+"by": "Efraimstochter",
+"lic": "Pixabay",
+"src": "pixabay:793377"
+},
+"sp_goldfish": {
+"by": "JuanCarlosPalauDiaz",
+"lic": "Pixabay",
+"src": "pixabay:3677808"
+},
+"sp_koi": {
+"by": "rschaubhut",
+"lic": "Pixabay",
+"src": "pixabay:6149183"
+},
+"sp_guppy": {
+"by": "Zucky123",
+"lic": "Pixabay",
+"src": "pixabay:4446625"
+},
+"sp_molly": {
+"by": "ivabalk",
+"lic": "Pixabay",
+"src": "pixabay:3237358"
+},
+"sp_betta": {
+"by": "nonnatthapat",
+"lic": "Pixabay",
+"src": "pixabay:6542430"
+},
+"sp_angelfish": {
+"by": "makabera",
+"lic": "Pixabay",
+"src": "pixabay:9942395"
+},
+"sp_discus": {
+"by": "Bergadder",
+"lic": "Pixabay",
+"src": "pixabay:1943755"
+},
+"sp_neon": {
+"by": "dicksonleroy",
+"lic": "Pixabay",
+"src": "pixabay:6015626"
+},
+"sp_oscar": {
+"by": "ignartonosbg",
+"lic": "Pixabay",
+"src": "pixabay:7297687"
 }
 };
 /* فيديوهات قصيرة مضمّنة (vids.json بمعرّف النوع): مقاطع 8 ثواني بلا صوت من Pixabay (رخصة Pixabay: استخدام مجاني بلا إلزام بنسب)، اتراجعت لقطاتها يدويًا: بلا علامات مائية ولا أشخاص */
