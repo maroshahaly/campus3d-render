@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <radialGradient id="bg" cx="35%" cy="30%" r="85%">
+      <stop offset="0%" stop-color="#12586b"/>
+      <stop offset="55%" stop-color="#0a3b4c"/>
+      <stop offset="100%" stop-color="#062733"/>
+    </radialGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f6d365"/>
+      <stop offset="55%" stop-color="#e8a800"/>
+      <stop offset="100%" stop-color="#c9860a"/>
+    </linearGradient>
+    <linearGradient id="goldSoft" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f6d365" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#e8a800" stop-opacity="0.95"/>
+    </linearGradient>
+  </defs>
+
+  <!-- background -->
+  <rect x="0" y="0" width="512" height="512" fill="url(#bg)"/>
+
+  <!-- subtle water ripples, kept low-contrast so they read at small sizes -->
+  <g stroke="#ffffff" stroke-opacity="0.06" stroke-width="10" fill="none">
+    <path d="M60 400 Q 150 380 240 400 T 452 400"/>
+    <path d="M40 430 Q 150 408 260 430 T 472 430"/>
+  </g>
+
+  <!-- fish hook: eyelet ring at top, straight shank, curling into a wave-like bend with a barbed point -->
+  <g fill="none" stroke="url(#gold)" stroke-width="25" stroke-linecap="round">
+    <circle cx="212" cy="118" r="17"/>
+    <path d="M 212 135
+             L 216 292
+             C 218 350 264 386 314 372
+             C 356 360 372 312 342 284
+             C 320 264 288 272 284 296"/>
+    <path d="M 284 296 L 254 290" stroke-width="22"/>
+  </g>
+
+  <!-- small fish silhouette swimming through the open loop of the hook -->
+  <g transform="translate(238 300) rotate(-8)">
+    <path d="M0 0 C 24 -20 60 -20 84 0 C 60 20 24 20 0 0 Z" fill="url(#goldSoft)"/>
+    <path d="M84 0 L 112 -18 L 102 0 L 112 18 Z" fill="url(#goldSoft)"/>
+    <circle cx="14" cy="-1" r="4.5" fill="#0a3b4c"/>
+  </g>
+</svg>

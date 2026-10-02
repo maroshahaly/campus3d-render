@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <radialGradient id="bg" cx="35%" cy="28%" r="90%">
+      <stop offset="0%" stop-color="#175f74"/>
+      <stop offset="45%" stop-color="#0a3b4c"/>
+      <stop offset="100%" stop-color="#051e28"/>
+    </radialGradient>
+    <radialGradient id="glow" cx="46%" cy="42%" r="42%">
+      <stop offset="0%" stop-color="#ffe9ad" stop-opacity="0.35"/>
+      <stop offset="55%" stop-color="#ffcf5c" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#ffcf5c" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="vignette" cx="50%" cy="46%" r="75%">
+      <stop offset="60%" stop-color="#000000" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.35"/>
+    </radialGradient>
+    <linearGradient id="gold" x1="10%" y1="0%" x2="95%" y2="100%">
+      <stop offset="0%" stop-color="#fde8a8"/>
+      <stop offset="30%" stop-color="#f6c445"/>
+      <stop offset="62%" stop-color="#e8a800"/>
+      <stop offset="100%" stop-color="#a86c05"/>
+    </linearGradient>
+    <linearGradient id="goldSoft" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fde8a8"/>
+      <stop offset="55%" stop-color="#f0b52a"/>
+      <stop offset="100%" stop-color="#c9860a"/>
+    </linearGradient>
+    <linearGradient id="sheen" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="dropshadow" x="-40%" y="-40%" width="180%" height="180%">
+      <feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#020c11" flood-opacity="0.45"/>
+    </filter>
+  </defs>
+
+  <!-- background -->
+  <rect x="0" y="0" width="512" height="512" fill="url(#bg)"/>
+  <rect x="0" y="0" width="512" height="512" fill="url(#glow)"/>
+
+  <!-- subtle water ripples, kept low-contrast so they read at small sizes -->
+  <g stroke="#ffffff" stroke-opacity="0.07" stroke-width="10" fill="none">
+    <path d="M60 400 Q 150 380 240 400 T 452 400"/>
+    <path d="M40 430 Q 150 408 260 430 T 472 430"/>
+  </g>
+
+  <!-- fish hook + fish, with soft drop shadow for depth -->
+  <g filter="url(#dropshadow)">
+    <!-- eyelet ring at top, straight shank, curling into a wave-like bend with a barbed point -->
+    <g fill="none" stroke="url(#gold)" stroke-width="25" stroke-linecap="round">
+      <circle cx="212" cy="118" r="17"/>
+      <path d="M 212 135
+               L 216 292
+               C 218 350 264 386 314 372
+               C 356 360 372 312 342 284
+               C 320 264 288 272 284 296"/>
+      <path d="M 284 296 L 254 290" stroke-width="22"/>
+    </g>
+    <!-- glossy highlight along the outer edge of the hook, for a metallic sheen -->
+    <g fill="none" stroke="url(#sheen)" stroke-width="7" stroke-linecap="round" opacity="0.8">
+      <circle cx="212" cy="112" r="12"/>
+      <path d="M 206 138 L 209 280"/>
+      <path d="M 224 354 C 262 372 300 360 318 336"/>
+    </g>
+
+    <!-- small fish silhouette swimming through the open loop of the hook -->
+    <g transform="translate(238 300) rotate(-8)">
+      <path d="M0 0 C 24 -20 60 -20 84 0 C 60 20 24 20 0 0 Z" fill="url(#goldSoft)"/>
+      <path d="M84 0 L 112 -18 L 102 0 L 112 18 Z" fill="url(#goldSoft)"/>
+      <path d="M10 -9 C 26 -16 46 -16 60 -9" stroke="url(#sheen)" stroke-width="3" fill="none" opacity="0.7"/>
+      <circle cx="14" cy="-1" r="4.5" fill="#0a3b4c"/>
+      <circle cx="15" cy="-2.3" r="1.3" fill="#ffe9ad"/>
+    </g>
+  </g>
+
+  <!-- vignette on top for depth -->
+  <rect x="0" y="0" width="512" height="512" fill="url(#vignette)"/>
+</svg>
