@@ -71,7 +71,8 @@
     x: '<path d="M6 6l12 12M18 6 6 18"/>',
     back: '<path d="m9 5 7 7-7 7"/>',
     theme: '<circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v17"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17z" fill="currentColor"/>',
-    camera: '<path d="M4 8.5h3.2L8.8 6h6.4l1.6 2.5H20a1 1 0 0 1 1 1V18a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5a1 1 0 0 1 1-1z"/><circle cx="12" cy="13.2" r="3.6"/>'
+    camera: '<path d="M4 8.5h3.2L8.8 6h6.4l1.6 2.5H20a1 1 0 0 1 1 1V18a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5a1 1 0 0 1 1-1z"/><circle cx="12" cy="13.2" r="3.6"/>',
+    gallery: '<rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><circle cx="9" cy="10" r="1.8"/><path d="m4 18 5.5-5.5 4 4 2.5-2.5 4 4"/>',
   };
   const ico = (n, sz) => '<svg width="' + (sz || 24) + '" height="' + (sz || 24) + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + IC[n] + '</svg>';
   const FISHPH = '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + IC.fish + '</svg>';
@@ -139,7 +140,8 @@
   /* صندوق بحث موحّد: زر عدسة شغّال يقفل الكيبورد ويرسل النموذج، وزر كاميرا لبحث بصورة السمكة. */
   const searchForm = (id, val, ph, label, formKey) => '<form class="search" data-form="' + (formKey || 'qq') + '" role="search"><input id="' + id + '" type="search" value="' + esc(val || '') + '" placeholder="' + esc(ph) + '" aria-label="' + esc(label) + '">' +
     '<span class="searchico"><button type="submit" aria-label="بحث">' + ico('search', 20) + '</button>' +
-    '<label aria-label="ابحث بصورة السمكة">' + ico('camera', 18) + '<input type="file" class="photoq" accept="image/*" capture="environment"></label></span></form>';
+    '<label aria-label="صوّر السمكة بالكاميرا" title="صوّر بالكاميرا">' + ico('camera', 18) + '<input type="file" class="photoq" accept="image/*" capture="environment"></label>' +
+    '<label aria-label="اختار صورة من الاستوديو أو الملفات أو أي تخزين" title="اختار صورة من الاستوديو أو الملفات">' + ico('gallery', 18) + '<input type="file" class="photoq" accept="image/*,.heic,.heif"></label></span></form>';
   /* ---------- الموقع والحسابات الفلكية ---------- */
   /* [الاسم, عرض, طول, منطقة زمنية, m بحري / f عذب] */
   const PRESETS = [
@@ -516,7 +518,7 @@
     s.nameHay = norm([s.ar, altNames, s.en, s.sci].join(' '));
   });
   /* أسماك ملف مصر المقابلة لأنواع القاعدة العالمية */
-  const DECK = { bluefish: 17, wreckfish: 24, sailfish: 29, whitegrouper: 72, dentex: 95, shefsh: 112, mira: 20, boops: 132, snapper: 143, lizardfish: 151, nagil: 152, triggerfish: 144, sargo: 97, redporgy: 124, grouper_dusky: 126, nileperch: 162, bonito: 146, seabass: 23, gilthead: 76, mullet: 42, tilapia: 58, clarias: 168, barracuda: 36, squid: 129, octopus: 30, lobster: 31, sardine: 93, dorado: 22, spanishmackerel: 19, emperor: 155, rabbitfish: 54 };
+  const DECK = { tees: 48, bluefish: 17, wreckfish: 24, sailfish: 29, whitegrouper: 72, dentex: 95, shefsh: 112, mira: 20, boops: 132, snapper: 143, lizardfish: 151, nagil: 152, triggerfish: 144, sargo: 97, redporgy: 124, grouper_dusky: 126, nileperch: 162, bonito: 146, seabass: 23, gilthead: 76, mullet: 42, tilapia: 58, clarias: 168, barracuda: 36, squid: 129, octopus: 30, lobster: 31, sardine: 93, dorado: 22, spanishmackerel: 19, emperor: 155, rabbitfish: 54 };
   /* درجة حذر كل نوع (1 جريء إلى 4 حذر جدًا) — تقدير عام مبني على سلوك معروف لكل فصيلة، وليس قياسًا دقيقًا لكل سمكة بعينها. مبدئي وقابل للتصحيح. */
   const CAUTION = {
     17: 2, 18: 2, 19: 1, 20: 2, 21: 3, 22: 1, 23: 3, 24: 2, 29: 2, 30: 2, 31: 3, 36: 1, 42: 4, 48: 2, 54: 2, 58: 2,
@@ -1438,8 +1440,13 @@
     if (e.target.id === 'mapsp') { mapSp = e.target.value; const cv = $('#map-here'), wrap = $('.mapbox[data-mapid="map-here"]'); if (cv) mapDraw(cv); if (wrap) { wrap.dataset.sp = mapSp; mapDrawSpRects('map-here'); } }
     if (e.target.id === 'cmpA' || e.target.id === 'cmpB' || e.target.id === 'cmpC') { CMP = { a: $('#cmpA').value, b: $('#cmpB').value, c: $('#cmpC').value }; try { history.replaceState(null, '', '#/compare?a=' + CMP.a + '&b=' + CMP.b + '&c=' + CMP.c); } catch (x) {} drawCompare(); }
     if (e.target.dataset && e.target.dataset.chk) { const st = store.get('chk', {}); st[e.target.dataset.chk] = e.target.checked; store.set('chk', st); }
-    if (e.target.classList && e.target.classList.contains('photoq') && e.target.files && e.target.files[0]) {
-      const url = URL.createObjectURL(e.target.files[0]), form = e.target.closest('form.search');
+    if (e.target.classList && e.target.classList.contains('photoq') && e.target.files && e.target.files[0]) { showPhotoQ(e.target.files[0], e.target.closest('form.search')); e.target.value = ''; }
+  });
+  /* البحث بالصورة: من الكاميرا، أو الاستوديو/الملفات/أي تخزين، أو بالسحب والإفلات، أو باللصق */
+  function showPhotoQ(file, form) {
+    if (!file || !/^image\//.test(file.type || 'image/')) { toast('الملف ده مش صورة.'); return; }
+    {
+      const url = URL.createObjectURL(file);
       if (form) {
         let prev = form.nextElementSibling;
         if (!prev || !prev.classList || !prev.classList.contains('photoqprev')) { prev = document.createElement('div'); prev.className = 'photoqprev card stack'; form.insertAdjacentElement('afterend', prev); }
@@ -1449,7 +1456,11 @@
         prev.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
     }
-  });
+  }
+  document.addEventListener('dragover', e => { if (e.target.closest && e.target.closest('form.search')) { e.preventDefault(); e.target.closest('form.search').classList.add('drop'); } });
+  document.addEventListener('dragleave', e => { const f = e.target.closest && e.target.closest('form.search'); if (f) f.classList.remove('drop'); });
+  document.addEventListener('drop', e => { const f = e.target.closest && e.target.closest('form.search'); if (!f) return; e.preventDefault(); f.classList.remove('drop'); const file = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]; if (file) showPhotoQ(file, f); });
+  document.addEventListener('paste', e => { const f = e.target.closest && e.target.closest('form.search'); if (!f || !e.clipboardData) return; const it = Array.from(e.clipboardData.items || []).find(x => x.type.indexOf('image/') === 0); if (it) { e.preventDefault(); showPhotoQ(it.getAsFile(), f); } });
   document.addEventListener('input', e => {
     if (e.target.id === 'fq') { fishQ = e.target.value; drawFishList(); }
     if (e.target.id === 'lq') { linkQ = e.target.value; drawLinks(); }

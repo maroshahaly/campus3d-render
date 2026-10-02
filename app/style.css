@@ -97,7 +97,7 @@ a.tag:hover { text-decoration: underline; }
 .tag.bad { background: var(--badsoft); color: var(--bad); }
 .tag.warn { background: var(--warnsoft); color: var(--warn); }
 .search { position: relative; }
-.search input { width: 100%; min-height: 52px; border: 1.5px solid var(--line); background: var(--surface); color: var(--ink); -webkit-text-fill-color: var(--ink); caret-color: var(--ink); border-radius: 14px; padding: 8px 14px; padding-inline-start: 88px; }
+.search input { width: 100%; min-height: 52px; border: 1.5px solid var(--line); background: var(--surface); color: var(--ink); -webkit-text-fill-color: var(--ink); caret-color: var(--ink); border-radius: 14px; padding: 8px 14px; padding-inline-start: 128px; }
 .search input::placeholder { color: var(--ink2); opacity: 1; }
 .search .searchico { position: absolute; inset-inline-start: 6px; top: 50%; transform: translateY(-50%); display: flex; align-items: center; gap: 2px; }
 .search .searchico button, .search .searchico label { display: flex; align-items: center; justify-content: center; width: 38px; height: 38px; border: none; border-radius: 10px; background: transparent; color: var(--ink2); cursor: pointer; padding: 0; }
@@ -371,3 +371,5 @@ header.stack .latin { display: block; text-align: right; }
 .knotart { background: var(--surface2); border-radius: 12px; padding: 8px; }
 .knotart svg { width: 100%; height: 110px; display: block; }
 .knotsteps { margin: 0; padding-inline-start: 20px; display: flex; flex-direction: column; gap: 4px; font-size: .9rem; }
+
+.search.drop input[type="search"] { outline: 2px dashed var(--teal); outline-offset: 2px; }

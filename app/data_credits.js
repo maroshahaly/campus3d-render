@@ -939,6 +939,11 @@ const PHOTO_CREDITS = {
 "by": "Aiken Lau",
 "lic": "CC0",
 "src": "inat:531335860"
+},
+"sp_tees": {
+"by": "Michael Bommerer",
+"lic": "CC-BY",
+"src": "inat:424466807"
 }
 };
 /* فيديوهات قصيرة مضمّنة (vids.json بمعرّف النوع): مقاطع 8 ثواني بلا صوت من Pixabay (رخصة Pixabay: استخدام مجاني بلا إلزام بنسب)، اتراجعت لقطاتها يدويًا: بلا علامات مائية ولا أشخاص */
