@@ -15,7 +15,7 @@ def js_json(obj):
 data = js_json(json.load(open(SP + '/data.json', encoding='utf-8')))
 imgs = js_json(json.load(open(SP + '/imgs.json', encoding='utf-8')))
 css = rd(A + '/leaflet.css') + '\n' + rd(A + '/style.css')
-code = rd(A + '/leaflet.js') + '\n' + '\n'.join(rd(A + '/' + f) for f in ['astro.js', 'data_mask.js', 'data_geo.js', 'data_species.js', 'data_art.js', 'data_links.js', 'data_world.js'])
+code = rd(A + '/leaflet.js') + '\n' + '\n'.join(rd(A + '/' + f) for f in ['astro.js', 'data_mask.js', 'data_geo.js', 'data_species.js', 'data_art.js', 'data_links.js', 'data_world.js', 'data_credits.js'])
 app = rd(A + '/app.js')
 # module.exports guard in astro is harmless in browsers
 

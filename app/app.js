@@ -74,6 +74,7 @@
   const ico = (n, sz) => '<svg width="' + (sz || 24) + '" height="' + (sz || 24) + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + IC[n] + '</svg>';
   const FISHPH = '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + IC.fish + '</svg>';
   const img = n => IMGS[n] || '';
+  const credit = k => { const c = PHOTO_CREDITS[k]; return c ? (c.lic === 'CC0' ? 'صورة حرة الاستخدام (CC0).' : 'تصوير: ' + esc(c.by) + ' — رخصة ' + esc(c.lic.replace('CC-', 'CC ')) + '.') : ''; };
   /* الشعار الرسمي (خطاف وسمكة) — مضمّن كـ SVG بمعرّفات فريدة لتفادي تعارض التدرجات عند التكرار في الصفحة */
   const LOGO_MARK = (sz, id) => {
     const g = 'lg' + id;
@@ -361,7 +362,7 @@
     const rigs = s.rigs.length ? '<section class="stack"><h2 class="h2" style="margin:0">الأرمات والقرم</h2><div class="stack">' + s.rigs.map(m => '<div class="stack"><div class="small" style="font-weight:700">' + esc(m.t) + '</div>' + (m.secs.length ? prose(m.secs) : '') + rigOrFig(m) + '</div>').join('') + '</div></section>' : '';
     return '<div class="stack-lg"><div class="row between"><a class="btn ghost small" href="#/fish">كل الأسماك</a>' + (inSeason(s) ? '<span class="tag ok">موسمها الآن</span>' : '') + '</div>' +
       '<header class="stack"><div><h1 class="h1">' + esc(s.name) + '</h1>' + (s.en ? '<div class="muted latin" style="margin-top:2px">' + esc(s.en) + '</div>' : '') + '</div><div class="chips"><span class="tag">' + KIND_L[s.kind] + '</span></div></header>' +
-      (s.photo ? '<button class="fishhero figure" data-zoom="' + s.photo + '" aria-label="تكبير صورة ' + esc(s.name) + '"><img src="' + img(s.photo) + '" alt="' + esc(s.name) + '"><span class="figmag">' + ico('search', 18) + '</span></button>' :
+      (s.photo ? '<button class="fishhero figure" data-zoom="' + s.photo + '" aria-label="تكبير صورة ' + esc(s.name) + '"><img src="' + img(s.photo) + '" alt="' + esc(s.name) + '"><span class="figmag">' + ico('search', 18) + '</span></button>' + (PHOTO_CREDITS[s.photo] ? '<div class="muted small">' + credit(s.photo) + '</div>' : '') :
         (fishPhotoTitles(s) ? '<button class="fishhero figure" data-fph="' + s.id + '" aria-label="صورة ' + esc(s.name) + '"><span class="muted small fphload" style="display:block;padding:24px;text-align:center">' + (STANDALONE ? 'جارٍ تحميل صورة حقيقية موثوقة…' : 'الصورة الحقيقية تظهر في النسخة المتصلة بالإنترنت') + '</span></button>'
           : '<div class="notice">صورة الملف الأصلي لهذا النوع كانت عليها علامة جهة تانية أو مش دقيقة، فشلناها لحد ما نجيب صورة حقيقية نظيفة بدالها. واسمها بالإنجليزي مش مؤكد عندنا لسه عشان نجيب صورتها الحقيقية تلقائيًا.</div>')) +
       chart +
@@ -829,7 +830,7 @@
     const howHtml = howGroupsHtml(s.how);
     return '<div class="stack-lg"><div class="row between"><a class="btn ghost small" href="#/species">كل الأنواع</a>' + (real ? '<span class="tag ' + SC_CLS[real[CUR]] + '">' + SC_L[real[CUR]] + ' الآن هنا</span>' : '') + '</div>' +
       '<header class="stack"><div><h1 class="h1">' + esc(dispName(s)) + '</h1>' + (dialect === 'mag' && s.names && s.names.mag ? '<div class="muted small">الاسم الأساسي: ' + esc(s.ar) + '</div>' : '') + '<div class="muted latin" style="margin-top:2px">' + esc(s.en) + '</div><div class="muted small latin"><i>' + esc(s.sci) + '</i></div>' + (s.fam ? '<div class="muted small">' + esc(s.fam) + '</div>' : '') + '</div><div class="chips"><span class="tag">' + HAB_L[s.h] + '</span>' + (s.o ? '<span class="tag gold">موسمي صارم</span>' : '') + '</div></header>' +
-      '<div class="sphero">' + gthumb(s, true) + '<div class="muted small" id="phcredit" data-sp="' + esc(s.id) + '">' + (deckPhoto(s) ? 'الصورة من ملف «مساعد الصيد».' : (STANDALONE ? 'جارٍ تحميل صورة حقيقية للنوع من ويكيبيديا…' : 'الصورة الحقيقية تظهر في النسخة المحمّلة عند الاتصال بالإنترنت.')) + '</div></div>' +
+      '<div class="sphero">' + gthumb(s, true) + '<div class="muted small" id="phcredit" data-sp="' + esc(s.id) + '">' + (deckPhoto(s) ? 'الصورة من ملف «مساعد الصيد».' : IMGS['sp_' + s.id] ? credit('sp_' + s.id) : (STANDALONE ? 'جارٍ تحميل صورة حقيقية للنوع من ويكيبيديا…' : 'الصورة الحقيقية تظهر في النسخة المحمّلة عند الاتصال بالإنترنت.')) + '</div></div>' +
       (s.w ? s.w.split(',').map(w => '<div class="notice ' + (WARN_L[w][1] === 'bad' ? 'bad' : 'warn') + '">' + esc(WARN_L[w][0]) + '.</div>').join('') : '') +
       (real ? '' : '<div class="notice info">هذا النوع <b>غير مسجَّل في منطقتك الحالية</b>. الأرقام في الجدول أدناه افتراضية لموطنه الأصلي حسب نصف الكرة المختار فقط، وليست تقييمًا لفرصك الفعلية عندك. <a href="#/here">غيّر موقعك</a></div>') +
       '<section class="card stack"><div class="row between"><h2 class="h2" style="margin:0">' + (real ? 'الموسم على مدار السنة' : 'موسمه الافتراضي في موطنه الأصلي (ليس عندك)') + '</h2><div class="chips"><a class="chip" href="#/sp/' + s.id + '?h=n" aria-pressed="' + (hem === 'n') + '">شمال</a><a class="chip" href="#/sp/' + s.id + '?h=s" aria-pressed="' + (hem === 's') + '">جنوب</a></div></div>' +
@@ -885,8 +886,10 @@
 
   /* ================= الصور والرسوم التوضيحية ================= */
   const deckPhoto = s => { const d = DECK[s.id]; return d && BY[d] && BY[d].photo ? img(BY[d].photo) : ''; };
+  /* صور حقيقية مضمّنة دائمًا (imgs.json بمفتاح sp_<id>)، بدون علامات مائية أو أشخاص — بياناتها في data_credits.js */
+  const gPhoto = s => deckPhoto(s) || img('sp_' + s.id);
   const gthumb = (s, big) => {
-    const dp = deckPhoto(s);
+    const dp = gPhoto(s);
     return '<span class="gthumb' + (big ? ' big' : '') + ' hab-' + s.h + (dp ? ' has' : '') + '" data-ph="' + s.id + '"' + (big ? ' data-big="1"' : '') + '>' + artSvg(s.id, big ? 'b' : 's') + (dp ? '<img alt="" src="' + dp + '">' : '') + '</span>';
   };
   const PH = { mem: store.get('ph', {}), q: [], busy: 0, t: 0, off: 0 };
@@ -977,7 +980,7 @@
     if (!STANDALONE) return;
     $$('.gthumb[data-ph]:not([data-pd])').forEach(el => {
       el.dataset.pd = '1'; const s = BYG[el.dataset.ph];
-      if (!s || deckPhoto(s)) return;
+      if (!s || gPhoto(s)) return;
       const m = PH.mem[s.id];
       if (m && m.u) return phApply(el, m);
       if (m && m.x && Date.now() - m.x < 14 * 864e5) {
