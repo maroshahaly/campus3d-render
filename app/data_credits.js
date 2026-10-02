@@ -904,6 +904,16 @@ const PHOTO_CREDITS = {
 "by": "Sylvain Le Bris",
 "lic": "CC-BY-NC",
 "src": "inat:156066336"
+},
+"sp_docmak": {
+"by": "Dale Kindler",
+"lic": "CC-BY-NC",
+"src": "inat:618653339"
+},
+"sp_labeo": {
+"by": "Dale Kindler (الصورة لنوع لبيس قريب من نفس الجنس: Labeo coubie)",
+"lic": "CC-BY-NC",
+"src": "inat:479693512"
 }
 };
 /* فيديوهات قصيرة مضمّنة (vids.json بمعرّف النوع): مقاطع 8 ثواني بلا صوت من Pixabay (رخصة Pixabay: استخدام مجاني بلا إلزام بنسب)، اتراجعت لقطاتها يدويًا: بلا علامات مائية ولا أشخاص */
