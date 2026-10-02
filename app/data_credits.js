@@ -779,6 +779,96 @@ const PHOTO_CREDITS = {
 "by": "ignartonosbg",
 "lic": "Pixabay",
 "src": "pixabay:7297687"
+},
+"sp_buri": {
+"by": "大澤風季 ohsawa_Fuki",
+"lic": "CC-BY",
+"src": "inat:733409448"
+},
+"sp_sbt": {
+"by": "Rolf Lawrenz",
+"lic": "CC-BY",
+"src": "inat:25876363"
+},
+"sp_scad": {
+"by": "Eric Crandall",
+"lic": "CC-BY",
+"src": "inat:74807537"
+},
+"sp_threadfin": {
+"by": "Ong Jyh Seng",
+"lic": "CC-BY-SA",
+"src": "inat:87375251"
+},
+"sp_indmackerel": {
+"by": "Pierre Pericard",
+"lic": "CC-BY",
+"src": "inat:555917021"
+},
+"sp_lizardfish": {
+"by": "Dr. Nasser Halaweh",
+"lic": "CC-BY",
+"src": "inat:18224232"
+},
+"sp_triggerfish": {
+"by": "Théo Porcheron-Georget",
+"lic": "CC-BY",
+"src": "inat:608008850"
+},
+"sp_sargo": {
+"by": "Vasileia Sef",
+"lic": "CC-BY",
+"src": "inat:419692601"
+},
+"sp_flyingfish": {
+"by": "Rob Wadsworth",
+"lic": "CC0",
+"src": "inat:459206950"
+},
+"sp_donax": {
+"by": "Andrey Polstianoi",
+"lic": "CC-BY",
+"src": "inat:199288507"
+},
+"sp_pinna": {
+"by": "Julien Renoult",
+"lic": "CC-BY",
+"src": "inat:4562321"
+},
+"sp_pearloyster": {
+"by": "Katerina Kalogerini",
+"lic": "CC-BY",
+"src": "inat:87290618"
+},
+"sp_niletiger": {
+"by": "John P Friel",
+"lic": "CC-BY",
+"src": "inat:53146526"
+},
+"sp_grasscarp": {
+"by": "laneneely",
+"lic": "CC0",
+"src": "inat:194777649"
+},
+"sp_thicklip": {
+"by": "Marino Linić",
+"lic": "CC0",
+"src": "inat:198548998"
+},
+"sp_redporgy": {
+"by": "Tom Heijnen",
+"lic": "CC-BY",
+"src": "inat:59111727"
+},
+"sp_smoothhound": {
+"by": "Ben Jobson",
+"lic": "CC-BY",
+"src": "inat:348484330"
+},
+"sp_nilecrab": {
+"by": "Peach",
+"lic": "CC0",
+"src": "inat:575426616"
 }
 };
 /* فيديوهات قصيرة مضمّنة (vids.json بمعرّف النوع): مقاطع 8 ثواني بلا صوت من Pixabay (رخصة Pixabay: استخدام مجاني بلا إلزام بنسب)، اتراجعت لقطاتها يدويًا: بلا علامات مائية ولا أشخاص */
