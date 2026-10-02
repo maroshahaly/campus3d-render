@@ -486,3 +486,36 @@ const PHOTO_CREDITS = {
 "src": "inat:170339702"
 }
 };
+/* فيديوهات قصيرة مضمّنة (vids.json بمعرّف النوع): مقاطع 8 ثواني بلا صوت من Pixabay (رخصة Pixabay: استخدام مجاني بلا إلزام بنسب)، اتراجعت لقطاتها يدويًا: بلا علامات مائية ولا أشخاص */
+const VIDEO_CREDITS = {
+"lionfish": {
+"by": "DavidClode",
+"lic": "Pixabay",
+"src": "pixabay:227893"
+},
+"pike": {
+"by": "RoyBuri",
+"lic": "Pixabay",
+"src": "pixabay:111288"
+},
+"octopus": {
+"by": "Solarselle77",
+"lic": "Pixabay",
+"src": "pixabay:345470"
+},
+"barramundi": {
+"by": "DavidClode",
+"lic": "Pixabay",
+"src": "pixabay:244011"
+},
+"carp": {
+"by": "RoyBuri",
+"lic": "Pixabay",
+"src": "pixabay:56241"
+},
+"grouper": {
+"by": "DavidClode",
+"lic": "Pixabay",
+"src": "pixabay:207996"
+}
+};
