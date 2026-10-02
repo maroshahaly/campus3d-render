@@ -326,7 +326,7 @@
     let body = '';
     if (worldTab === 'tech') body = '<div>' + TECHNIQUES.map((t, i) => '<details class="acc"' + (i === 0 ? ' open' : '') + '><summary><span>' + esc(t.t) + '<br><span class="muted small latin">' + esc(t.en) + '</span></span></summary><div class="body stack"><p>' + esc(t.what) + '</p>' +
       '<dl class="kv" style="margin:0"><dt>الوقت</dt><dd>' + esc(t.when) + '</dd><dt>العدة</dt><dd>' + esc(t.gear) + '</dd></dl><ul style="margin:0;padding-inline-start:20px">' + t.tips.map(x => '<li>' + esc(x) + '</li>').join('') + '</ul></div></details>').join('') + '</div>';
-    else if (worldTab === 'knots') body = '<div class="stack"><p class="muted small">لخطوات متحركة راجع <a href="https://www.animatedknots.com/fishing-knots" target="_blank" rel="noopener">Animated Knots by Grog</a> (مجاني، وله تطبيق).</p><div>' + KNOTS.map((k, i) => '<details class="acc"' + (i === 0 ? ' open' : '') + '><summary><span>' + esc(k.t) + '<br><span class="muted small latin">' + esc(k.en) + '</span></span></summary><div class="body stack"><p>' + esc(k.use) + '</p><ol style="margin:0;padding-inline-start:22px;display:flex;flex-direction:column;gap:6px">' + k.steps.map(x => '<li>' + esc(x) + '</li>').join('') + '</ol></div></details>').join('') + '</div></div>';
+    else if (worldTab === 'knots') body = '<div id="knotbody"></div>';
     else body = '<div class="stack">' + LINE_INFO.map(x => '<div class="card"><h3 class="h3">' + esc(x.t) + '</h3><p class="muted">' + esc(x.p) + '</p></div>').join('') + '</div>';
     return '<div class="stack"><div><div class="eyebrow">لكل البحار</div><h1 class="h1">الدليل العالمي</h1></div>' + seg([['tech', 'التقنيات'], ['knots', 'العقد'], ['gear', 'الخيوط والعدة']], worldTab, 'world') + body + '</div>';
   };
@@ -344,11 +344,19 @@
   V.tools = function (a, qs) {
     if (qs.t) toolTab = qs.t;
     return '<div class="stack"><div><div class="eyebrow">تعمل من أي مكان</div><h1 class="h1">الأدوات</h1></div>' +
-      seg([['today', 'اليوم'], ['sea', 'البحر'], ['bft', 'بوفورت'], ['conv', 'محوّلات'], ['log', 'سجل الصيد'], ['gear', 'أدوات الصياد'], ['chk', 'قائمة الخروج']], toolTab, 'tools') + '<div id="toolbody"></div></div>';
+      seg([['today', 'اليوم'], ['sea', 'البحر'], ['bft', 'بوفورت'], ['conv', 'محوّلات'], ['log', 'سجل الصيد'], ['knots', 'العقد'], ['gear', 'أدوات الصياد'], ['chk', 'قائمة الخروج']], toolTab, 'tools') + '<div id="toolbody"></div></div>';
   };
   function drawTool() {
     const el = $('#toolbody'); if (!el) return;
-    ({ gear: toolGear, today: toolToday, sea: toolSea, bft: toolBft, conv: toolConv, log: toolLog, chk: toolChk }[toolTab] || toolToday)(el);
+    ({ knots: toolKnots, gear: toolGear, today: toolToday, sea: toolSea, bft: toolBft, conv: toolConv, log: toolLog, chk: toolChk }[toolTab] || toolToday)(el);
+  }
+  function toolKnots(el) {
+    el.innerHTML = '<div class="stack"><p class="muted" style="margin:0">أهم عقد الصيد: بتستخدم في إيه وإزاي تتربط خطوة بخطوة. لمشاهدة الرسوم المتحركة لكل عقدة اضغط «شوف الحركة».</p><div class="geargrid">' +
+      FKNOTS.map((k, i) => '<article class="card knotcard stack"><div class="knotart"><svg viewBox="' + (k.flip ? '-70 0 380 120' : '0 0 310 120') + '" role="img" aria-label="' + esc(k.t) + '">' + k.svg + '</svg></div>' +
+        '<h2 class="h3"><span class="gearn">' + (i + 1) + '</span>' + esc(k.t) + ' <span class="muted small latin">' + esc(k.en) + '</span></h2><p style="margin:0">' + esc(k.use) + '</p>' +
+        '<ol class="knotsteps">' + k.steps.map(t => '<li>' + esc(t) + '</li>').join('') + '</ol>' +
+        '<a class="btn ghost small" target="_blank" rel="noopener" href="' + KNOT_BASE + k.u + '">شوف الحركة خطوة بخطوة</a></article>').join('') + '</div>' +
+      '<a class="btn ghost" target="_blank" rel="noopener" href="' + KNOT_BASE + 'fishing-knots">كل عقد الصيد بالرسوم المتحركة</a></div>';
   }
   function toolGear(el) {
     el.innerHTML = '<div class="stack"><p class="muted" style="margin:0">كل اللي بيستخدمه الصياد، مرتّب من أصغر قطعة لأكبرها: شكلها، وبتستخدم في إيه.</p><div class="geargrid">' +
@@ -1351,6 +1359,7 @@
     const main = $('#main'); main.innerHTML = view(r.args, r.qs);
     const nm = name;
     $$('.nav a').forEach(a => a.setAttribute('aria-current', a.dataset.m.split('|').indexOf(nm) > -1 ? 'page' : 'false'));
+    if ($('#knotbody')) toolKnots($('#knotbody'));
     if (nm === 'fishlist') drawFishList(); if (nm === 'tools') drawTool(); if (nm === 'links') drawLinks(); if (nm === 'here') drawHere(); if (nm === 'species') drawSpList(); if (nm === 'compare') drawCompare();
     window.scrollTo(0, 0);
     document.title = nm === 'fish' && BY[+r.args[0]] ? BY[+r.args[0]].name + ' — الصنّارة' : nm === 'sp' && BYG[r.args[0]] ? BYG[r.args[0]].ar + ' — الصنّارة' : 'الصنّارة';
