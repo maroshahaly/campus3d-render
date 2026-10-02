@@ -58,6 +58,7 @@
     tools: '<circle cx="12" cy="12" r="8.5"/><path d="m15.5 8.5-2 5-5 2 2-5z"/>',
     book: '<path d="M5 4.5h11a3 3 0 0 1 3 3V20H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11"/>',
     search: '<circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/>',
+    zoomin: '<circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5M11 8v6M8 11h6"/>',
     moon: '<path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/>',
     sun: '<circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.3M12 19.2v2.3M2.5 12h2.3M19.2 12h2.3M5.3 5.3 7 7M17 17l1.7 1.7M5.3 18.7 7 17M17 7l1.7-1.7"/>',
     wave: '<path d="M2.5 9c2.2 0 2.2-2 4.5-2s2.3 2 4.5 2 2.3-2 4.5-2 2.3 2 4.5 2M2.5 15c2.2 0 2.2-2 4.5-2s2.3 2 4.5 2 2.3-2 4.5-2 2.3 2 4.5 2"/>',
@@ -75,6 +76,16 @@
   const ico = (n, sz) => '<svg width="' + (sz || 24) + '" height="' + (sz || 24) + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + IC[n] + '</svg>';
   const FISHPH = '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + IC.fish + '</svg>';
   const img = n => IMGS[n] || '';
+  /* تكبير الصورة بملء الشاشة: زر X أعلى يسار الصورة، ويقفل بـ Esc أو زر الرجوع */
+  function openZoom(src, alt) {
+    closeZoom();
+    const d = document.createElement('div');
+    d.className = 'fullzoom'; d.setAttribute('role', 'dialog'); d.setAttribute('aria-modal', 'true');
+    d.innerHTML = '<img src="' + src + '" alt="' + String(alt).replace(/"/g, '&quot;') + '"><button class="fzx" data-zoom-close="1" aria-label="إغلاق الصورة المكبّرة"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>';
+    d.addEventListener('click', e => { if (e.target === d) closeZoom(); });
+    document.body.appendChild(d); document.body.style.overflow = 'hidden';
+  }
+  function closeZoom() { const d = document.querySelector('.fullzoom'); if (d) { d.remove(); document.body.style.overflow = ''; return true; } return false; }
   const credit = k => { const c = PHOTO_CREDITS[k]; return c ? (c.lic === 'CC0' ? 'صورة حرة الاستخدام (CC0).' : c.lic === 'Pixabay' ? 'صورة حرة الاستخدام.' : 'تصوير: ' + esc(c.by) + ' — رخصة ' + esc(c.lic.replace('CC-', 'CC ')) + '.') : ''; };
   /* الشعار الرسمي (خطاف وسمكة) — مضمّن كـ SVG بمعرّفات فريدة لتفادي تعارض التدرجات عند التكرار في الصفحة */
   const LOGO_MARK = (sz, id) => {
@@ -122,103 +133,12 @@
     return x.h ? '<p><span class="lbl">' + esc(x.h) + '</span></p>' + ps : ps;
   }).join('') + '</div>';
   const figures = (imgs, alt) => imgs.map(n => '<button class="figure" data-zoom="' + n + '" aria-label="تكبير الصورة: ' + esc(alt) + '"><img loading="lazy" src="' + img(n) + '" alt="' + esc(alt) + '"><span class="figmag">' + ico('search', 18) + '</span></button>').join('');
-  /* الرسم الموحّد له الأولوية دايمًا لو موثّق لهذه الطريقة؛ غير كده صورة الملف الأصلي (لو موجودة) أو المخطط العام المؤقت */
-  const rigOrFig = m => (m.slide != null && RIGSPECS[m.slide]) ? rigPh(m) : (m.imgs.length ? figures(m.imgs, m.t) : rigPh(m));
+  /* رسم الأرمة الاحترافي (rigs.js + data_rigs.js) لكل طريقة؛ طرق تجهيز الطُّعم مالهاش رسم */
+  const rigOrFig = m => (m.slide != null && RIGS[m.slide]) ? RigArt.render(RIGS[m.slide], esc) : '';
   /* صندوق بحث موحّد: زر عدسة شغّال يقفل الكيبورد ويرسل النموذج، وزر كاميرا لبحث بصورة السمكة. */
   const searchForm = (id, val, ph, label, formKey) => '<form class="search" data-form="' + (formKey || 'qq') + '" role="search"><input id="' + id + '" type="search" value="' + esc(val || '') + '" placeholder="' + esc(ph) + '" aria-label="' + esc(label) + '">' +
     '<span class="searchico"><button type="submit" aria-label="بحث">' + ico('search', 20) + '</button>' +
     '<label aria-label="ابحث بصورة السمكة">' + ico('camera', 18) + '<input type="file" class="photoq" accept="image/*" capture="environment"></label></span></form>';
-  /* ---- رسم موحّد ومقاس لكل أرمة/قرمة، مبني على أرقام حقيقية مأخوذة من شرح الطريقة نفسه (مش تخمين) ----
-     spec: { main: طول الشعر الأساسي, leaderLen: طول الفروع, hooks: عدد السنانير, hookSize: نمرة السنارة,
-             weight: وصف الرصاص, weightPos: 'end'|'above', bait: الطعم, note: ملاحظة قصيرة, title: عنوان الأرمة } */
-  /* خطاف سنارة واضح الشكل (مش علامة مجردة): ساق + انحناء + شُص، بحجم ثابت فى كل الرسومات */
-  /* خطاف حقيقي الشكل: عين دائرية + ساق مستقيم + انحناء دائري واضح + سن راجع لفوق مع شُص صغير، ورقم نمرته مكتوب جنبه مباشرة */
-  const hookGlyph = (x, y, size) => '<g>' +
-    '<circle cx="' + x + '" cy="' + y + '" r="2.5" fill="none" stroke="currentColor" stroke-width="2"/>' +
-    '<line x1="' + x + '" y1="' + (y + 2.5) + '" x2="' + x + '" y2="' + (y + 19) + '" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>' +
-    '<path d="M' + x + ' ' + (y + 19) + ' A 9 9 0 0 0 ' + (x + 18) + ' ' + (y + 19) + '" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>' +
-    '<line x1="' + (x + 18) + '" y1="' + (y + 19) + '" x2="' + (x + 18) + '" y2="' + (y + 8) + '" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>' +
-    '<path d="M' + (x + 18) + ' ' + (y + 11) + ' l-4 2.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>' +
-    (size ? '<text x="' + (x + 24) + '" y="' + (y + 16) + '" font-size="10.5" font-weight="700" fill="currentColor" text-anchor="start">نمرة ' + esc(size) + '</text>' : '') +
-    '</g>';
-  /* تسمية مكتوبة مايلة بالظبط على اتجاه الخط نفسه (زي رسومات المهندسين)، مش موضوعة عشوائي أو مغطّاة بالرسمة:
-     بتحسب زاوية الخط وتكتب عليه مباشرة مع إزاحة بسيطة جنبه عشان الخط نفسه يفضل ظاهر تحتها */
-  const slantLabel = (x1, y1, x2, y2, t, frac, gap) => {
-    const dx = x2 - x1, dy = y2 - y1, len = Math.hypot(dx, dy) || 1;
-    let ang = Math.atan2(dy, dx) * 180 / Math.PI;
-    if (ang > 90) ang -= 180; else if (ang < -90) ang += 180;
-    const px = x1 + dx * (frac == null ? 0.5 : frac), py = y1 + dy * (frac == null ? 0.5 : frac);
-    const side = (x1 + x2) / 2 >= 0 ? 1 : 1; /* احتياطي لو احتجنا لاحقًا نعكس الجهة */
-    const nx = (-dy / len), ny = (dx / len);
-    const d = gap == null ? 9 : gap, sgn = dx >= 0 ? -1 : 1;
-    const lx = px + nx * d * sgn, ly = py + ny * d * sgn;
-    return '<text x="' + lx + '" y="' + ly + '" transform="rotate(' + ang.toFixed(1) + ' ' + lx.toFixed(1) + ' ' + ly.toFixed(1) + ')" font-size="11.5" font-weight="700" fill="currentColor" text-anchor="middle" dominant-baseline="middle">' + esc(t) + '</text>';
-  };
-  function rigDraw(o) {
-    const W = 360, branchY = o.weightPos === 'above' ? 150 : 230, mainBottom = branchY;
-    const total = o.hooks || 1, many = total > 5;
-    /* لو العدد كبير: نرسم أول واحد وآخر واحد بخطوط وخطاطيف حقيقية، والوسط خطوط متقطعة (بدون خطاف) تدل على باقي العدد المذكور فى الشرح تحت */
-    const n = Math.min(total, 5);
-    const spread = n <= 1 ? [0] : Array.from({ length: n }, (_, i) => -1 + (2 * i) / (n - 1));
-    const hookY = branchY + 70;
-    let firstEdge = null;
-    const branches = spread.map((dx, i) => {
-      const x2 = W / 2 + dx * 115;
-      const isEdge = !many || i === 0 || i === n - 1;
-      if (isEdge && firstEdge === null) firstEdge = { x1: W / 2, y1: branchY, x2: x2, y2: hookY };
-      const dash = isEdge ? '' : ' stroke-dasharray="4 4"';
-      const line = '<line x1="' + (W / 2) + '" y1="' + branchY + '" x2="' + x2 + '" y2="' + hookY + '" stroke="currentColor" stroke-width="2"' + dash + '/>';
-      return line + (isEdge ? hookGlyph(x2, hookY, o.hookSize) : '');
-    }).join('');
-    const weightY = hookY + 48;
-    const weightSvg = o.weightPos === 'above'
-      ? '<ellipse cx="' + (W / 2) + '" cy="' + (branchY - 22) + '" rx="7" ry="15" fill="var(--gold)"/>'
-      : '<ellipse cx="' + (W / 2) + '" cy="' + weightY + '" rx="7" ry="15" fill="var(--gold)"/>';
-    const weightLineSvg = o.weightPos === 'above'
-      ? '<line x1="' + (W / 2) + '" y1="' + (branchY - 37) + '" x2="' + (W / 2) + '" y2="' + branchY + '" stroke="currentColor" stroke-width="2"/>'
-      : '<line x1="' + (W / 2) + '" y1="' + (hookY + 19) + '" x2="' + (W / 2) + '" y2="' + (weightY - 15) + '" stroke="currentColor" stroke-width="2"/>';
-    /* تسمية طول الشعر الأساسي مكتوبة مايلة بالظبط على خطه، وتسمية طول الفرع مكتوبة مايلة على أول خط فرع حقيقي */
-    const onSvg = [
-      o.main ? slantLabel(W / 2, 18, W / 2, mainBottom, 'الشعر الأساسي: ' + o.main, 0.42, 11) : '',
-      o.leaderLen && firstEdge ? slantLabel(firstEdge.x1, firstEdge.y1, firstEdge.x2, firstEdge.y2, 'الفرع: ' + o.leaderLen, 0.4, 11) : ''
-    ].join('');
-    const belowSvg = [
-      o.weight ? 'الرصاص: ' + o.weight : null,
-      many ? 'العدد الكلي: ' + o.hooks + ' سنارة' : null,
-      o.bait ? 'الطُّعم: ' + o.bait : null
-    ].filter(Boolean);
-    const h = o.weightPos === 'above' ? hookY + 34 : weightY + 24;
-    return '<div class="rigph rigreal" role="img" aria-label="مخطط ' + esc(o.title || 'الأرمة') + ' بمقاساتها الحقيقية"><svg viewBox="0 0 ' + W + ' ' + h + '" width="100%" height="' + Math.min(h, 300) + '">' +
-      '<line x1="' + (W / 2) + '" y1="18" x2="' + (W / 2) + '" y2="' + mainBottom + '" stroke="currentColor" stroke-width="2"/>' +
-      '<circle cx="' + (W / 2) + '" cy="14" r="5" fill="none" stroke="currentColor" stroke-width="2"/>' +
-      weightLineSvg + branches + weightSvg + onSvg +
-      '</svg>' + (belowSvg.length ? '<dl class="rigfacts">' + belowSvg.map(t => '<dd>' + esc(t) + '</dd>').join('') + '</dl>' : '') +
-      '<div class="muted small">' + (o.note ? esc(o.note) + ' — ' : '') + 'المقاسات من شرح الطريقة فوق، مش رسم عام.</div></div>';
-  }
-  /* مفاتيح RIGSPECS = رقم الشريحة (slide) الخاص بالطريقة في ملف مصر، بحيث كل رسم مربوط بنص حقيقي قرأناه بنفسنا */
-  const RIGSPECS = {
-    45: { title: 'الفلة', main: '25', leaderLen: '15–20', hooks: 1, hookSize: '20–25', weight: 'بدون رصاصة ثابتة (فلة تعويم)', weightPos: 'end', bait: 'عجينة طرية', note: 'شعر الفروع قصير (25 و15/20 سم)، والعمق نص عمق المية' },
-    46: { title: 'الربع (المشنقة)', main: '25', leaderLen: '15–20', hooks: 6, hookSize: '5–6', weight: 'رصاص شريط حوالين مكان توصيل السنانير', weightPos: 'above', bait: 'عجينة ناشفة أو سردين', note: 'من 5 إلى 7 سنانير: 3 منها طولها 10 سم والباقي حوالي 5 سم' },
-    47: { title: 'البوصة', main: '40', leaderLen: '30–35', hooks: 20, hookSize: '18–20', weight: 'رصاصة عادية', weightPos: 'above', bait: 'عيش بلدي أسمر ملفوف بالاستيك', note: 'من 15 إلى 25 سنارة بنفس الطول (15 سم)، كلها متوصلة فوق الرصاصة بـ30 سم' },
-    180: { title: 'السندوتش', main: '40', leaderLen: '', hooks: 12, hookSize: '6', weight: 'شمندورة فيها رصاص + رصاص تحتها', weightPos: 'above', bait: 'شريحة رغيف أو عيش شامي ملفوفة حوالين السنانير', note: '10 إلى 14 سنارة ملفوفة داخل شريحة الرغيف على هيئة سندوتش' }
-  };
-  /* مخطط عام مؤقت لأي طريقة لسه ملهاش رقم حقيقي موثّق — يستبدل أي صورة قديمة عليها علامة جهة تانية أو رسم غير واضح */
-  const rigPh = m => {
-    const spec = m && m.slide != null ? RIGSPECS[m.slide] : null;
-    if (spec) return rigDraw(spec);
-    return '<div class="rigph" role="img" aria-label="مخطط عام لتجهيزة الصيد"><svg viewBox="0 0 220 160" width="100%" height="140">' +
-      '<line x1="110" y1="6" x2="110" y2="55" stroke="currentColor" stroke-width="2"/>' +
-      '<circle cx="110" cy="55" r="5" fill="none" stroke="currentColor" stroke-width="2"/>' +
-      '<ellipse cx="110" cy="80" rx="7" ry="14" fill="var(--gold)"/>' +
-      '<line x1="110" y1="94" x2="60" y2="140" stroke="currentColor" stroke-width="2"/>' +
-      '<line x1="110" y1="94" x2="110" y2="140" stroke="currentColor" stroke-width="2"/>' +
-      '<line x1="110" y1="94" x2="160" y2="140" stroke="currentColor" stroke-width="2"/>' +
-      '<path d="M60 140 q-8 14 6 16" fill="none" stroke="currentColor" stroke-width="2"/>' +
-      '<path d="M110 140 q-8 14 6 16" fill="none" stroke="currentColor" stroke-width="2"/>' +
-      '<path d="M160 140 q-8 14 6 16" fill="none" stroke="currentColor" stroke-width="2"/>' +
-      '</svg><div class="muted small">مخطط عام تقريبي للتجهيزة لحد ما نوثّق مقاساتها الحقيقية من شرحها — مش طريقة بديلة.</div></div>';
-  };
-
   /* ---------- الموقع والحسابات الفلكية ---------- */
   /* [الاسم, عرض, طول, منطقة زمنية, m بحري / f عذب] */
   const PRESETS = [
@@ -371,13 +291,13 @@
       (() => { const cl = CAUTION[s.id] || 2; return '<div class="notice ' + (cl >= 3 ? 'warn' : '') + '"><b>مستوى حذر ' + esc(s.name) + ': ' + CAUTION_L[cl] + ' (' + cl + '/4).</b> ' + CAUTION_TXT[cl] + '</div>'; })() +
       (facts.length ? '<section class="card"><dl class="kv" style="margin:0">' + facts.map(f => '<dt>' + f[0] + '</dt><dd>' + esc(f[1]) + '</dd>').join('') + '</dl></section>' : '') +
       sizes + methAcc(s.methods, 'طرق الصيد') + rigs + acc(s.baits, 'تجهيز الطُّعم', false) + acc(s.notes, 'ملاحظات ونصائح', true) +
-      (missing.length ? '<p class="muted small">لم يُملأ في الملف الأصلي بعد: ' + missing.join('، ') + '.</p>' : '') + '</div>';
+      (DECK_REV[s.id] && BYG[DECK_REV[s.id]] ? '<a class="btn ghost" href="#/sp/' + DECK_REV[s.id] + '">معلومات ' + esc(BYG[DECK_REV[s.id]].ar) + ' في الدليل العالمي: الأماكن والمواسم حول العالم</a>' : '') + '</div>';
   };
 
   /* رسم عام (مش لسمكة بعينها) لفكرة الترقيد والسبحة نفسها، زي رسومات الأرمات بالظبط */
   const GENRIGS = {
-    tarqeed: { title: 'الترقيد', main: '100', leaderLen: '100–125', hooks: 1, hookSize: 'حسب السمكة المستهدفة', weight: 'رصاصة ثقيلة تثبّت على القاع (80–150 حسب الريح والموج)', weightPos: 'end', bait: 'طُعم خشن (سمك/سردين/جرايات/جندوفلي)', note: 'طرف قايم واحد فقط: طوله متر وربع تحت الرصاصة للترقيد على الرمل، أو شبر فوق الرصاصة للترقيد على الوعر' },
-    sabha: { title: 'السبحة', main: '40', leaderLen: '20–30', hooks: 5, weight: 'رصاص شريط حوالين مكان توصيل السنانير', weightPos: 'above', bait: 'حسب الهدف', note: 'نمرة السنارة حسب السمكة المستهدفة. سبحة ضيقة (فرد قصير) لو السمك واقف وبيضرب من غير ما يسحب، وسبحة واسعة (فرد طويل، أكتر من مترين) لو السمك خايف من الطعم المشدود' }
+    tarqeed: { e: [['tip'], ['line', 'الشعر الأساسي 100', { h: 50 }], ['sinker', 'رصاصة تقيلة 80–150 تثبت على القاع حسب الريح والموج', { shape: 'pyramid' }], ['swivel', 'مدوّر'], ['line', 'طرف قايم واحد طوله متر – متر وربع', { h: 64, leader: 1 }], ['hook', 'سنارة حسب السمكة + طُعم خشن', { s: 1.2, bait: 'strip' }], ['bed', null, {}]], n: ['الطُّعم الخشن: سمك، سردين، جرايات، جندوفلي — عشان العفشة ماتصفّيهوش.', 'أفضل وقت: من العصر لبعد العشا، ومن قبل الفجر بساعة للساعة 9.'] },
+    sabha: { e: [['tip'], ['line', 'الشعر الأساسي 40', { h: 34 }], ['swivel', 'مدوّر'], ['side', 'فرد السنانير 20–30 — المسافة بينها تحدد ارتفاع السبحة', { n: 5, gap: 30, bait: 'shrimp' }], ['sinker', 'رصاصة تحت'], ['bed', null, {}]], n: ['سبحة واسعة (أطول من 2 م) لو السمك بيضرب على السنانير اللي فوق.', 'فردة طويلة لو السمك الكبير بيضرب ومابيبلعش.'] }
   };
 
   let techTab = 'tarqeed';
@@ -385,8 +305,8 @@
     if (qs.t) techTab = qs.t;
     const I = DATA.info;
     let body = '';
-    if (techTab === 'tarqeed') body = rigDraw(GENRIGS.tarqeed) + '<div class="card">' + prose(I.tarqeed.secs) + '</div>';
-    else if (techTab === 'sabha') body = rigDraw(GENRIGS.sabha) + '<div class="stack">' + I.sabha.map(p => '<div class="card">' + prose(p.secs) + '</div>').join('') + '</div>';
+    if (techTab === 'tarqeed') body = RigArt.render(GENRIGS.tarqeed, esc) + '<div class="card">' + prose(I.tarqeed.secs) + '</div>';
+    else if (techTab === 'sabha') body = RigArt.render(GENRIGS.sabha, esc) + '<div class="stack">' + I.sabha.map(p => '<div class="card">' + prose(p.secs) + '</div>').join('') + '</div>';
     else if (techTab === 'mouth') body = '<div class="card">' + prose(I.mouth.secs) + '</div>';
     else body = '<div class="stack"><p class="muted small">جداول مصورة من الملف: الطُّعم والخيط والسنارة لعدة أسماك. اضغط للتكبير.</p>' + I.charts.map(c => '<button class="figure" data-zoom="' + c.img + '"><img loading="lazy" src="' + img(c.img) + '" alt="جدول المعلومات"></button>').join('') + '</div>';
     return '<div class="stack"><div><div class="eyebrow">من الملف</div><h1 class="h1">الترقيد والسبحة</h1></div>' + seg([['tarqeed', 'الترقيد'], ['sabha', 'السبحة'], ['mouth', 'الفم والسنانير'], ['charts', 'جداول']], techTab, 'tech') + body + '</div>';
@@ -404,7 +324,7 @@
   };
 
   /* ---------- الأدوات ---------- */
-  let toolTab = 'gear';
+  let toolTab = 'today';
   const CONV = {
     'الطول': { u: { 'سم': 0.01, 'م': 1, 'مم': 0.001, 'بوصة': 0.0254, 'قدم': 0.3048 } },
     'الوزن': { u: { 'كجم': 1, 'جم': 0.001, 'رطل': 0.45359237, 'أونصة': 0.028349523 } },
@@ -416,7 +336,7 @@
   V.tools = function (a, qs) {
     if (qs.t) toolTab = qs.t;
     return '<div class="stack"><div><div class="eyebrow">تعمل من أي مكان</div><h1 class="h1">الأدوات</h1></div>' +
-      seg([['gear', 'أدوات الصياد'], ['today', 'اليوم'], ['sea', 'البحر'], ['bft', 'بوفورت'], ['conv', 'محوّلات'], ['log', 'سجل الصيد'], ['chk', 'قائمة الخروج']], toolTab, 'tools') + '<div id="toolbody"></div></div>';
+      seg([['today', 'اليوم'], ['sea', 'البحر'], ['bft', 'بوفورت'], ['conv', 'محوّلات'], ['log', 'سجل الصيد'], ['gear', 'أدوات الصياد'], ['chk', 'قائمة الخروج']], toolTab, 'tools') + '<div id="toolbody"></div></div>';
   };
   function drawTool() {
     const el = $('#toolbody'); if (!el) return;
@@ -837,7 +757,7 @@
     const howHtml = howGroupsHtml(s.how);
     return '<div class="stack-lg"><div class="row between"><a class="btn ghost small" href="#/species">كل الأنواع</a>' + (real ? '<span class="tag ' + SC_CLS[real[CUR]] + '">' + SC_L[real[CUR]] + ' الآن هنا</span>' : '') + '</div>' +
       '<header class="stack"><div><h1 class="h1">' + esc(dispName(s)) + '</h1>' + (dialect === 'mag' && s.names && s.names.mag ? '<div class="muted small">الاسم الأساسي: ' + esc(s.ar) + '</div>' : '') + '<div class="muted latin" style="margin-top:2px">' + esc(s.en) + '</div><div class="muted small latin"><i>' + esc(s.sci) + '</i></div>' + (s.fam ? '<div class="muted small">' + esc(s.fam) + '</div>' : '') + '</div><div class="chips"><span class="tag">' + HAB_L[s.h] + '</span>' + (s.o ? '<span class="tag gold">موسمي صارم</span>' : '') + '</div></header>' +
-      '<div class="sphero">' + gthumb(s, true) + '<div class="muted small" id="phcredit" data-sp="' + esc(s.id) + '">' + (deckPhoto(s) ? 'الصورة من ملف «مساعد الصيد».' : IMGS['sp_' + s.id] ? credit('sp_' + s.id) : (STANDALONE ? 'جارٍ تحميل صورة حقيقية للنوع من ويكيبيديا…' : 'الصورة الحقيقية تظهر في النسخة المحمّلة عند الاتصال بالإنترنت.')) + '</div></div>' + vidHtml(s.id) +
+      '<div class="sphero"><div style="position:relative">' + gthumb(s, true) + '<span class="figmag">' + ico('zoomin', 18) + '</span></div>' + '<div class="muted small" id="phcredit" data-sp="' + esc(s.id) + '">' + (deckPhoto(s) ? 'الصورة من ملف «مساعد الصيد».' : IMGS['sp_' + s.id] ? credit('sp_' + s.id) : (STANDALONE ? 'جارٍ تحميل صورة حقيقية للنوع من ويكيبيديا…' : 'الصورة الحقيقية تظهر في النسخة المحمّلة عند الاتصال بالإنترنت.')) + '</div></div>' + vidHtml(s.id) +
       (s.w ? s.w.split(',').map(w => '<div class="notice ' + (WARN_L[w][1] === 'bad' ? 'bad' : 'warn') + '">' + esc(WARN_L[w][0]) + '.</div>').join('') : '') +
       (real ? '' : '<div class="notice info">هذا النوع <b>غير مسجَّل في منطقتك الحالية</b>. الأرقام في الجدول أدناه افتراضية لموطنه الأصلي حسب نصف الكرة المختار فقط، وليست تقييمًا لفرصك الفعلية عندك. <a href="#/here">غيّر موقعك</a></div>') +
       '<section class="card stack"><div class="row between"><h2 class="h2" style="margin:0">' + (real ? 'الموسم على مدار السنة' : 'موسمه الافتراضي في موطنه الأصلي (ليس عندك)') + '</h2><div class="chips"><a class="chip" href="#/sp/' + s.id + '?h=n" aria-pressed="' + (hem === 'n') + '">شمال</a><a class="chip" href="#/sp/' + s.id + '?h=s" aria-pressed="' + (hem === 's') + '">جنوب</a></div></div>' +
@@ -944,7 +864,7 @@
     im.onerror = () => { im.remove(); };
     im.src = m.u.replace(/\/\d+px-/, '/900px-');
     el.appendChild(im);
-    if (!el.querySelector('.figmag')) el.insertAdjacentHTML('beforeend', '<span class="figmag">' + ico('search', 18) + '</span>');
+    if (!el.querySelector('.figmag')) el.insertAdjacentHTML('beforeend', '<span class="figmag">' + ico('zoomin', 18) + '</span>');
     el.dataset.zoom = m.u;
     if (m.p) el.insertAdjacentHTML('afterend', '<div class="muted small">صورة من <a href="' + esc(m.p) + '" target="_blank" rel="noopener">ويكيبيديا: ' + esc(m.t || '') + '</a>. حقوقها لأصحابها وفق الرخصة المذكورة في صفحتها.</div>');
   }
@@ -1417,6 +1337,8 @@
   /* ---------- الأحداث ---------- */
   function setLoc(l) { store.set('loc', l); drawTool(); const n = parse().name; if (['home', 'here', 'species', 'sp'].indexOf(n) > -1) render(); }
   document.addEventListener('click', e => {
+    const gz = e.target.closest('.sphero .gthumb.big.has');
+    if (gz) { const im = gz.querySelector('img'); if (im) { openZoom(im.src, ''); return; } }
     const t = e.target.closest('[data-zoom],[data-zoom-close],[data-act],[data-seg],[data-ff],[data-lc],[data-lf],[data-hf],[data-sf],[data-dl],[data-mz],[data-ml],[data-td],[data-fph-retry],[data-ph-retry]');
     if (!t) return;
     if (t.dataset.phRetry) {
@@ -1439,19 +1361,8 @@
       }
       return;
     }
-    if (t.dataset.zoomClose) { const box = t.closest('.inlinezoom'); if (box) box.remove(); return; }
-    if (t.dataset.zoom) {
-      const z = t.dataset.zoom, src = /^https?:/.test(z) ? z : img(z);
-      const open = t.nextElementSibling && t.nextElementSibling.classList && t.nextElementSibling.classList.contains('inlinezoom') ? t.nextElementSibling : null;
-      $$('.inlinezoom').forEach(el => { if (el !== open) el.remove(); });
-      if (open) { open.remove(); return; }
-      const div = document.createElement('div');
-      div.className = 'inlinezoom';
-      div.innerHTML = '<button class="iconbtn x" data-zoom-close="1" aria-label="إغلاق الصورة المكبّرة">' + ico('x', 18) + '</button><img src="' + src + '" alt="">';
-      t.insertAdjacentElement('afterend', div);
-      div.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      return;
-    }
+    if (t.dataset.zoomClose) { closeZoom(); return; }
+    if (t.dataset.zoom) { const z = t.dataset.zoom; openZoom(/^(https?:|data:)/.test(z) ? z : img(z), t.getAttribute('aria-label') || ''); return; }
     if (t.dataset.seg) { const k = t.dataset.k, s = t.dataset.seg; if (s === 'tools') toolTab = k; else if (s === 'tech') techTab = k; else if (s === 'here') { hereTab = k; try { history.replaceState(null, '', '#/here' + (k === 'now' ? '' : '?t=' + k)); } catch (x) {} } else worldTab = k; if (s === 'tools' || s === 'here') { $$('.seg button').forEach(b => b.setAttribute('aria-selected', b === t ? 'true' : 'false')); if (s === 'tools') drawTool(); else drawHere(); } else render(); return; }
     if (t.dataset.mz) {
       const id = t.dataset.for;
@@ -1523,7 +1434,15 @@
       if (store.set('log', l)) { toast('تم الحفظ.'); drawTool(); } else toast('تعذّر الحفظ في هذا المتصفح.');
     }
   });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') $$('.inlinezoom').forEach(el => el.remove()); });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { closeZoom(); return; }
+    /* Backspace يرجع للصفحة اللي قبلها (إلا لو بتكتب في خانة) */
+    if (e.key === 'Backspace' && !e.altKey && !e.ctrlKey && !e.metaKey) {
+      const el = e.target, tag = el && el.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (el && el.isContentEditable)) return;
+      e.preventDefault(); if (closeZoom()) return; history.back();
+    }
+  });
   window.addEventListener('hashchange', render);
 
   /* ---------- الهيكل ---------- */

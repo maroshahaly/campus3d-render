@@ -342,3 +342,21 @@ header.stack .latin { display: block; text-align: right; }
 .gearimg img { width: 100%; height: 180px; object-fit: contain; display: block; }
 .gearimg svg { width: 120px; height: 120px; }
 .gearn { display: inline-grid; place-items: center; min-width: 26px; height: 26px; border-radius: 13px; background: var(--teal); color: var(--teal-ink); font-size: .8rem; margin-inline-end: 8px; vertical-align: middle; }
+
+/* رسومات الأرمات: الرسم على اليمين والبيانات المرقّمة جنبه */
+.rig2 { margin: 0; display: grid; grid-template-columns: minmax(150px, 46%) 1fr; gap: 14px; align-items: start; border: 1px solid var(--line); border-radius: 14px; padding: 12px; background: var(--surface); }
+.rig2art svg { width: 100%; height: auto; display: block; max-height: 520px; }
+.rig2leg ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.rig2leg li { display: flex; gap: 8px; align-items: flex-start; font-size: .9rem; line-height: 1.55; font-weight: 600; }
+.rig2leg .rn { flex: none; display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 11px; background: var(--teal); color: var(--teal-ink); font-size: .75rem; font-weight: 700; margin-top: 1px; }
+.rignotes { margin: 12px 0 0; padding: 10px 14px 0; border-top: 1px dashed var(--line); color: var(--ink2); font-size: .84rem; line-height: 1.6; }
+.rignotes li { margin-bottom: 4px; }
+@media (max-width: 560px) { .rig2 { grid-template-columns: 1fr; gap: 10px; padding: 10px; } .rig2art svg { max-height: 440px; width: auto; max-width: 100%; margin: 0 auto; } .rig2leg li { font-size: .86rem; } }
+
+/* تكبير الصورة بملء الشاشة */
+.fullzoom { position: fixed; inset: 0; z-index: 1000; background: rgba(3,10,14,.94); display: flex; align-items: center; justify-content: center; padding: 12px; }
+.fullzoom img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px; }
+.fzx { position: absolute; top: 14px; left: 14px; width: 44px; height: 44px; border-radius: 22px; border: 1px solid rgba(255,255,255,.35); background: rgba(10,30,40,.75); color: #fff; display: grid; place-items: center; cursor: pointer; }
+.fzx:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.figmag { left: 10px; right: auto; inset-inline-end: auto; }
+.sphero .gthumb.big.has { cursor: zoom-in; }
