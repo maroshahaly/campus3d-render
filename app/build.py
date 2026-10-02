@@ -16,7 +16,7 @@ data = js_json(json.load(open(SP + '/data.json', encoding='utf-8')))
 imgs = js_json(json.load(open(SP + '/imgs.json', encoding='utf-8')))
 vids = js_json(json.load(open(SP + '/vids.json', encoding='utf-8'))) if os.path.exists(SP + '/vids.json') else '{}'  # مقاطع فيديو قصيرة مضمّنة (data URI)
 css = rd(A + '/leaflet.css') + '\n' + rd(A + '/style.css')
-code = rd(A + '/leaflet.js') + '\n' + '\n'.join(rd(A + '/' + f) for f in ['astro.js', 'data_mask.js', 'data_geo.js', 'data_species.js', 'data_art.js', 'data_links.js', 'data_world.js', 'data_credits.js'])
+code = rd(A + '/leaflet.js') + '\n' + '\n'.join(rd(A + '/' + f) for f in ['astro.js', 'data_mask.js', 'data_geo.js', 'data_species.js', 'data_art.js', 'data_links.js', 'data_world.js', 'data_credits.js', 'data_gear.js'])
 app = rd(A + '/app.js')
 # module.exports guard in astro is harmless in browsers
 
@@ -34,7 +34,7 @@ def minify_js(src):
     except Exception:
         return src
 
-FONTS = '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Reem+Kufi:wght@500;600;700&display=swap">'
+FONTS = '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Noto+Kufi+Arabic:wght@500;600;700&display=swap">'
 def body(standalone, minify=False):
     pre = '<script>window.__STANDALONE__=true;</script>\n' if standalone else ''
     bid = '<script>window.__BUILD_ID__=' + json.dumps(BUILD_ID) + ';</script>\n'

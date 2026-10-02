@@ -80,7 +80,8 @@ const HOW_LINK = {
   troll: 'https://en.wikipedia.org/wiki/Trolling_(fishing)', fly: 'https://en.wikipedia.org/wiki/Fly_fishing',
   float: 'https://en.wikipedia.org/wiki/Bobber', sabiki: 'https://en.wikipedia.org/wiki/Sabiki_rig',
   bot: 'https://en.wikipedia.org/wiki/Bottom_fishing', chum: 'https://en.wikipedia.org/wiki/Chumming',
-  drift: 'https://en.wikipedia.org/wiki/Drift_fishing'
+  drift: 'https://en.wikipedia.org/wiki/Drift_fishing', cast: 'https://en.wikipedia.org/wiki/Spin_fishing',
+  pop: 'https://en.wikipedia.org/wiki/Topwater_fishing_lure', live: 'https://en.wikipedia.org/wiki/Live_bait'
 };
 const BAIT = {
   sar: 'سردين', shr: 'جمبري', sq: 'حبّار', crab: 'سلطعون/كابوريا', worm: 'ديدان', dough: 'عجينة أو خبز', corn: 'ذرة', lure: 'رابلات (طُعم صناعي)',

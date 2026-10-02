@@ -5,7 +5,7 @@
   --ok: #17804D; --oksoft: #D9F0E3; --warn: #98620A; --warnsoft: #FBEBC8; --bad: #B3261E; --badsoft: #F9DAD7;
   --lv0: #DCE6EA; --lv1: #A6D0DA; --lv2: #4AA0B5; --lv3: #0B6478;
   --shadow: 0 1px 2px rgba(6,32,44,.08), 0 8px 24px rgba(6,32,44,.07);
-  --f-display: 'Reem Kufi', 'Noto Kufi Arabic', 'Segoe UI', Tahoma, system-ui, sans-serif;
+  --f-display: 'Noto Kufi Arabic', 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, system-ui, sans-serif;
   --f-body: 'IBM Plex Sans Arabic', 'Noto Sans Arabic', 'Segoe UI', Tahoma, system-ui, sans-serif;
 }
 @media (prefers-color-scheme: dark) {
@@ -65,7 +65,8 @@ main { padding-block: 18px 110px; }
 /* ---------- عناصر عامة ---------- */
 .eyebrow { font-size: .8rem; letter-spacing: .06em; color: var(--ink2); font-weight: 600; }
 .h1 { font-size: 1.7rem; font-weight: 700; }
-.h2 { font-size: 1.25rem; font-weight: 700; margin-bottom: 10px; }
+.h2 { font-size: 1.25rem; font-weight: 700; margin-bottom: 10px; line-height: 1.7; }
+section.stack > .h2:first-child { margin-top: 18px !important; }
 .h3 { font-size: 1.05rem; font-weight: 700; }
 .muted { color: var(--ink2); }
 .small { font-size: .88rem; }
@@ -259,9 +260,9 @@ a.hm:hover .nm { color: var(--teal); }
 .fart .ph-dot.d2 { animation-delay: .3s; }
 @keyframes ph-pulse { 0%, 80%, 100% { opacity: .2; } 40% { opacity: .7; } }
 .gthumb.has .fart { display: none; }
-.sphero .gthumb.big { width: 100%; height: 210px; border-radius: 18px; }
+.sphero .gthumb.big { width: 100%; height: 260px; border-radius: 18px; background: var(--sea); }
+.sphero .gthumb.big img { object-fit: contain; }
 .sphero .gthumb.big .fart { width: 20%; }
-.sphero .gthumb.big img { object-fit: cover; }
 .sphero { display: flex; flex-direction: column; gap: 6px; }
 .seg.tight button { padding: 8px 9px; font-size: .92rem; }
 .mapbox { display: flex; flex-direction: column; gap: 8px; position: relative; }
@@ -333,3 +334,11 @@ header.stack .latin { display: block; text-align: right; }
 @media (max-width: 380px) { .wmark-sig span { display: none; } }
 .copyline { font-size: .78rem; color: var(--ink2); text-align: center; padding-block: 2px; }
 .copyline .fid { direction: ltr; unicode-bidi: isolate; display: inline-block; opacity: .8; }
+
+/* أدوات الصياد */
+.geargrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+.gearcard { display: flex; flex-direction: column; gap: 12px; }
+.gearimg { height: 180px; border-radius: 14px; overflow: hidden; background: var(--surface2); display: grid; place-items: center; color: var(--teal); }
+.gearimg img { width: 100%; height: 180px; object-fit: contain; display: block; }
+.gearimg svg { width: 120px; height: 120px; }
+.gearn { display: inline-grid; place-items: center; min-width: 26px; height: 26px; border-radius: 13px; background: var(--teal); color: var(--teal-ink); font-size: .8rem; margin-inline-end: 8px; vertical-align: middle; }

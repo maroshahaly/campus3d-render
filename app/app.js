@@ -75,7 +75,7 @@
   const ico = (n, sz) => '<svg width="' + (sz || 24) + '" height="' + (sz || 24) + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + IC[n] + '</svg>';
   const FISHPH = '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + IC.fish + '</svg>';
   const img = n => IMGS[n] || '';
-  const credit = k => { const c = PHOTO_CREDITS[k]; return c ? (c.lic === 'CC0' ? 'صورة حرة الاستخدام (CC0).' : 'تصوير: ' + esc(c.by) + ' — رخصة ' + esc(c.lic.replace('CC-', 'CC ')) + '.') : ''; };
+  const credit = k => { const c = PHOTO_CREDITS[k]; return c ? (c.lic === 'CC0' ? 'صورة حرة الاستخدام (CC0).' : c.lic === 'Pixabay' ? 'صورة حرة الاستخدام.' : 'تصوير: ' + esc(c.by) + ' — رخصة ' + esc(c.lic.replace('CC-', 'CC ')) + '.') : ''; };
   /* الشعار الرسمي (خطاف وسمكة) — مضمّن كـ SVG بمعرّفات فريدة لتفادي تعارض التدرجات عند التكرار في الصفحة */
   const LOGO_MARK = (sz, id) => {
     const g = 'lg' + id;
@@ -404,7 +404,7 @@
   };
 
   /* ---------- الأدوات ---------- */
-  let toolTab = 'today';
+  let toolTab = 'gear';
   const CONV = {
     'الطول': { u: { 'سم': 0.01, 'م': 1, 'مم': 0.001, 'بوصة': 0.0254, 'قدم': 0.3048 } },
     'الوزن': { u: { 'كجم': 1, 'جم': 0.001, 'رطل': 0.45359237, 'أونصة': 0.028349523 } },
@@ -416,11 +416,16 @@
   V.tools = function (a, qs) {
     if (qs.t) toolTab = qs.t;
     return '<div class="stack"><div><div class="eyebrow">تعمل من أي مكان</div><h1 class="h1">الأدوات</h1></div>' +
-      seg([['today', 'اليوم'], ['sea', 'البحر'], ['bft', 'بوفورت'], ['conv', 'محوّلات'], ['log', 'سجل الصيد'], ['chk', 'قائمة الخروج']], toolTab, 'tools') + '<div id="toolbody"></div></div>';
+      seg([['gear', 'أدوات الصياد'], ['today', 'اليوم'], ['sea', 'البحر'], ['bft', 'بوفورت'], ['conv', 'محوّلات'], ['log', 'سجل الصيد'], ['chk', 'قائمة الخروج']], toolTab, 'tools') + '<div id="toolbody"></div></div>';
   };
   function drawTool() {
     const el = $('#toolbody'); if (!el) return;
-    ({ today: toolToday, sea: toolSea, bft: toolBft, conv: toolConv, log: toolLog, chk: toolChk }[toolTab] || toolToday)(el);
+    ({ gear: toolGear, today: toolToday, sea: toolSea, bft: toolBft, conv: toolConv, log: toolLog, chk: toolChk }[toolTab] || toolToday)(el);
+  }
+  function toolGear(el) {
+    el.innerHTML = '<div class="stack"><p class="muted" style="margin:0">كل اللي بيستخدمه الصياد، مرتّب من أصغر قطعة لأكبرها: شكلها، وبتستخدم في إيه.</p><div class="geargrid">' +
+      GEAR.map((g, i) => '<article class="card gearcard"><div class="gearimg">' + (g.img && IMGS['gear_' + g.id] ? '<img loading="lazy" alt="' + esc(g.t) + '" src="' + IMGS['gear_' + g.id] + '">' : '<svg viewBox="0 0 120 120" role="img" aria-label="' + esc(g.t) + '">' + GEAR_SVG[g.id] + '</svg>') + '</div>' +
+        '<div class="stack" style="gap:6px"><h2 class="h3"><span class="gearn">' + (i + 1) + '</span>' + esc(g.t) + '</h2><p style="margin:0">' + esc(g.d) + '</p><p class="muted small" style="margin:0"><b>الاستخدام: </b>' + esc(g.u) + '</p></div></article>').join('') + '</div></div>';
   }
   function toolToday(el) {
     const loc = getLoc(), di = dayInfo(loc), sun = di.sun;

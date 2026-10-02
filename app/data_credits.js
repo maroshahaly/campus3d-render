@@ -1,4 +1,4 @@
-/* بيانات صور الأنواع المضمّنة (imgs.json بمفتاح sp_<id>): اسم المصوّر والرخصة. المصدر: بيانات iNaturalist المفتوحة، بترخيص CC0 أو CC BY فقط، وكل صورة اتراجعت يدويًا: بلا علامات مائية ولا أشخاص */
+/* بيانات صور الأنواع المضمّنة (imgs.json بمفتاح sp_<id>): اسم المصوّر والرخصة. المصدر: بيانات iNaturalist المفتوحة، بترخيص CC0 أو CC BY، أو من Pixabay (رخصة Pixabay: استخدام حر بلا إلزام بنسب)، وكل صورة اتراجعت يدويًا: بلا علامات مائية ولا أشخاص */
 const PHOTO_CREDITS = {
 "sp_seabass": {
 "by": "Zoltán Stekkelpak",
@@ -31,14 +31,14 @@ const PHOTO_CREDITS = {
 "src": "inat:628350220"
 },
 "sp_albacore": {
-"by": "Doug Miller",
-"lic": "CC-BY",
-"src": "inat:254934981"
+"by": "russnamitz",
+"lic": "CC0",
+"src": "inat:51663545"
 },
 "sp_bonito": {
-"by": "Ametsak",
-"lic": "CC0",
-"src": "inat:315494947"
+"by": "Christina",
+"lic": "CC-BY",
+"src": "inat:345539281"
 },
 "sp_littletunny": {
 "by": "Ricardo Lima",
@@ -484,6 +484,121 @@ const PHOTO_CREDITS = {
 "by": "Lucy Keith-Diagne",
 "lic": "CC-BY",
 "src": "inat:170339702"
+},
+"sp_anchovy": {
+"by": "Contessascalza",
+"lic": "Pixabay",
+"src": "pixabay:4116370"
+},
+"sp_scallop": {
+"by": "miriamart",
+"lic": "Pixabay",
+"src": "pixabay:1063448"
+},
+"sp_cockle": {
+"by": "artyangel",
+"lic": "Pixabay",
+"src": "pixabay:2706754"
+},
+"sp_razor": {
+"by": "MIH83",
+"lic": "Pixabay",
+"src": "pixabay:3553475"
+},
+"sp_limpet": {
+"by": "Bluesnap",
+"lic": "Pixabay",
+"src": "pixabay:10249670"
+},
+"sp_abalone": {
+"by": "cocoparisienne",
+"lic": "Pixabay",
+"src": "pixabay:264803"
+},
+"sp_whelk": {
+"by": "Susbany",
+"lic": "Pixabay",
+"src": "pixabay:79102"
+},
+"sp_conch": {
+"by": "CandiceJax",
+"lic": "Pixabay",
+"src": "pixabay:4001305"
+},
+"gear_hook": {
+"by": "Oolmadefoto",
+"lic": "Pixabay",
+"src": "pixabay:7418284"
+},
+"gear_sinker": {
+"by": "mxart",
+"lic": "Pixabay",
+"src": "pixabay:3731857"
+},
+"gear_jighead": {
+"by": "ds_30",
+"lic": "Pixabay",
+"src": "pixabay:4872646"
+},
+"gear_wobbler": {
+"by": "TheDigitalWay",
+"lic": "Pixabay",
+"src": "pixabay:1563233"
+},
+"gear_stickbait": {
+"by": "u_14282vb65e",
+"lic": "Pixabay",
+"src": "pixabay:8340486"
+},
+"gear_spoons": {
+"by": "LUM3N",
+"lic": "Pixabay",
+"src": "pixabay:887516"
+},
+"gear_pliers": {
+"by": "TonyZhu",
+"lic": "Pixabay",
+"src": "pixabay:8311"
+},
+"gear_knife": {
+"by": "4volvos",
+"lic": "Pixabay",
+"src": "pixabay:505298"
+},
+"gear_tacklebox": {
+"by": "TheDigitalWay",
+"lic": "Pixabay",
+"src": "pixabay:1572408"
+},
+"gear_rodpod": {
+"by": "dortyi",
+"lic": "Pixabay",
+"src": "pixabay:78464"
+},
+"gear_rod": {
+"by": "K_Malik",
+"lic": "Pixabay",
+"src": "pixabay:5541327"
+},
+"gear_net": {
+"by": "anaterate",
+"lic": "Pixabay",
+"src": "pixabay:7375359"
+},
+"gear_pots": {
+"by": "27707",
+"lic": "Pixabay",
+"src": "pixabay:1007936"
+},
+"gear_lifering": {
+"by": "dimitrisvetsikas1969",
+"lic": "Pixabay",
+"src": "pixabay:2435653"
+},
+"gear_boat": {
+"by": "mariya_m",
+"lic": "Pixabay",
+"src": "pixabay:7850627"
 }
 };
 /* فيديوهات قصيرة مضمّنة (vids.json بمعرّف النوع): مقاطع 8 ثواني بلا صوت من Pixabay (رخصة Pixabay: استخدام مجاني بلا إلزام بنسب)، اتراجعت لقطاتها يدويًا: بلا علامات مائية ولا أشخاص */
