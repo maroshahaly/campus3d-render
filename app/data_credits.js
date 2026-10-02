@@ -914,6 +914,31 @@ const PHOTO_CREDITS = {
 "by": "Dale Kindler (الصورة لنوع لبيس قريب من نفس الجنس: Labeo coubie)",
 "lic": "CC-BY-NC",
 "src": "inat:479693512"
+},
+"sp_shefsh": {
+"by": "Julien Renoult",
+"lic": "CC-BY",
+"src": "inat:122246693"
+},
+"sp_whitegrouper": {
+"by": "Katerina Kalogerini",
+"lic": "CC-BY",
+"src": "inat:323012479"
+},
+"sp_mira": {
+"by": "Al Kordesch",
+"lic": "CC0",
+"src": "inat:648061973"
+},
+"sp_boops": {
+"by": "franciscodocampo",
+"lic": "CC-BY",
+"src": "inat:536553044"
+},
+"sp_wreckfish": {
+"by": "Aiken Lau",
+"lic": "CC0",
+"src": "inat:531335860"
 }
 };
 /* فيديوهات قصيرة مضمّنة (vids.json بمعرّف النوع): مقاطع 8 ثواني بلا صوت من Pixabay (رخصة Pixabay: استخدام مجاني بلا إلزام بنسب)، اتراجعت لقطاتها يدويًا: بلا علامات مائية ولا أشخاص */

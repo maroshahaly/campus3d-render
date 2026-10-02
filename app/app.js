@@ -516,7 +516,7 @@
     s.nameHay = norm([s.ar, altNames, s.en, s.sci].join(' '));
   });
   /* أسماك ملف مصر المقابلة لأنواع القاعدة العالمية */
-  const DECK = { lizardfish: 151, nagil: 152, triggerfish: 144, sargo: 97, redporgy: 124, grouper_dusky: 126, nileperch: 162, bonito: 146, seabass: 23, gilthead: 76, mullet: 42, tilapia: 58, clarias: 168, barracuda: 36, squid: 129, octopus: 30, lobster: 31, sardine: 93, dorado: 22, spanishmackerel: 19, emperor: 155, rabbitfish: 54 };
+  const DECK = { bluefish: 17, wreckfish: 24, sailfish: 29, whitegrouper: 72, dentex: 95, shefsh: 112, mira: 20, boops: 132, snapper: 143, lizardfish: 151, nagil: 152, triggerfish: 144, sargo: 97, redporgy: 124, grouper_dusky: 126, nileperch: 162, bonito: 146, seabass: 23, gilthead: 76, mullet: 42, tilapia: 58, clarias: 168, barracuda: 36, squid: 129, octopus: 30, lobster: 31, sardine: 93, dorado: 22, spanishmackerel: 19, emperor: 155, rabbitfish: 54 };
   /* درجة حذر كل نوع (1 جريء إلى 4 حذر جدًا) — تقدير عام مبني على سلوك معروف لكل فصيلة، وليس قياسًا دقيقًا لكل سمكة بعينها. مبدئي وقابل للتصحيح. */
   const CAUTION = {
     17: 2, 18: 2, 19: 1, 20: 2, 21: 3, 22: 1, 23: 3, 24: 2, 29: 2, 30: 2, 31: 3, 36: 1, 42: 4, 48: 2, 54: 2, 58: 2,
