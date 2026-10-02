@@ -869,6 +869,41 @@ const PHOTO_CREDITS = {
 "by": "Peach",
 "lic": "CC0",
 "src": "inat:575426616"
+},
+"sp_blackmarlin": {
+"by": "Vivek.N.Rathod",
+"lic": "CC-BY-NC-SA",
+"src": "inat:327350815"
+},
+"sp_taimen": {
+"by": "yureder",
+"lic": "CC-BY-NC",
+"src": "inat:619471703"
+},
+"sp_roundherring": {
+"by": "Saad Ferah",
+"lic": "CC-BY-NC",
+"src": "inat:628885892"
+},
+"sp_bagrus": {
+"by": "isjo",
+"lic": "CC-BY-NC",
+"src": "inat:684869343"
+},
+"sp_bynni": {
+"by": "A. Geremew",
+"lic": "CC-BY-NC",
+"src": "inat:269685453"
+},
+"sp_oedal": {
+"by": "Philippe Geniez",
+"lic": "CC-BY-NC",
+"src": "inat:336182941"
+},
+"sp_tobara": {
+"by": "Sylvain Le Bris",
+"lic": "CC-BY-NC",
+"src": "inat:156066336"
 }
 };
 /* فيديوهات قصيرة مضمّنة (vids.json بمعرّف النوع): مقاطع 8 ثواني بلا صوت من Pixabay (رخصة Pixabay: استخدام مجاني بلا إلزام بنسب)، اتراجعت لقطاتها يدويًا: بلا علامات مائية ولا أشخاص */
