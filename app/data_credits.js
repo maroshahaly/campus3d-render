@@ -861,9 +861,9 @@ const PHOTO_CREDITS = {
 "src": "inat:59111727"
 },
 "sp_smoothhound": {
-"by": "Ben Jobson",
+"by": "Selim Türeli",
 "lic": "CC-BY",
-"src": "inat:348484330"
+"src": "inat:405649608"
 },
 "sp_nilecrab": {
 "by": "Peach",
