@@ -651,7 +651,11 @@
   const locSummary = loc => {
     const regs = regionsAt(loc), names = regs.m.concat(regs.f).map(c => REG[c].l);
     const kind = regs.sf.t === 0 ? 'في عرض البحر' : regs.sf.t === 2 ? 'ساحل' : regs.sf.sea ? 'قرب الساحل' : 'داخل اليابسة (مياه عذبة)';
-    return '<div class="muted small">' + kind + ' · ' + (isSouth(loc) ? 'نصف الكرة الجنوبي' : 'نصف الكرة الشمالي') + ' · ' + seasonName(loc) + (names.length ? ' · ' + esc(names.slice(0, 3).join(' · ')) : ' · لا إقليم مسجَّل قريب') + (regs.approx ? ' <span class="tag warn">أقرب إقليم تقريبًا</span>' : '') + '</div>';
+    const cs = COASTS.filter(c => loc.lat >= c[1][0] && loc.lat <= c[1][1] && loc.lng >= c[1][2] && loc.lng <= c[1][3]).map(c => c[0]);
+    const sea = regs.m.map(c => REG[c].l), fw = regs.f.map(c => REG[c].l.replace(/\s*\(عذب:[^)]*\)/, ''));
+    const fwLocal = cs.filter(n => /نيل|ناصر|قارون|دجلة/.test(n)), coastLocal = cs.filter(n => fwLocal.indexOf(n) < 0);
+    const parts = coastLocal.slice(0, 1).concat(sea.slice(0, 2), fwLocal.length ? ['مياه عذبة: ' + fwLocal.join('، ')] : (fw.length && !coastLocal.length) ? ['مياه عذبة: ' + fw[0]] : []);
+    return '<div class="muted small">' + kind + ' · ' + (isSouth(loc) ? 'نصف الكرة الجنوبي' : 'نصف الكرة الشمالي') + ' · ' + seasonName(loc) + (parts.length ? ' · ' + esc(parts.join(' · ')) : ' · لا إقليم مسجَّل قريب') + (regs.approx ? ' <span class="tag warn">أقرب إقليم تقريبًا</span>' : '') + '</div>';
   };
 
   /* ---------- الصفحة: هنا الآن ---------- */
@@ -1224,7 +1228,7 @@
   function tideSvg(S, loc, days, hf) {
     const v = S.m && S.m.sea_level_height_msl; if (!v || v.every(x => x == null)) return null;
     const tz = S.tz, n = Math.min(v.length, days * 24), t0 = S.t[0], t1 = S.t[n - 1];
-    const cw = ($('#herebody') || {}).clientWidth || 360, W = Math.max(300, Math.min(720, cw - 34)), H = Math.max(230, Math.round(W * 0.42)), pl = 40, pr = 12, pt = 40, pb = 46;
+    const cw = ($('#herebody') || {}).clientWidth || 360, W = Math.max(300, Math.min(720, cw - 34)), H = Math.max(230, Math.round(W * 0.42)), pl = 40, pr = 12, pt = 40, pb = 62;
     let mn = 1e9, mx = -1e9; for (let i = 0; i < n; i++) if (v[i] != null) { mn = Math.min(mn, v[i]); mx = Math.max(mx, v[i]); }
     const span = Math.max(mx - mn, 0.2), stp = [0.05, 0.1, 0.2, 0.25, 0.5, 1, 2].find(s => span / s <= 6) || 2;
     mn = Math.floor((mn - span * 0.12) / stp) * stp; mx = Math.ceil((mx + span * 0.18) / stp) * stp;
@@ -1244,7 +1248,15 @@
     const dfmt = tfmt(tz, { weekday: 'short', day: 'numeric' }, 'tk');
     for (let k = 0; k < days; k++) {
       const ds = t0 + k * 86400000, x = X(ds);
-      g += '<line x1="' + x.toFixed(1) + '" x2="' + x.toFixed(1) + '" y1="' + pt + '" y2="' + (H - pb) + '" class="tday"/><text x="' + X(ds + 12 * 3600000).toFixed(1) + '" y="' + (H - 14) + '" class="tax" text-anchor="middle">' + esc(dfmt.format(new Date(ds + 12 * 3600000))) + '</text>';
+      g += '<line x1="' + x.toFixed(1) + '" x2="' + x.toFixed(1) + '" y1="' + pt + '" y2="' + (H - pb) + '" class="tday"/><text x="' + X(ds + 12 * 3600000).toFixed(1) + '" y="' + (H - 8) + '" class="tax" text-anchor="middle">' + esc(dfmt.format(new Date(ds + 12 * 3600000))) + '</text>';
+    }
+    /* علامات الساعات: كل 3 ساعات (وكل 6 أو 12 ساعة لو الأيام كتير) */
+    const hstep = days <= 3 ? 3 : days <= 5 ? 6 : 12, hrf = tfmt(tz, { hour: 'numeric', hour12: false }, 'hh');
+    for (let i = 0; i < n; i++) {
+      const hh = +hrf.format(new Date(S.t[i])) % 24; if (hh % hstep) continue;
+      const x = X(S.t[i]);
+      g += '<line x1="' + x.toFixed(1) + '" x2="' + x.toFixed(1) + '" y1="' + (H - pb) + '" y2="' + (H - pb + 5) + '" class="tgrid"/>' + (hh ? '<line x1="' + x.toFixed(1) + '" x2="' + x.toFixed(1) + '" y1="' + pt + '" y2="' + (H - pb) + '" class="tgrid" opacity=".45"/>' : '') +
+        '<text x="' + x.toFixed(1) + '" y="' + (H - pb + 17) + '" class="tax n" text-anchor="middle" style="font-size:10px">' + (hh < 10 ? '0' : '') + hh + ':00</text>';
     }
     let p = '', pts = []; for (let i = 0; i < n; i++) if (v[i] != null) pts.push([X(S.t[i]), Y(v[i])]);
     pts.forEach((q, i) => {
@@ -1307,8 +1319,8 @@
     const actCard = '<div class="card stack"><div class="row between" style="align-items:center"><div><div class="muted small">نشاط السمك المتوقع الآن</div><div class="h2 num" style="margin:0">' + actNow.score + '<span class="muted small">/100</span></div></div><span class="tag ' + ACT_CLS[ab] + '" style="font-size:1rem;padding:8px 14px">' + ACT_L[ab] + '</span></div>' + (actNow.reasons.length ? '<div class="chips">' + actNow.reasons.map(r => '<span class="chip" style="pointer-events:none">' + esc(r) + '</span>').join('') + '</div>' : '<div class="muted small">لا عوامل قوية الآن.</div>') + '</div>';
     el.innerHTML = '<div class="stack">' + actCard +
       '<div class="notice ' + lev[0] + '">' + lev[1] + '</div>' + stats +
-      (svg ? '<section class="card stack"><div class="row between"><h2 class="h2" style="margin:0">منحنى المد والجزر</h2><div class="chips">' + [2, 3, 5, 8].map(d => '<button class="chip" data-td="' + d + '" aria-pressed="' + (TD.days === d) + '">' + d + ' أيام</button>').join('') + '</div></div>' +
-        '<div class="tidewrap">' + svg + '</div><div class="muted small">الارتفاع بالمتر عن متوسط سطح البحر. الخلفية الداكنة = الليل، والخط العمودي = الآن. الأوقات بتوقيت الموقع (' + esc(tz || 'جهازك') + ').</div>' +
+      (svg ? '<section class="card stack"><div class="row between"><h2 class="h2" style="margin:0">منحنى المد والجزر</h2><div class="chips">' + [1, 2, 3, 5, 8].map(d => '<button class="chip" data-td="' + d + '" aria-pressed="' + (TD.days === d) + '">' + (d === 1 ? 'يوم' : d === 2 ? 'يومين' : d + ' أيام') + '</button>').join('') + '</div></div>' +
+        '<div class="tidewrap">' + svg + '</div><div class="muted small">الارتفاع بالمتر عن متوسط سطح البحر. الخلفية الداكنة = الليل، والخط العمودي = الآن، والساعات تحت المنحنى كل 3 ساعات. الأوقات بتوقيت الموقع (' + esc(tz || 'جهازك') + ').</div>' +
         (rangeAll < 0.5 ? '<div class="notice info">المدى هنا صغير (أقل من نصف متر: بحر شبه مغلق أو موقع بعيد عن مد المحيط)، فالرياح والضغط تغيّر مستوى الماء وتياره أكثر من القمر.</div>' : '') + '</section>' +
         (ex.length ? '<section class="card stack"><h2 class="h2" style="margin:0">القادم من مد وجزر</h2><div class="tbl"><table><thead><tr><th>الحالة</th><th>الوقت</th><th>الارتفاع</th></tr></thead><tbody>' + ex.map(e => '<tr><td>' + (e.hi ? '<span class="tag ok">مد عالٍ</span>' : '<span class="tag">جزر</span>') + '</td><td>' + esc(df.format(new Date(e.t))) + '</td><td class="num">' + (e.v > 0 ? '+' : '') + e.v.toFixed(2) + ' م</td></tr>').join('') + '</tbody></table></div></section>' : '') :
         '<div class="notice info">لا بيانات مد لهذا الموقع (غالبًا يابسة داخلية أو بحيرة). الرياح والضغط والمطر أدناه ما زالت مفيدة لصيد المياه العذبة.</div>') +
