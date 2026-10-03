@@ -1524,25 +1524,56 @@
     }
     return (SPFEAT = out);
   }
-  /* نموذج رؤية (MobileNet v2 المدرَّب على ImageNet) يُحمَّل من الإنترنت عند أول استخدام ويُخزَّن في ذاكرة المتصفح؛
-     بنستخرج منه «بصمة» 1280 رقم لكل صورة ونقارنها ببصمات صور الأنواع (تُحسب مرة وتُحفظ على الجهاز). */
-  const TFJS = ['https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js', 'https://unpkg.com/@tensorflow/tfjs@4.22.0/dist/tf.min.js'];
-  const VIS_URL = 'https://storage.googleapis.com/tfjs-models/savedmodel/mobilenet_v2_1.0_224/model.json', VIS_OUT = 'module_apply_default/MobilenetV2/Logits/AvgPool';
+  /* نموذج BioCLIP (رؤية مدرَّبة على ملايين صور الكائنات الحية حتى مستوى النوع) مضغوط int8 ≈ 87 ميجا، يتحمّل مرة واحدة
+     من مستودع التطبيق (أو jsDelivr) ويتخزن في IndexedDB على الجهاز، فبعدها التعرّف يشتغل بدون إنترنت. التشغيل بـ ONNX Runtime Web. */
+  const MDL_BASES = ['https://raw.githubusercontent.com/maroshahaly/campus3d-render/claude/gifted-maxwell-yjbmo3/models/', 'https://cdn.jsdelivr.net/gh/maroshahaly/campus3d-render@claude/gifted-maxwell-yjbmo3/models/'];
+  const MDL_FILES = { js: 'ort.min.js', mjs: 'ort-wasm-simd-threaded.mjs', wasm: 'ort-wasm-simd-threaded.wasm', parts: ['bioclip-vis-int8.part1', 'bioclip-vis-int8.part2'] }, MDL_KEY = 'bioclip-v1';
+  const idb = () => new Promise((ok, no) => { const r = indexedDB.open('sayad-models', 1); r.onupgradeneeded = () => r.result.createObjectStore('f'); r.onsuccess = () => ok(r.result); r.onerror = () => no(r.error); });
+  const idbGet = async k => { const d = await idb(); return new Promise(ok => { const q = d.transaction('f').objectStore('f').get(k); q.onsuccess = () => ok(q.result); q.onerror = () => ok(null); }); };
+  const idbPut = async (k, v) => { const d = await idb(); return new Promise(ok => { const t = d.transaction('f', 'readwrite'); t.objectStore('f').put(v, k); t.oncomplete = () => ok(); t.onerror = () => ok(); }); };
+  async function fetchAny(name, prog) {
+    let last;
+    for (const base of MDL_BASES) {
+      try {
+        const r = await fetch(base + name); if (!r.ok) throw new Error(r.status);
+        const n = +r.headers.get('content-length') || 0, rd = r.body.getReader(), ch = []; let got = 0;
+        for (;;) { const { done, value } = await rd.read(); if (done) break; ch.push(value); got += value.length; if (prog) prog(got, n); }
+        const out = new Uint8Array(got); let o = 0; ch.forEach(c => { out.set(c, o); o += c.length; }); return out;
+      } catch (e) { last = e; }
+    }
+    throw last || new Error('fetch');
+  }
   let VIS = null;
-  const addScript = src => new Promise((ok, no) => { const e = document.createElement('script'); e.src = src; e.onload = ok; e.onerror = no; document.head.appendChild(e); });
-  function visModel() {
+  function visModel(prog) {
     if (!VIS) VIS = (async () => {
-      if (typeof tf === 'undefined') { let ok = false; for (const u of TFJS) { try { await addScript(u); ok = true; break; } catch (e) {} } if (!ok) throw new Error('tf'); }
-      return tf.loadGraphModel(VIS_URL);
+      let pk = await idbGet(MDL_KEY);
+      if (!pk) {
+        const tot = 89.8e6; let done = 0;
+        const step = (g, n) => prog && prog(Math.min(99, Math.round((done + g) / tot * 100)));
+        const js = await fetchAny(MDL_FILES.js), mjs = await fetchAny(MDL_FILES.mjs), wasm = await fetchAny(MDL_FILES.wasm);
+        const parts = []; for (const f of MDL_FILES.parts) { const b = await fetchAny(f, step); parts.push(b); done += b.length; }
+        const n = parts.reduce((a, b) => a + b.length, 0), model = new Uint8Array(n); let o = 0; parts.forEach(b => { model.set(b, o); o += b.length; });
+        pk = { js, mjs, wasm, model }; await idbPut(MDL_KEY, pk);
+      }
+      if (typeof ort === 'undefined') { const u = URL.createObjectURL(new Blob([pk.js], { type: 'text/javascript' })); await addScript(u); }
+      ort.env.wasm.numThreads = 1; ort.env.wasm.wasmBinary = pk.wasm;
+      const mjsTxt = new TextDecoder().decode(pk.mjs).split('import.meta.url').join(JSON.stringify(MDL_BASES[0] + MDL_FILES.mjs)); /* عنوان حقيقي بدل blob: عشان حسابات المسارات النسبية جوه المكتبة */
+      ort.env.wasm.wasmPaths = { mjs: URL.createObjectURL(new Blob([mjsTxt], { type: 'text/javascript' })), wasm: URL.createObjectURL(new Blob([pk.wasm], { type: 'application/wasm' })) };
+      return ort.InferenceSession.create(pk.model, { executionProviders: ['wasm'] });
     })().catch(e => { VIS = null; throw e; });
     return VIS;
   }
-  /* نفس معالجة التدريب بالظبط: الصورة كلها بدون قص داخل مربع 224 بخلفية رمادية، ومعاها نسخة معكوسة */
-  function embed2(m, im) {
-    const c = document.createElement('canvas'); c.width = c.height = 224; const x = c.getContext('2d');
+  const addScript = src => new Promise((ok, no) => { const e = document.createElement('script'); e.src = src; e.onload = ok; e.onerror = no; document.head.appendChild(e); });
+  /* نفس معالجة التدريب: الصورة كلها بدون قص داخل مربع 224 بخلفية رمادية، ومعاها نسخة معكوسة، والنتيجة متوسط البصمتين */
+  async function embed2(sess, im) {
+    const c = document.createElement('canvas'); c.width = c.height = 224; const x = c.getContext('2d', { willReadFrequently: true });
     const w = im.naturalWidth || im.width, h = im.naturalHeight || im.height, k = 224 / Math.max(w, h);
     x.fillStyle = '#808080'; x.fillRect(0, 0, 224, 224); x.drawImage(im, (224 - w * k) / 2, (224 - h * k) / 2, w * k, h * k);
-    return tf.tidy(() => { const t = tf.browser.fromPixels(c).toFloat().div(255); return m.execute({ images: tf.stack([t, t.reverse(1)]) }, VIS_OUT).reshape([2, -1]).arraySync(); });
+    const d = x.getImageData(0, 0, 224, 224).data, P = 224 * 224, a = new Float32Array(2 * 3 * P);
+    for (let y = 0; y < 224; y++) for (let xx = 0; xx < 224; xx++) { const o = (y * 224 + xx) * 4, i = y * 224 + xx, j = y * 224 + (223 - xx); for (let ch = 0; ch < 3; ch++) { a[ch * P + i] = d[o + ch] / 255; a[3 * P + ch * P + j] = d[o + ch] / 255; } }
+    const r = await sess.run({ x: new ort.Tensor('float32', a, [2, 3, 224, 224]) }), e = r.e.data, D = e.length / 2, v = new Float32Array(D);
+    let nn = 0; for (let i = 0; i < D; i++) { v[i] = e[i] + e[D + i]; nn += v[i] * v[i]; } nn = Math.sqrt(nn) || 1; for (let i = 0; i < D; i++) v[i] /= nn;
+    return [v];
   }
   let CLSW = null;
   function classify(vs) {
@@ -1556,17 +1587,21 @@
   async function photoMatch(url, box) {
     const im = await loadImg(url); if (!im) { box.innerHTML = '<div class="notice">تعذّر قراءة الصورة.</div>'; return; }
     try {
-      box.innerHTML = '<div class="muted small">جاري تحميل نموذج التعرّف على الصور (مرة واحدة تقريبًا 14 ميجا، وبعدها بيتخزن)…</div>';
       if (typeof SPCLS === 'undefined') throw new Error('nocls');
-      const m = await Promise.race([visModel(), new Promise((_, no) => setTimeout(() => no(new Error('timeout')), 45000))]);
-      const res = classify(embed2(m, im)).filter(r => BYG[r.id]).slice(0, 5), p0 = res[0].p;
+      const cached = !!(await idbGet(MDL_KEY).catch(() => null));
+      box.innerHTML = '<div class="muted small">' + (cached ? 'جاري التعرّف…' : 'أول مرة بس: بنحمّل نموذج التعرّف (حوالي 90 ميجا) وبيتخزن على جهازك… <b class="mprog">0%</b>') + '</div>';
+      const sess = await visModel(pc => { const e = box.querySelector('.mprog'); if (e) e.textContent = pc + '%'; });
+      box.innerHTML = '<div class="muted small">جاري التعرّف…</div>';
+      const vs = await embed2(sess, im);
+      const res = classify(vs).filter(r => BYG[r.id]).slice(0, 5), p0 = res[0].p;
       const head = p0 >= 0.6 ? 'غالبًا دي: <b>' + esc(dispName(BYG[res[0].id])) + '</b>' : p0 >= 0.3 ? 'الأقرب: <b>' + esc(dispName(BYG[res[0].id])) + '</b> (مش متأكد تمامًا، قارن بالبدائل)' : 'مش متأكد: ممكن النوع مش ضمن الـ ' + SPCLS.ids.length + ' نوع في الدليل أو الصورة مش واضحة';
-      box.innerHTML = '<h3 class="h3" style="margin:0">نتيجة التعرّف</h3><div>' + head + '</div><div class="muted small">مصنّف مدرَّب على آلاف الصور الحقيقية (حوالي 60 صورة لكل نوع) بيشتغل على جهازك. النسبة = درجة ثقة النموذج.</div>' +
+      box.innerHTML = '<h3 class="h3" style="margin:0">نتيجة التعرّف</h3><div>' + head + '</div><div class="muted small">نموذج BioCLIP المتخصص في تمييز الكائنات الحية، مع مصنّف مدرَّب على حوالي 10 آلاف صورة حقيقية لأنواع الدليل، وبيشتغل على جهازك. النسبة = درجة ثقة النموذج.</div>' +
         '<div class="vargrid">' + res.map(r => { const sp = BYG[r.id], src = deckPhoto(sp) || img('sp_' + sp.id); return matchCard(sp, src).replace('</a>', '<div class="small" style="font-weight:700">' + Math.round(r.p * 100) + '%</div></a>'); }).join('') + '</div>';
     } catch (err) {
+      try { console.warn('photoMatch fallback:', err && (err.stack || err.message || err)); } catch (e) {}
       const f = imgFeat(im), all = await spFeats();
       const top = all.map(e => ({ e, v: featSim(f, e.f) })).sort((a, b) => b.v - a.v).slice(0, 8);
-      box.innerHTML = '<h3 class="h3" style="margin:0">ترشيحات تقريبية (بدون إنترنت)</h3><div class="muted small">نموذج التعرّف محتاج إنترنت لأول مرة. لحد ما يتحمّل، دي مقارنة بسيطة باللون والنقوش فقط ودقتها ضعيفة، فاعتبرها بداية للبحث بس.</div>' +
+      box.innerHTML = '<h3 class="h3" style="margin:0">ترشيحات تقريبية (بدون إنترنت)</h3><div class="muted small">نموذج التعرّف محتاج إنترنت أول مرة بس عشان يتحمّل. لحد ما يتحمّل، دي مقارنة بسيطة باللون والنقوش فقط ودقتها ضعيفة، فاعتبرها بداية للبحث بس.</div>' +
         '<div class="vargrid">' + top.map(x => matchCard(x.e.s, x.e.src)).join('') + '</div>';
     }
   }
