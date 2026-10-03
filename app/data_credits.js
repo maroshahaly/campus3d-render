@@ -944,6 +944,26 @@ const PHOTO_CREDITS = {
 "by": "Michael Bommerer",
 "lic": "CC-BY",
 "src": "inat:424466807"
+},
+"gear_headlamp": {
+"by": "WikimediaImages",
+"lic": "Pixabay",
+"src": "pixabay:2202248"
+},
+"gear_reel": {
+"by": "Ben_Kerckx",
+"lic": "Pixabay",
+"src": "pixabay:276218"
+},
+"gear_cooler": {
+"by": "squatdwarf2",
+"lic": "Pixabay",
+"src": "pixabay:4921377"
+},
+"gear_float": {
+"by": "artellliii72",
+"lic": "Pixabay",
+"src": "pixabay:7552506"
 }
 };
 /* فيديوهات قصيرة مضمّنة (vids.json بمعرّف النوع): مقاطع 8 ثواني بلا صوت من Pixabay (رخصة Pixabay: استخدام مجاني بلا إلزام بنسب)، اتراجعت لقطاتها يدويًا: بلا علامات مائية ولا أشخاص */
