@@ -466,9 +466,9 @@ const PHOTO_CREDITS = {
 "src": "inat:443558263"
 },
 "sp_arapaima": {
-"by": "buriedanimal",
-"lic": "CC0",
-"src": "inat:407768511"
+"by": "Klayver Santos",
+"lic": "CC-BY-NC",
+"src": "inat:660974691"
 },
 "sp_e62": {
 "by": "Thomas Stjernegaard Jeppesen",

@@ -1527,7 +1527,7 @@
   /* نموذج رؤية (MobileNet v2 المدرَّب على ImageNet) يُحمَّل من الإنترنت عند أول استخدام ويُخزَّن في ذاكرة المتصفح؛
      بنستخرج منه «بصمة» 1280 رقم لكل صورة ونقارنها ببصمات صور الأنواع (تُحسب مرة وتُحفظ على الجهاز). */
   const TFJS = ['https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js', 'https://unpkg.com/@tensorflow/tfjs@4.22.0/dist/tf.min.js'];
-  const VIS_URL = 'https://storage.googleapis.com/tfjs-models/savedmodel/mobilenet_v2_1.0_224/model.json', VIS_OUT = 'module_apply_default/MobilenetV2/Logits/AvgPool', EMB_KEY = 'sayad:emb1';
+  const VIS_URL = 'https://storage.googleapis.com/tfjs-models/savedmodel/mobilenet_v2_1.0_224/model.json', VIS_OUT = 'module_apply_default/MobilenetV2/Logits/AvgPool';
   let VIS = null;
   const addScript = src => new Promise((ok, no) => { const e = document.createElement('script'); e.src = src; e.onload = ok; e.onerror = no; document.head.appendChild(e); });
   function visModel() {
@@ -1537,42 +1537,32 @@
     })().catch(e => { VIS = null; throw e; });
     return VIS;
   }
-  function embed(m, im) {
+  /* نفس معالجة التدريب بالظبط: الصورة كلها بدون قص داخل مربع 224 بخلفية رمادية، ومعاها نسخة معكوسة */
+  function embed2(m, im) {
     const c = document.createElement('canvas'); c.width = c.height = 224; const x = c.getContext('2d');
-    const w = im.naturalWidth || im.width, h = im.naturalHeight || im.height, k = Math.min(w, h);
-    x.drawImage(im, (w - k) / 2, (h - k) / 2, k, k, 0, 0, 224, 224);
-    return tf.tidy(() => { const v = m.execute({ images: tf.browser.fromPixels(c).toFloat().div(255).expandDims(0) }, VIS_OUT).reshape([-1]); return v.div(v.norm()).dataSync().slice(); });
+    const w = im.naturalWidth || im.width, h = im.naturalHeight || im.height, k = 224 / Math.max(w, h);
+    x.fillStyle = '#808080'; x.fillRect(0, 0, 224, 224); x.drawImage(im, (224 - w * k) / 2, (224 - h * k) / 2, w * k, h * k);
+    return tf.tidy(() => { const t = tf.browser.fromPixels(c).toFloat().div(255); return m.execute({ images: tf.stack([t, t.reverse(1)]) }, VIS_OUT).reshape([2, -1]).arraySync(); });
   }
-  async function spEmbeds(m, prog) {
-    const list = SG.map(s => ({ s, src: deckPhoto(s) || img('sp_' + s.id) })).filter(e => e.src);
-    let cache = {}; try { cache = JSON.parse(localStorage.getItem(EMB_KEY) || '{}'); } catch (e) {}
-    const out = []; let changed = false;
-    for (let i = 0; i < list.length; i++) {
-      const e = list[i], key = e.s.id + ':' + e.src.length; let v = null;
-      if (cache[key]) { const b = atob(cache[key]), q = new Int8Array(b.length); for (let j = 0; j < b.length; j++) q[j] = b.charCodeAt(j) << 24 >> 24; v = Float32Array.from(q, z => z / 127); }
-      else {
-        const im = await loadImg(e.src); if (!im) continue; v = embed(m, im);
-        let mx = 0; v.forEach(z => { mx = Math.max(mx, Math.abs(z)); }); const q = new Int8Array(v.length); for (let j = 0; j < v.length; j++) q[j] = Math.round(v[j] / mx * 127);
-        cache[key] = btoa(String.fromCharCode.apply(null, new Uint8Array(q.buffer))); changed = true;
-        if (prog && i % 10 === 0) { prog(i, list.length); await new Promise(r => setTimeout(r, 0)); }
-      }
-      out.push({ s: e.s, src: e.src, v });
-    }
-    if (changed) try { localStorage.setItem(EMB_KEY, JSON.stringify(cache)); } catch (e) {}
-    return out;
+  let CLSW = null;
+  function classify(vs) {
+    if (!CLSW) { const bs = atob(SPCLS.w), q = new Int8Array(bs.length); for (let i = 0; i < bs.length; i++) q[i] = bs.charCodeAt(i) << 24 >> 24; CLSW = q; }
+    const C = SPCLS.ids.length, D = SPCLS.d, z = new Float64Array(C);
+    vs.forEach(v => { const acc = new Float64Array(C); for (let d = 0; d < D; d++) { const xv = v[d]; if (!xv) continue; const o = d * C; for (let c = 0; c < C; c++) acc[c] += xv * CLSW[o + c]; } for (let c = 0; c < C; c++) z[c] += (acc[c] * SPCLS.sc[c] + SPCLS.b[c]) / vs.length; });
+    let mx = -1e9; z.forEach(v => { mx = Math.max(mx, v); }); let sum = 0; const p = Array.from(z, v => { const e = Math.exp(v - mx); sum += e; return e; });
+    return p.map((v, i) => ({ id: SPCLS.ids[i], p: v / sum })).sort((x, y) => y.p - x.p);
   }
-  const cosSim = (a, b) => { let d = 0, na = 0, nb = 0; for (let i = 0; i < a.length; i++) { d += a[i] * b[i]; na += a[i] * a[i]; nb += b[i] * b[i]; } return d / Math.sqrt(na * nb || 1); };
   const matchCard = (s, src) => '<a class="card" href="#/sp/' + s.id + '" style="padding:6px;text-decoration:none"><img loading="lazy" src="' + src + '" alt="' + esc(s.ar) + '" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:8px"><div class="small" style="font-weight:600">' + esc(dispName(s)) + '</div><div class="muted small latin">' + esc(s.en) + '</div></a>';
   async function photoMatch(url, box) {
     const im = await loadImg(url); if (!im) { box.innerHTML = '<div class="notice">تعذّر قراءة الصورة.</div>'; return; }
     try {
       box.innerHTML = '<div class="muted small">جاري تحميل نموذج التعرّف على الصور (مرة واحدة تقريبًا 14 ميجا، وبعدها بيتخزن)…</div>';
+      if (typeof SPCLS === 'undefined') throw new Error('nocls');
       const m = await Promise.race([visModel(), new Promise((_, no) => setTimeout(() => no(new Error('timeout')), 45000))]);
-      const all = await spEmbeds(m, (i, n) => { box.innerHTML = '<div class="muted small">تجهيز بصمات صور الأنواع لأول مرة: ' + i + ' من ' + n + '…</div>'; });
-      const q = embed(m, im), top = all.map(e => ({ e, v: cosSim(q, e.v) })).sort((a, b) => b.v - a.v).slice(0, 8);
-      const conf = top[0].v > 0.75 ? 'تشابه قوي' : top[0].v > 0.6 ? 'تشابه متوسط' : 'تشابه ضعيف — يمكن النوع مش موجود في الدليل أو الصورة مش واضحة';
-      box.innerHTML = '<h3 class="h3" style="margin:0">أقرب الأنواع شبهًا لصورتك</h3><div class="muted small">تعرّف تلقائي بنموذج رؤية على جهازك (' + conf + '). الترتيب من الأقرب، وهو ترشيح مش تأكيد: افتح النوع وقارن الزعانف والنقوش والفم قبل ما تحكم.</div>' +
-        '<div class="vargrid">' + top.map(x => matchCard(x.e.s, x.e.src)).join('') + '</div>';
+      const res = classify(embed2(m, im)).filter(r => BYG[r.id]).slice(0, 5), p0 = res[0].p;
+      const head = p0 >= 0.6 ? 'غالبًا دي: <b>' + esc(dispName(BYG[res[0].id])) + '</b>' : p0 >= 0.3 ? 'الأقرب: <b>' + esc(dispName(BYG[res[0].id])) + '</b> (مش متأكد تمامًا، قارن بالبدائل)' : 'مش متأكد: ممكن النوع مش ضمن الـ ' + SPCLS.ids.length + ' نوع في الدليل أو الصورة مش واضحة';
+      box.innerHTML = '<h3 class="h3" style="margin:0">نتيجة التعرّف</h3><div>' + head + '</div><div class="muted small">مصنّف مدرَّب على آلاف الصور الحقيقية (حوالي 60 صورة لكل نوع) بيشتغل على جهازك. النسبة = درجة ثقة النموذج.</div>' +
+        '<div class="vargrid">' + res.map(r => { const sp = BYG[r.id], src = deckPhoto(sp) || img('sp_' + sp.id); return matchCard(sp, src).replace('</a>', '<div class="small" style="font-weight:700">' + Math.round(r.p * 100) + '%</div></a>'); }).join('') + '</div>';
     } catch (err) {
       const f = imgFeat(im), all = await spFeats();
       const top = all.map(e => ({ e, v: featSim(f, e.f) })).sort((a, b) => b.v - a.v).slice(0, 8);
