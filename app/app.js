@@ -362,7 +362,7 @@
   }
   function toolGear(el) {
     el.innerHTML = '<div class="stack"><p class="muted" style="margin:0">كل اللي بيستخدمه الصياد، مرتّب من أصغر قطعة لأكبرها: شكلها، وبتستخدم في إيه.</p><div class="geargrid">' +
-      GEAR.map((g, i) => '<article class="card gearcard"><div class="gearimg">' + (g.img && IMGS['gear_' + g.id] ? '<img loading="lazy" alt="' + esc(g.t) + '" src="' + IMGS['gear_' + g.id] + '">' : '<svg viewBox="0 0 120 120" role="img" aria-label="' + esc(g.t) + '">' + GEAR_SVG[g.id] + '</svg>') + '</div>' +
+      GEAR.map((g, i) => '<article class="card gearcard"><div class="gearimg">' + (g.img && IMGS['gear_' + g.id] ? '<img loading="lazy" alt="' + esc(g.t) + '" src="' + IMGS['gear_' + g.id] + '">' + (PHOTO_CREDITS['gear_' + g.id] && !/^(CC0|Pixabay)$/.test(PHOTO_CREDITS['gear_' + g.id].lic) ? '<span class="muted small gearcr">' + credit('gear_' + g.id) + '</span>' : '') : '<svg viewBox="0 0 120 120" role="img" aria-label="' + esc(g.t) + '">' + GEAR_SVG[g.id] + '</svg>') + '</div>' +
         '<div class="stack" style="gap:6px"><h2 class="h3"><span class="gearn">' + (i + 1) + '</span>' + esc(g.t) + '</h2><p style="margin:0">' + esc(g.d) + '</p><p class="muted small" style="margin:0"><b>الاستخدام: </b>' + esc(g.u) + '</p></div></article>').join('') + '</div></div>';
   }
   function toolToday(el) {

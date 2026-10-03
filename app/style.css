@@ -373,3 +373,5 @@ header.stack .latin { display: block; text-align: right; }
 .knotsteps { margin: 0; padding-inline-start: 20px; display: flex; flex-direction: column; gap: 4px; font-size: .9rem; }
 
 .search.drop input[type="search"] { outline: 2px dashed var(--teal); outline-offset: 2px; }
+.gearimg { position: relative; }
+.gearcr { position: absolute; inset-inline-start: 6px; bottom: 4px; font-size: 10px; background: rgba(255,255,255,.8); color: #333; padding: 1px 6px; border-radius: 6px; }
