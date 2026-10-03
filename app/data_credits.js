@@ -1154,6 +1154,176 @@ const PHOTO_CREDITS = {
 "by": "Peter from Wellesley",
 "lic": "CC BY 2.0",
 "src": "commons:File:Bringing in the barracuda.jpg"
+},
+"var_chelon_ramada": {
+"by": "Alfred Passath",
+"lic": "CC-BY-NC",
+"src": "inat:426734398"
+},
+"var_crenimugil_crenilabis": {
+"by": "Adelma Hills",
+"lic": "CC-BY-NC",
+"src": "inat:38123403"
+},
+"var_oreochromis_aureus": {
+"by": "Masumi Palhof",
+"lic": "CC-BY-NC",
+"src": "inat:186301124"
+},
+"var_coptodon_zillii": {
+"by": "Diodio Sorue Achille",
+"lic": "CC-BY-NC",
+"src": "inat:116934677"
+},
+"var_sarotherodon_galilaeus": {
+"by": "H.Grenier",
+"lic": "CC-BY-NC",
+"src": "inat:251308445"
+},
+"var_lithognathus_mormyrus": {
+"by": "gus_1",
+"lic": "CC-BY-NC",
+"src": "inat:32421452"
+},
+"var_pagellus_erythrinus": {
+"by": "ma_mobile",
+"lic": "CC-BY-NC",
+"src": "inat:209779616"
+},
+"var_cephalopholis_miniata": {
+"by": "Pauline Fey",
+"lic": "CC-BY-NC",
+"src": "inat:527782411"
+},
+"var_variola_louti": {
+"by": "Pauline Fey",
+"lic": "CC-BY-NC",
+"src": "inat:622016349"
+},
+"var_dicentrarchus_punctatus": {
+"by": "Mathieu Pélissié",
+"lic": "CC-BY-NC",
+"src": "inat:423313194"
+},
+"var_sardinella_aurita": {
+"by": "cassieferri",
+"lic": "CC-BY-NC",
+"src": "inat:244087553"
+},
+"var_todarodes_sagittatus": {
+"by": "Poradcereal",
+"lic": "CC-BY-NC",
+"src": "inat:57718019"
+},
+"var_sepioteuthis_lessoniana": {
+"by": "David Kimr",
+"lic": "CC-BY-NC",
+"src": "inat:283469494"
+},
+"var_octopus_cyanea": {
+"by": "ariannalim",
+"lic": "CC-BY-NC",
+"src": "inat:626610651"
+},
+"var_panulirus_versicolor": {
+"by": "DZIVULA GUBE",
+"lic": "CC-BY-NC",
+"src": "inat:265028634"
+},
+"var_homarus_gammarus": {
+"by": "Kurt Kristian Lyngholm",
+"lic": "CC-BY-NC",
+"src": "inat:25938520"
+},
+"var_portunus_segnis": {
+"by": "Ricky Taylor",
+"lic": "CC-BY-NC",
+"src": "inat:15584938"
+},
+"var_pachygrapsus_marmoratus": {
+"by": "Luca Boscain",
+"lic": "CC-BY-NC",
+"src": "inat:159006707"
+},
+"var_sphyraena_sphyraena": {
+"by": "Alex R",
+"lic": "CC-BY-NC",
+"src": "inat:22353480"
+},
+"var_sphyraena_qenie": {
+"by": "Hubert Lagrange",
+"lic": "CC-BY-NC",
+"src": "inat:472227676"
+},
+"var_sphyraena_flavicauda": {
+"by": "amfstocker",
+"lic": "CC-BY",
+"src": "inat:168446021"
+},
+"var_lethrinus_lentjan": {
+"by": "Sue Churchill",
+"lic": "CC-BY-NC",
+"src": "inat:610575204"
+},
+"var_lethrinus_olivaceus": {
+"by": "Jens Sommer-Knudsen",
+"lic": "CC-BY-NC",
+"src": "inat:621944295"
+},
+"var_lutjanus_ehrenbergii": {
+"by": "sandra_bracun",
+"lic": "CC-BY-NC",
+"src": "inat:449357018"
+},
+"var_lutjanus_bohar": {
+"by": "orionsmcc",
+"lic": "CC-BY-NC",
+"src": "inat:179513352"
+},
+"var_hypophthalmichthys_molitrix": {
+"by": "MP Zhou",
+"lic": "CC-BY-NC",
+"src": "inat:134016604"
+},
+"var_synodontis_schall": {
+"by": "Dale Kindler",
+"lic": "CC-BY-NC",
+"src": "inat:574640408"
+},
+"var_muraena_helena": {
+"by": "frahome",
+"lic": "CC-BY-NC",
+"src": "inat:90348912"
+},
+"var_anguilla_anguilla": {
+"by": "Tse Chung Yi",
+"lic": "CC-BY-NC",
+"src": "inat:141182070"
+},
+"var_siganus_luridus": {
+"by": "Falk Viczian Solarboot-Projekte gGmbH",
+"lic": "CC-BY-NC",
+"src": "inat:449941979"
+},
+"var_siganus_stellatus": {
+"by": "barthazes",
+"lic": "CC-BY-NC",
+"src": "inat:438411267"
+},
+"var_arothron_hispidus": {
+"by": "moseranna",
+"lic": "CC-BY-NC",
+"src": "inat:449465579"
+},
+"var_arothron_stellatus": {
+"by": "Tsu Soo Tan",
+"lic": "CC-BY-NC",
+"src": "inat:318072932"
+},
+"var_coryphaena_equiselis": {
+"by": "MARC MARTIN SOLA",
+"lic": "CC-BY-NC",
+"src": "inat:743883318"
 }
 };
 /* فيديوهات قصيرة مضمّنة (vids.json بمعرّف النوع): مقاطع 8 ثواني بلا صوت من Pixabay (رخصة Pixabay: استخدام مجاني بلا إلزام بنسب)، اتراجعت لقطاتها يدويًا: بلا علامات مائية ولا أشخاص */

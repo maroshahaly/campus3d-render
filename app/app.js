@@ -853,7 +853,7 @@
   const varHtml = id => {
     const v = VARIANTS[id]; if (!v || !v.length) return '';
     return '<section class="stack"><h2 class="h2" style="margin:0">الأنواع والسلالات</h2><div class="vargrid">' + v.map(x => {
-      const g = x[3] && BYG[x[3]], ph = g ? gPhoto(g) : '', cur = x[3] === id;
+      const g = x[3] && BYG[x[3]], vk = 'var_' + x[1].toLowerCase().replace(/[^a-z]+/g, '_').replace(/^_+|_+$/g, ''), ph = g ? gPhoto(g) : img(vk), cur = x[3] === id;
       const inner = '<div class="varimg">' + (ph ? '<img loading="lazy" alt="" src="' + ph + '">' : '<svg viewBox="0 0 64 40" width="54" aria-hidden="true"><path d="M6 20 Q22 4 44 14 L58 6 V34 L44 26 Q22 36 6 20Z" fill="none" stroke="currentColor" stroke-width="2.4"/><circle cx="16" cy="18" r="2" fill="currentColor"/></svg>') + '</div><div><b>' + esc(x[0]) + (cur ? ' <span class="tag ok">هذه الصفحة</span>' : '') + '</b><div class="muted small latin"><i>' + esc(x[1]) + '</i></div>' + (x[2] ? '<div class="small">' + esc(x[2]) + '</div>' : '') + '</div>';
       return g && !cur ? '<a class="card varcard" href="#/sp/' + x[3] + '">' + inner + '</a>' : '<div class="card varcard">' + inner + '</div>';
     }).join('') + '</div></section>';
