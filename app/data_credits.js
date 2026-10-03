@@ -964,6 +964,171 @@ const PHOTO_CREDITS = {
 "by": "artellliii72",
 "lic": "Pixabay",
 "src": "pixabay:7552506"
+},
+"sp_orca": {
+"by": "steve b",
+"lic": "CC0",
+"src": "inat:282690764"
+},
+"sp_bluewhale": {
+"by": "steve b",
+"lic": "CC0",
+"src": "inat:268676081"
+},
+"sp_humpback": {
+"by": "Lawrence Hylton",
+"lic": "CC-BY",
+"src": "inat:432947691"
+},
+"sp_fin": {
+"by": "nature Hopper",
+"lic": "CC-BY-SA",
+"src": "inat:388537663"
+},
+"sp_sperm": {
+"by": "Daniel Benák",
+"lic": "CC-BY",
+"src": "inat:542160818"
+},
+"sp_grey": {
+"by": "steve b",
+"lic": "CC0",
+"src": "inat:472563795"
+},
+"sp_right": {
+"by": "Paul Prior",
+"lic": "CC-BY",
+"src": "inat:251742598"
+},
+"sp_bowhead": {
+"by": "steve b",
+"lic": "CC0",
+"src": "inat:560483795"
+},
+"sp_minke": {
+"by": "Nils",
+"lic": "CC-BY",
+"src": "inat:2901229"
+},
+"sp_brydes": {
+"by": "Dan Schofield",
+"lic": "CC-BY",
+"src": "inat:436623523"
+},
+"sp_beluga": {
+"by": "Henrik Kibak",
+"lic": "CC-BY",
+"src": "inat:229562495"
+},
+"sp_narwhal": {
+"by": "steve b",
+"lic": "CC0",
+"src": "inat:565614005"
+},
+"sp_pilot": {
+"by": "Vsevolod Rudyi",
+"lic": "CC-BY",
+"src": "inat:215548393"
+},
+"sp_bottlenose": {
+"by": "Sydney Dragon",
+"lic": "CC-BY",
+"src": "inat:138603453"
+},
+"sp_spinner": {
+"by": "Rui Ribeiro",
+"lic": "CC-BY",
+"src": "inat:606617496"
+},
+"sp_commondolphin": {
+"by": "Brooke J.",
+"lic": "CC-BY",
+"src": "inat:701008453"
+},
+"sp_risso": {
+"by": "Morgan Caygill",
+"lic": "CC-BY",
+"src": "inat:232540924"
+},
+"sp_porpoise": {
+"by": "Fábio Olmos",
+"lic": "CC-BY",
+"src": "inat:299205165"
+},
+"sp_dugong": {
+"by": "Jean-Paul Boerekamps",
+"lic": "CC0",
+"src": "inat:168378330"
+},
+"sp_manatee": {
+"by": "Robin White",
+"lic": "CC-BY",
+"src": "inat:186967568"
+},
+"sp_greenturtle": {
+"by": "Matteo Bellucci",
+"lic": "CC-BY",
+"src": "inat:628142620"
+},
+"sp_loggerhead": {
+"by": "Annika Lindqvist",
+"lic": "CC-BY",
+"src": "inat:1622197"
+},
+"sp_hawksbill": {
+"by": "Daniel Benák",
+"lic": "CC-BY",
+"src": "inat:229385754"
+},
+"sp_jellyfish": {
+"by": "Juraj Ahel",
+"lic": "CC-BY",
+"src": "inat:228242633"
+},
+"sp_mantaray": {
+"by": "desertnaturalist",
+"lic": "CC-BY",
+"src": "inat:61443529"
+},
+"sp_greatwhite": {
+"by": "brendanboyd",
+"lic": "CC-BY",
+"src": "inat:451580189"
+},
+"sp_bullshark": {
+"by": "Ewout Knoester",
+"lic": "CC-BY-SA",
+"src": "inat:168237268"
+},
+"sp_oceanicwt": {
+"by": "Daniel Benák",
+"lic": "CC-BY",
+"src": "inat:334402837"
+},
+"sp_nurse": {
+"by": "Daniel Benák",
+"lic": "CC-BY",
+"src": "inat:229382183"
+},
+"sp_eagleray": {
+"by": "Kathy Daniel",
+"lic": "CC0",
+"src": "inat:610111004"
+},
+"sp_beaked": {
+"by": "bogsuckers",
+"lic": "CC-BY",
+"src": "inat:550588668"
+},
+"sp_sunfish": {
+"by": "jeffcherry",
+"lic": "CC0",
+"src": "inat:217510576"
+},
+"sp_monkseal": {
+"by": "Fábio Olmos",
+"lic": "CC-BY",
+"src": "inat:90338114"
 }
 };
 /* فيديوهات قصيرة مضمّنة (vids.json بمعرّف النوع): مقاطع 8 ثواني بلا صوت من Pixabay (رخصة Pixabay: استخدام مجاني بلا إلزام بنسب)، اتراجعت لقطاتها يدويًا: بلا علامات مائية ولا أشخاص */

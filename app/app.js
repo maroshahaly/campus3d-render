@@ -740,7 +740,7 @@
   const SHELL_IDS = ['squid', 'cuttlefish', 'octopus', 'lobster', 'bluecrab', 'oyster', 'mussel', 'clam', 'seasnail', 'scallop', 'cockle', 'razor', 'limpet', 'abalone', 'whelk', 'conch'];
   const grpOf = s => s.g || (SHELL_IDS.indexOf(s.id) > -1 ? 'shell' : s.id === 'mako' ? 'shark' : 'fish');
   const inEgypt = s => s.R && (s.R.has ? (s.R.has('med') || s.R.has('redsea') || s.R.has('f_naf')) : false);
-  const SPF_L = [['all', 'الكل'], ['mine', 'في منطقتي'], ['now', 'ذروتها الآن'], ['egypt', 'في مصر'], ['redsea', 'البحر الأحمر'], ['m', 'بحري'], ['f', 'مياه عذبة'], ['shell', 'رخويات وقشريات'], ['shark', 'قروش وراي'], ['crt', 'كائنات بحرية'], ['orn', 'أسماك الزينة']];
+  const SPF_L = [['all', 'الكل'], ['mine', 'في منطقتي'], ['now', 'ذروتها الآن'], ['egypt', 'في مصر'], ['redsea', 'البحر الأحمر'], ['m', 'بحري'], ['f', 'مياه عذبة'], ['shell', 'رخويات وقشريات'], ['mam', 'حيتان ودلافين وثدييات'], ['shark', 'قروش وراي'], ['crt', 'كائنات بحرية وسلاحف'], ['orn', 'أسماك الزينة'], ['fam', 'حسب الفصيلة']];
   /* اسم النوع باللهجة المختارة: مصر/الخليج (الافتراضي) أو المغرب العربي إن وُجد بديل موثّق له، وإلا نرجع للاسم الأساسي */
   let dialect = store.get('dialect', 'eg');
   const dispName = s => (dialect === 'mag' && s.names && s.names.mag) || s.ar;
@@ -758,10 +758,15 @@
     const el = $('#splist'); if (!el) return;
     const loc = getLoc(), regs = regionsAt(loc), toks = norm(spQ).split(' ').filter(Boolean), qf = norm(spQ).replace(/ /g, '').length <= 2 ? 'nameHay' : 'hay';
     let rows = SG.filter(s => toks.every(t => s[qf].indexOf(t) > -1)).map(s => ({ s, sc: monthScores(s, loc, regs, null) }));
-    if (spF === 'mine') rows = rows.filter(r => r.sc); else if (spF === 'now') rows = rows.filter(r => r.sc && r.sc[CUR] === 3); else if (spF === 'm') rows = rows.filter(r => r.s.h !== 'f' && grpOf(r.s) !== 'orn'); else if (spF === 'f') rows = rows.filter(r => r.s.h !== 'm' && grpOf(r.s) !== 'orn'); else if (spF === 'egypt') rows = rows.filter(r => inEgypt(r.s) && grpOf(r.s) !== 'orn'); else if (spF === 'redsea') rows = rows.filter(r => r.s.R.has('redsea')); else if (['shell', 'shark', 'crt', 'orn'].indexOf(spF) > -1) rows = rows.filter(r => grpOf(r.s) === spF);
+    if (spF === 'mine') rows = rows.filter(r => r.sc); else if (spF === 'now') rows = rows.filter(r => r.sc && r.sc[CUR] === 3); else if (spF === 'm') rows = rows.filter(r => r.s.h !== 'f' && grpOf(r.s) !== 'orn'); else if (spF === 'f') rows = rows.filter(r => r.s.h !== 'm' && grpOf(r.s) !== 'orn'); else if (spF === 'egypt') rows = rows.filter(r => inEgypt(r.s) && grpOf(r.s) !== 'orn'); else if (spF === 'redsea') rows = rows.filter(r => r.s.R.has('redsea')); else if (['shell', 'shark', 'crt', 'orn', 'mam'].indexOf(spF) > -1) rows = rows.filter(r => grpOf(r.s) === spF);
     rows.sort((x, y) => ((y.sc ? y.sc[CUR] : -1) - (x.sc ? x.sc[CUR] : -1)) || x.s.ar.localeCompare(y.s.ar, 'ar'));
+    const famKey = s => (s.fam || 'غير مصنّف').split(' — ')[0];
+    if (spF === 'fam') rows.sort((x, y) => famKey(x.s).localeCompare(famKey(y.s), 'ar') || x.s.ar.localeCompare(y.s.ar, 'ar'));
+    let lastFam = '';
     el.innerHTML = rows.length ? rows.map(r => { const s = r.s, sc = r.sc;
-      return '<a class="card gcard stack" href="#/sp/' + s.id + '" style="gap:6px"><div class="gtop">' + gthumb(s) + '<div class="gnm"><div class="row between"><b class="h3" style="margin:0">' + esc(dispName(s)) + '</b>' + (grpOf(s) === 'orn' ? '<span class="tag gold">أحواض زينة</span>' : sc ? '<span class="tag ' + SC_CLS[sc[CUR]] + '">' + SC_L[sc[CUR]] + '</span>' : '<span class="tag">خارج منطقتك</span>') + '</div><div class="muted small latin">' + esc(s.en) + ' · <i>' + esc(s.sci) + '</i></div></div></div>' + (sc ? stripG(sc) : '') + '</a>'; }).join('') : '<div class="empty" style="grid-column:1/-1">لا نتائج. جرّب كلمة أقصر أو فلترًا آخر.</div>';
+      const fh = spF === 'fam' && famKey(s) !== lastFam ? '<h2 class="h3" style="grid-column:1/-1;margin:14px 0 0;border-bottom:1px solid var(--line);padding-bottom:6px">' + esc(lastFam = famKey(s)) + '</h2>' : '';
+      return fh + (function () {
+      return '<a class="card gcard stack" href="#/sp/' + s.id + '" style="gap:6px"><div class="gtop">' + gthumb(s) + '<div class="gnm"><div class="row between"><b class="h3" style="margin:0">' + esc(dispName(s)) + '</b>' + (grpOf(s) === 'orn' ? '<span class="tag gold">أحواض زينة</span>' : sc ? '<span class="tag ' + SC_CLS[sc[CUR]] + '">' + SC_L[sc[CUR]] + '</span>' : '<span class="tag">خارج منطقتك</span>') + '</div><div class="muted small latin">' + esc(s.en) + ' · <i>' + esc(s.sci) + '</i></div></div></div>' + (sc ? stripG(sc) : '') + '</a>'; })(); }).join('') : '<div class="empty" style="grid-column:1/-1">لا نتائج. جرّب كلمة أقصر أو فلترًا آخر.</div>';
   }
 
   V.sp = function (a, qs) {
