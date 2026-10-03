@@ -16,7 +16,7 @@ data = js_json(json.load(open(SP + '/data.json', encoding='utf-8')))
 imgs = js_json(json.load(open(SP + '/imgs.json', encoding='utf-8')))
 vids = js_json(json.load(open(SP + '/vids.json', encoding='utf-8'))) if os.path.exists(SP + '/vids.json') else '{}'  # مقاطع فيديو قصيرة مضمّنة (data URI)
 css = rd(A + '/leaflet.css') + '\n' + rd(A + '/style.css')
-code = rd(A + '/leaflet.js') + '\n' + '\n'.join(rd(A + '/' + f) for f in ['astro.js', 'data_mask.js', 'data_geo.js', 'data_species.js', 'data_art.js', 'data_links.js', 'data_world.js', 'data_credits.js', 'data_gear.js', 'rigs.js', 'data_rigs.js', 'data_variants.js', 'data_knots.js'])
+code = rd(A + '/leaflet.js') + '\n' + '\n'.join(rd(A + '/' + f) for f in ['astro.js', 'data_mask.js', 'data_geo.js', 'data_species.js', 'data_art.js', 'data_links.js', 'data_world.js', 'data_credits.js', 'data_gear.js', 'rigs.js', 'data_rigs.js', 'data_variants.js', 'data_knots.js', 'data_occ.js'])
 app = rd(A + '/app.js')
 # module.exports guard in astro is harmless in browsers
 

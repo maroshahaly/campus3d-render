@@ -1129,6 +1129,31 @@ const PHOTO_CREDITS = {
 "by": "Fábio Olmos",
 "lic": "CC-BY",
 "src": "inat:90338114"
+},
+"gear_swivel": {
+"by": "Raboe001",
+"lic": "CC BY-SA 2.5",
+"src": "commons:File:Angeln zubehoer wirbel 01.jpg"
+},
+"gear_leader": {
+"by": "Raboe001",
+"lic": "CC BY-SA 2.5",
+"src": "commons:File:Angeln zubehoer wirbel 02.jpg"
+},
+"gear_line": {
+"by": "Fimb",
+"lic": "CC BY 2.0",
+"src": "commons:File:Crabbing line.jpg"
+},
+"gear_finder": {
+"by": "Peter Southwood",
+"lic": "CC0",
+"src": "commons:File:Fishfinder display showing the mark at Flash Pinnacle P7280213.jpg"
+},
+"gear_gaff": {
+"by": "Peter from Wellesley",
+"lic": "CC BY 2.0",
+"src": "commons:File:Bringing in the barracuda.jpg"
 }
 };
 /* فيديوهات قصيرة مضمّنة (vids.json بمعرّف النوع): مقاطع 8 ثواني بلا صوت من Pixabay (رخصة Pixabay: استخدام مجاني بلا إلزام بنسب)، اتراجعت لقطاتها يدويًا: بلا علامات مائية ولا أشخاص */

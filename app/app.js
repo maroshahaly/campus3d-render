@@ -497,9 +497,9 @@
       '<p><span class="lbl">بدون صورة للسمكة</span>' + esc(gap(s => !s.photo)) + '</p></div></section>' +
       '<section class="card prose"><p><b>القسم العالمي: كيف يعمل.</b> تختار موقعك (GPS أو مدينة من القائمة أو إحداثيات) فيحدد التطبيق: هل أنت على بحر أم يابسة داخلية، وفي أي نصف كرة، وأي أقاليم صيد قريبة منك. ثم يقلب مواسم الأنواع تلقائيًا بين الشمال والجنوب (الموسم الجنوبي = الشمالي بعد 6 أشهر ما لم يُذكر غير ذلك)، ويحسب من الشمس والقمر أوقات الفجر والغروب والفترات الأنسب (سولونار) لتوقيتك المحلي. قاعدة بيانات واسعة من الأنواع البحرية والنهرية حول العالم، بأسمائها العلمية والإنجليزية.</p>' +
       '<p><b>نشاط السمك المتوقع.</b> في تبويب «مد وجزر» تقدير بالساعة (0 إلى 100) يجمع قرب الفجر أو الغروب، الفترات القمرية الرئيسية والثانوية وقرب المحاق أو البدر، سرعة تحرك المد أو الجزر، سرعة الرياح، واتجاه الضغط الجوي. هذا مزيج اجتهادي شبيه بجداول السولونار التجارية وليس معادلة علمية مثبتة؛ استخدمه كمؤشر إضافي لا كضمان.</p>' +
-      '<p><b>الصور والخريطة والمد.</b> كل الأنواع تظهر بصورة حقيقية للنوع، لا رسم توضيحي. أسماك «ملف مصر» صورها من ملفك الأصلي. أنواع القاعدة العالمية تُجلب صورتها الحقيقية تلقائيًا من ويكيبيديا عند توفر الإنترنت وتُحفظ على جهازك (نقاط تحميل مؤقتة تظهر لحين وصول الصورة)، مع رابط لصفحتها وحقوقها لأصحابها. الخريطة مرسومة داخل التطبيق بلا إنترنت من قناع يابسة بدقة درجة واحدة. منحنى المد والموج والرياح والضغط (تبويب «مد وجزر») يأتي من Open-Meteo في النسخة المحمّلة فقط، وهو نموذج عالمي دقته قرب السواحل محدودة.</p>' +
+      '<p><b>الصور والخريطة والمد.</b> كل الأنواع تظهر بصورة حقيقية للنوع، لا رسم توضيحي. أسماك «ملف مصر» صورها من ملفك الأصلي. أنواع القاعدة العالمية تُجلب صورتها الحقيقية تلقائيًا من ويكيبيديا عند توفر الإنترنت وتُحفظ على جهازك (نقاط تحميل مؤقتة تظهر لحين وصول الصورة)، مع رابط لصفحتها وحقوقها لأصحابها. الخريطة مرسومة داخل التطبيق بلا إنترنت من قناع يابسة بدقة نصف درجة (نحو 50 كم)، ومواقع انتشار الأنواع نقاط مشاهدات حقيقية موثقة مقرّبة إلى نحو 5 كم. منحنى المد والموج والرياح والضغط (تبويب «مد وجزر») يأتي من Open-Meteo في النسخة المحمّلة فقط، وهو نموذج عالمي دقته قرب السواحل محدودة.</p>' +
       '<p><b>ما تحقّقتُ منه وما لم أتحقق.</b> راجعتُ بمصادر رسمية أو إرشادية مواسم: النمر الإفريقي (تايغرفش) في الزامبيزي، والباراموندي في كوينزلاند وفترات الحظر عندها، والمارلن المخطّط، وسمك مراي كود في نيو ساوث ويلز وحظره من سبتمبر إلى نوفمبر، وسمك ماكو. أما بقية الأنواع فمواسمها إرشاد عام من معرفة عامة ولم يُتحقق منها نوعًا نوعًا، وتختلف محليًا حسب الماء والطقس. تحقّق من مصدر رسمي في منطقتك (راجع تبويب المراجع: FishBase وIUCN وهيئات الصيد الوطنية) قبل أي قرار.</p></section>' +
-      '<section class="card prose"><p><b>حدود الدقة.</b> جداول الملف تقديرات ميدانية لمصر. حسابات الشمس والقمر تقريبية بدقة عدة دقائق. الأقاليم العالمية صناديق إحداثيات تقريبية وقناع اليابسة بدقة درجة واحدة، فقد تقع أنت قرب الحد بين إقليمين. بعض الأسماء العربية للأنواع الأجنبية حروف عربية للاسم وليست اسمًا متداولًا. درجة حرارة سطح البحر الحية تعمل في النسخة المحمّلة فقط. المعلومات العالمية عامة ولا تغني عن قوانين بلدك وفترات المنع والمقاسات الدنيا. إرشادات الإسعاف للتوعية وليست علاجًا.</p></section>' +
+      '<section class="card prose"><p><b>حدود الدقة.</b> جداول الملف تقديرات ميدانية لمصر. حسابات الشمس والقمر تقريبية بدقة عدة دقائق. الأقاليم العالمية صناديق إحداثيات تقريبية وقناع اليابسة بدقة نصف درجة (نحو 50 كم)، فقد تقع أنت قرب الحد بين إقليمين. بعض الأسماء العربية للأنواع الأجنبية حروف عربية للاسم وليست اسمًا متداولًا. درجة حرارة سطح البحر الحية تعمل في النسخة المحمّلة فقط. المعلومات العالمية عامة ولا تغني عن قوانين بلدك وفترات المنع والمقاسات الدنيا. إرشادات الإسعاف للتوعية وليست علاجًا.</p></section>' +
       '<section class="card prose"><p><b>الخصوصية.</b> سجل الصيد والموقع وإعداداتك تُحفظ على جهازك فقط. في النسخة المحمّلة فقط يُرسل التطبيق إحداثيات موقعك إلى Open-Meteo لجلب حرارة الماء والمد والموج والرياح، ويطلب من ويكيبيديا صورة كل نوع باسمه العلمي دون أي بيانات عنك. الصفحة المنشورة لا ترسل شيئًا.</p></section>' +
       (STANDALONE ? '<section class="card prose"><p><b>التثبيت على الهاتف.</b> افتح الملف أو الرابط في المتصفح ثم «إضافة إلى الشاشة الرئيسية». عند الاستضافة على رابط https يُخزَّن التطبيق كاملًا للعمل بدون إنترنت.</p></section>' : '') +
       '<section class="card prose" style="display:flex;align-items:center;gap:14px;flex-wrap:wrap"><div style="flex:none">' + LOGO_MARK(34, 'about') + '</div><div style="min-width:200px;flex:1"><p><b>© ' + new Date().getFullYear() + ' الصنّارة. جميع الحقوق محفوظة.</b> هذا التطبيق وتصميمه وشعاره وشيفرته البرمجية ملك لصاحب المشروع، ولا يجوز نسخه أو إعادة توزيعه أو انتحاله باسم آخر دون إذن كتابي.</p>' +
@@ -543,13 +543,15 @@
   };
   /* قناع اليابسة (1°): يحدد هل الموقع بحر أو ساحل أو يابسة داخلية */
   const LMB = (() => { const b = atob(LAND_MASK), u = new Uint8Array(b.length); for (let i = 0; i < b.length; i++) u[i] = b.charCodeAt(i); return u; })();
-  const cellT = (i, j) => { i = Math.max(0, Math.min(179, i)); j = ((j % 360) + 360) % 360; const k = i * 360 + j; return (LMB[k >> 2] >> ((k & 3) * 2)) & 3; };
+  const MR = 2, NI = 180 * MR, NJ = 360 * MR; /* خلايا لكل درجة: 0.5° */
+  const cellT = (i, j) => { i = Math.max(0, Math.min(NI - 1, i)); j = ((j % NJ) + NJ) % NJ; const k = i * NJ + j; const v = (LMB[k >> 1] >> ((k & 1) * 4)) & 15; return v === 0 ? 0 : v === 15 ? 1 : 2; };
+  const cellF = k => ((LMB[k >> 1] >> ((k & 1) * 4)) & 15) / 15; /* نسبة اليابسة في الخلية للرسم الناعم للساحل */
   function surface(loc) {
-    const i = Math.floor(loc.lat + 90), j = Math.floor(loc.lng + 180), t = cellT(i, j);
+    const i = Math.floor((loc.lat + 90) * MR), j = Math.floor((loc.lng + 180) * MR), t = cellT(i, j);
     let sea = t !== 1;
     for (let di = -1; di <= 1 && !sea; di++) for (let dj = -1; dj <= 1 && !sea; dj++) {
       if ((!di && !dj) || cellT(i + di, j + dj) === 1) continue;
-      if (boxDist([i + di - 90, i + di - 89, j + dj - 180, j + dj - 179], loc.lat, loc.lng) <= 0.5) sea = true;
+      if (boxDist([(i + di) / MR - 90, (i + di + 1) / MR - 90, (j + dj) / MR - 180, (j + dj + 1) / MR - 180], loc.lat, loc.lng) <= 0.25) sea = true;
     }
     return { sea, land: t !== 0, t };
   }
@@ -785,7 +787,7 @@
     const fb = species ? 'https://www.fishbase.se/summary/' + primary.replace(' ', '-') + '.html' : 'https://www.fishbase.se/search.php';
     const iu = species ? 'https://www.iucnredlist.org/search?query=' + encodeURIComponent(primary) : 'https://www.iucnredlist.org/';
     const bts = listNames(s.bt, BAIT);
-    const facts = [['أفضل وقت في اليوم', todText(s)], ['ماء الصيد', s.dp ? DP_L[s.dp] : ''], ['الأفضل مع', s.tide ? TIDE_L[s.tide] : ''], ['حرارة الماء المثلى', s.sst ? s.sst[0] + '–' + s.sst[1] + '°م' : ''], ['الحجم المعتاد', s.sz], ['الطُّعم', bts.join('، ')]].filter(x => x[1]);
+    const facts = [['أفضل وقت في اليوم', todText(s)], ['ماء الصيد', s.dp ? DP_L[s.dp] : ''], ['بيئة الانتشار', habText(s)], ['الأفضل مع', s.tide ? TIDE_L[s.tide] : ''], ['حرارة الماء المثلى', s.sst ? s.sst[0] + '–' + s.sst[1] + '°م' : ''], ['الحجم المعتاد', s.sz], ['الطُّعم', bts.join('، ')]].filter(x => x[1]);
     const howHtml = howGroupsHtml(s.how);
     return '<div class="stack-lg"><div class="row between"><a class="btn ghost small" href="#/species">كل الأنواع</a>' + (real ? '<span class="tag ' + SC_CLS[real[CUR]] + '">' + SC_L[real[CUR]] + ' الآن هنا</span>' : '') + '</div>' +
       '<header class="stack"><div><h1 class="h1">' + esc(dispName(s)) + '</h1>' + (dialect === 'mag' && s.names && s.names.mag ? '<div class="muted small">الاسم الأساسي: ' + esc(s.ar) + '</div>' : '') + '<div class="muted latin" style="margin-top:2px">' + esc(s.en) + '</div><div class="muted small latin"><i>' + esc(s.sci) + '</i></div>' + (s.fam ? '<div class="muted small">' + esc(s.fam) + '</div>' : '') + '</div><div class="chips"><span class="tag">' + HAB_L[s.h] + '</span>' + (s.o ? '<span class="tag gold">موسمي صارم</span>' : '') + '</div></header>' +
@@ -796,7 +798,7 @@
       '<div class="bars' + (real ? '' : ' hyp') + '" role="img" aria-label="نسبة ذروة موسم ' + esc(s.ar) + (real ? '' : ' (افتراضي لموطنه الأصلي)') + '">' + sc.map((l, i) => { const pct = Math.round(l * 100 / 3); return '<div class="col l' + l + (i === CUR ? ' cur' : '') + '"><b class="pct">' + pct + '%</b><div class="batt"><i style="height:' + pct + '%"></i></div><span>' + MONTHS[i].slice(0, 3) + '</span></div>'; }).join('') + '</div>' +
       (real ? '<div class="legend"><span><i style="background:var(--lv0)"></i>0%</span><span><i style="background:var(--lv1)"></i>33%</span><span><i style="background:var(--lv2)"></i>66%</span><span><i style="background:var(--lv3)"></i>100%</span></div>' : '<div class="muted small">تدرّج رمادي عمدًا لأنه تقدير افتراضي غير مرتبط بمنطقتك الحالية.</div>') +
       '<div class="muted small">' + (egyptReal && hem === 'n' ? 'هذه نسب ميدانية حقيقية من ملف «مساعد الصيد» في مصر (نفس بيانات صفحته التفصيلية)، وليست تقديرًا عامًا — لذلك قد تختلف عن أنواع أخرى تعرض تقديرًا تقريبيًا فقط. ' : 'الشهور ' + (hem === 's' ? 'مقلوبة لنصف الكرة الجنوبي.' : 'لنصف الكرة الشمالي.')) + (Math.abs(loc.lat) < 6 && real && !egyptReal ? ' قرب خط الاستواء الموسمية ضعيفة فتُعرض متوسطة طوال السنة.' : '') + '</div></section>' +
-      '<section class="card stack"><h2 class="h2" style="margin:0">أين يعيش؟</h2>' + mapHtml('map-sp', { sp: s.id, span: 360, h: 330 }) + legendMap + '<div class="muted small">الظل الذهبي أقاليم تواجد النوع (صناديق تقريبية، والحدود الفعلية أدق منها). النقطة الذهبية موقعك.</div></section>' +
+      '<section class="card stack"><h2 class="h2" style="margin:0">أين يعيش؟</h2>' + mapHtml('map-sp', { sp: s.id, span: 360, h: 330 }) + legendMap + '<div class="muted small">' + (occPts(s.id) ? 'كل نقطة ذهبية مشاهدة حقيقية موثقة للنوع (مقرّبة لخلية ≈ 5 كم)، والصناديق المنقطة الباهتة أقاليم تواجده العامة. ' : 'الظل الذهبي أقاليم تواجد النوع (صناديق تقريبية). ') + '<b>البيئة:</b> ' + esc(habText(s)) + '. دبوس الموقع مكانك.</div></section>' +
       (howHtml ? '<section class="card stack"><h2 class="h2" style="margin:0">طريقة الصيد</h2>' + howHtml + '</section>' : '') +
       (real ? '<section class="card stack"><h2 class="h2" style="margin:0">اليوم في ' + esc(loc.name) + '</h2><div class="wins">' + (winHtml(ws, di.sun) || '<span class="muted small">لا نوافذ محددة لليوم.</span>') + '</div><div class="muted small">النجمة ★ = تتزامن مع فترة قمرية رئيسية. الأوقات تقريبية وبتوقيت ' + (loc.tz ? 'المدينة' : 'جهازك') + '.</div></section>' : '') +
       '<section class="card"><dl class="kv" style="margin:0">' + facts.map(f => '<dt>' + f[0] + '</dt><dd>' + esc(f[1]) + '</dd>').join('') + '<dt>يتواجد في</dt><dd>' + esc(regList.slice(0, 8).join('، ') + (regList.length > 8 ? '… و' + (regList.length - 8) + ' مناطق أخرى' : '')) + '</dd></dl></section>' +
@@ -967,31 +969,47 @@
   const MAPST = {};
   const rgb = v => { v = String(v).trim(); const m = /^#([0-9a-f]{6})$/i.exec(v); if (m) return [parseInt(m[1].slice(0, 2), 16), parseInt(m[1].slice(2, 4), 16), parseInt(m[1].slice(4), 16)]; const n = /(\d+)[, ]+(\d+)[, ]+(\d+)/.exec(v); return n ? [+n[1], +n[2], +n[3]] : [128, 128, 128]; };
   const cssv = n => getComputedStyle(document.documentElement).getPropertyValue(n);
-  const CVAL = [0, 1, 0.55];
-  const GRD = new Float32Array(180 * 360); for (let i = 0; i < 180; i++) for (let j = 0; j < 360; j++) GRD[i * 360 + j] = CVAL[cellT(i, j)];
+  const GRD = new Float32Array(NI * NJ); for (let i = 0; i < NI; i++) for (let j = 0; j < NJ; j++) GRD[i * NJ + j] = cellF(i * NJ + j);
   const crW = t => [(-t * t * t + 2 * t * t - t) / 2, (3 * t * t * t - 5 * t * t + 2) / 2, (-3 * t * t * t + 4 * t * t + t) / 2, (t * t * t - t * t) / 2];
   const wrapLng = lo => ((lo + 540) % 360) - 180;
   function spBoxes(id) {
     const s = BYG[id]; if (!s) return [];
     return Array.from(s.R).filter(c => REG[c] && (s.h === 'a' || (s.h === 'f' ? REG[c].k === 'f' : REG[c].k === 'm'))).map(c => ({ k: REG[c].k, b: REG[c].b }));
   }
+  /* نقاط مشاهدات حقيقية موثقة (OCC): أزواج int16 = خط العرض×20، خط الطول×20 (خلية 0.05° ≈ 5 كم) */
+  const OCCC = {};
+  function occPts(id) {
+    if (!id || typeof OCC === 'undefined' || !OCC[id]) return null;
+    if (!OCCC[id]) { const b = atob(OCC[id]), u = new Uint8Array(b.length); for (let i = 0; i < b.length; i++) u[i] = b.charCodeAt(i); OCCC[id] = new Int16Array(u.buffer); }
+    return OCCC[id];
+  }
+  function habText(s) {
+    const t = [];
+    t.push(({ sh: 'ساحلي: الشاطئ والصخور القريبة', es: 'ساحلي: المصبات والبحيرات المالحة والمانجروف', rf: 'الشعاب والصخور والحطام قرب الساحل وعلى الجرف', of: 'المياه المفتوحة بعيدًا عن الساحل (سطحي إلى متوسط العمق)', dp: 'الأعماق: حافة الجرف والمنحدر القاري وما بعده', fw: 'مياه عذبة: أنهار وبحيرات وقنوات' })[s.dp] || HAB_L[s.h]);
+    if (s.h === 'a' && s.dp !== 'fw') t.push('يدخل المياه العذبة أو قليلة الملوحة');
+    if (s.sst) {
+      const a = s.sst[0], b = s.sst[1];
+      t.push(a >= 22 ? 'مياه استوائية دافئة (تيارات دافئة)' : b <= 16 ? 'مياه باردة (تيارات باردة وقطبية)' : a >= 16 ? 'مياه دافئة إلى معتدلة' : b <= 22 ? 'مياه معتدلة إلى باردة' : 'يتحمل مدى واسعًا من الحرارة');
+    }
+    return t.join(' · ');
+  }
   function mapDraw(cv) {
     const st = MAPST[cv.id]; if (!st) return;
     const W = cv.width, H = cv.height, ctx = cv.getContext('2d'), im = ctx.createImageData(W, H), d = im.data;
     const sea = rgb(cssv('--sea')), gold = rgb(cssv('--gold')), land = rgb(cssv(sea[0] + sea[1] + sea[2] < 150 ? '--lv2' : '--lv1'));
     const dpp = st.span / W, cl = st.span <= 120 ? Math.max(0.15, Math.cos(st.lat * Math.PI / 180)) : 1;
-    const wrapEl = cv.closest('.mapbox'), boxes = spBoxes((wrapEl && wrapEl.dataset.sp) || ''), lons = new Float64Array(W);
+    const wrapEl = cv.closest('.mapbox'), spId = (wrapEl && wrapEl.dataset.sp) || '', pts = occPts(spId), boxes = spBoxes(spId), lons = new Float64Array(W), bm = pts ? 0.2 : 0.58;
     const cols = new Int32Array(W * 4), wxs = new Float32Array(W * 4);
     for (let x = 0; x < W; x++) {
       const lo = wrapLng(st.lng + (x - W / 2 + 0.5) * dpp); lons[x] = lo;
-      const fj = lo + 179.5, j0 = Math.floor(fj), w = crW(fj - j0);
-      for (let c = 0; c < 4; c++) { cols[x * 4 + c] = (((j0 - 1 + c) % 360) + 360) % 360; wxs[x * 4 + c] = w[c]; }
+      const fj = (lo + 180) * MR - 0.5, j0 = Math.floor(fj), w = crW(fj - j0);
+      for (let c = 0; c < 4; c++) { cols[x * 4 + c] = (((j0 - 1 + c) % NJ) + NJ) % NJ; wxs[x * 4 + c] = w[c]; }
     }
     const rix = [0, 0, 0, 0];
     for (let y = 0; y < H; y++) {
       const la = st.lat + (H / 2 - y - 0.5) * dpp * cl, out = la > 90 || la < -90;
-      const fi = la + 89.5, i0 = Math.floor(fi), wy = crW(fi - i0);
-      for (let r = 0; r < 4; r++) rix[r] = Math.max(0, Math.min(179, i0 - 1 + r)) * 360;
+      const fi = (la + 90) * MR - 0.5, i0 = Math.floor(fi), wy = crW(fi - i0);
+      for (let r = 0; r < 4; r++) rix[r] = Math.max(0, Math.min(NI - 1, i0 - 1 + r)) * NJ;
       for (let x = 0; x < W; x++) {
         const o = (y * W + x) * 4; let c0 = sea[0], c1 = sea[1], c2 = sea[2];
         if (out) { c0 = sea[0] * 0.6; c1 = sea[1] * 0.6; c2 = sea[2] * 0.6; }
@@ -1006,7 +1024,7 @@
               const bb = boxes[q]; if (bb.k === 'm' ? isL : !isL) continue;
               for (let z = 0; z < bb.b.length; z++) { const b = bb.b[z]; if (la >= b[0] && la <= b[1] && lo >= b[2] && lo <= b[3]) { hit = true; break; } }
             }
-            if (hit) { c0 = c0 * 0.42 + gold[0] * 0.58; c1 = c1 * 0.42 + gold[1] * 0.58; c2 = c2 * 0.42 + gold[2] * 0.58; }
+            if (hit) { c0 = c0 * (1 - bm) + gold[0] * bm; c1 = c1 * (1 - bm) + gold[1] * bm; c2 = c2 * (1 - bm) + gold[2] * bm; }
           }
         }
         d[o] = c0; d[o + 1] = c1; d[o + 2] = c2; d[o + 3] = 255;
@@ -1014,6 +1032,12 @@
     }
     ctx.putImageData(im, 0, 0);
     const px = lo => W / 2 + wrapLng(lo - st.lng) / dpp, py = la => H / 2 - (la - st.lat) / (dpp * cl), S = W / 600;
+    if (pts) {
+      const r = Math.max(1.6 * S, 0.025 / dpp); ctx.fillStyle = gold.length ? 'rgb(' + gold.join(',') + ')' : '#E8A800'; ctx.strokeStyle = 'rgba(6,32,44,.8)'; ctx.lineWidth = Math.max(0.6, 0.5 * S);
+      ctx.beginPath();
+      for (let q = 0; q < pts.length; q += 2) { const xx = px(pts[q + 1] / 20), yy = py(pts[q] / 20); if (xx < -r || xx > W + r || yy < -r || yy > H + r) continue; ctx.moveTo(xx + r, yy); ctx.arc(xx, yy, r, 0, 6.3); }
+      ctx.fill(); ctx.stroke();
+    }
     const gs = st.span > 200 ? 30 : st.span > 60 ? 10 : st.span > 20 ? 5 : 1;
     ctx.strokeStyle = 'rgba(255,255,255,.16)'; ctx.lineWidth = 1; ctx.beginPath();
     for (let la = -90; la <= 90; la += gs) { const y = py(la); if (y >= 0 && y <= H) { ctx.moveTo(0, y + .5); ctx.lineTo(W, y + .5); } }
@@ -1063,10 +1087,15 @@
   function mapDrawSpRects(id) {
     const L2 = LMAP[id]; if (!L2) return;
     (L2.rects || []).forEach(r => L2.map.removeLayer(r)); L2.rects = [];
-    spBoxes($('.mapbox[data-mapid="' + id + '"]').dataset.sp || '').forEach(bb => bb.b.forEach(b => {
-      const r = L.rectangle([[b[0], b[2]], [b[1], b[3]]], { color: '#E8A800', weight: 1, fillColor: '#E8A800', fillOpacity: .35, interactive: false }).addTo(L2.map);
+    const spId = $('.mapbox[data-mapid="' + id + '"]').dataset.sp || '', pts = occPts(spId);
+    spBoxes(spId).forEach(bb => bb.b.forEach(b => {
+      const r = L.rectangle([[b[0], b[2]], [b[1], b[3]]], pts ? { color: '#E8A800', weight: 1, dashArray: '4 4', fillColor: '#E8A800', fillOpacity: .08, interactive: false } : { color: '#E8A800', weight: 1, fillColor: '#E8A800', fillOpacity: .35, interactive: false }).addTo(L2.map);
       L2.rects.push(r);
     }));
+    if (pts) {
+      if (!L2.rend) L2.rend = L.canvas({ padding: 0.3 });
+      for (let q = 0; q < pts.length; q += 2) L2.rects.push(L.circleMarker([pts[q] / 20, pts[q + 1] / 20], { renderer: L2.rend, radius: 3.5, color: '#06202C', weight: 1, fillColor: '#E8A800', fillOpacity: .95, interactive: false }).addTo(L2.map));
+    }
   }
   function mapInit(wrap) {
     if (wrap.dataset.mi) return; wrap.dataset.mi = '1';
@@ -1128,7 +1157,7 @@
     const L2 = LMAP[id]; if (!L2 || L2.cur === which) return;
     L2.map.removeLayer(which === 'sat' ? L2.street : L2.sat); (which === 'sat' ? L2.sat : L2.street).addTo(L2.map); L2.cur = which;
   }
-  const legendMap = '<div class="legend"><span><i style="background:var(--gold)"></i>نطاق انتشار النوع (تقريبي)</span></div>';
+  const legendMap = '<div class="legend"><span><i style="background:var(--gold);border-radius:50%"></i>مشاهدات موثقة (≈ 5 كم)</span><span><i style="background:var(--gold);opacity:.35"></i>إقليم التواجد العام</span></div>';
   let mapSp = '';
   function hereMap(el, loc) {
     const old = MAPST['map-here']; MAPST['map-here'] = { lat: loc.lat, lng: loc.lng, span: old ? old.span : 40 };
@@ -1142,7 +1171,7 @@
       '<a class="chip" target="_blank" rel="noopener" href="https://www.google.com/maps/@' + ll + ',9z">Google Maps</a>' +
       '<a class="chip" target="_blank" rel="noopener" href="https://www.windy.com/?' + ll + ',8">Windy (رياح وأمواج)</a>' +
       '<a class="chip" target="_blank" rel="noopener" href="https://tidecheck.com/">TideCheck (مد وجزر)</a></div></section>' +
-      '<div class="notice info">الخريطة مرسومة داخل التطبيق من قناع يابسة بدقة درجة واحدة (نحو 110 كم)، وأقاليم الأنواع صناديق تقريبية، فلا تعتمد عليها في الملاحة أو لتحديد حدود المياه والقوانين.</div></div>';
+      '<div class="notice info">الخريطة مرسومة داخل التطبيق من قناع يابسة بدقة نصف درجة (نحو 50 كم)، ونقاط انتشار الأنواع مشاهدات حقيقية موثقة بدقة نحو 5 كم، فلا تعتمد عليها في الملاحة أو لتحديد حدود المياه والقوانين.</div></div>';
   }
 
   /* ================= المد والجزر والطقس البحري (النسخة المحمّلة فقط: مصدر Open-Meteo) ================= */
@@ -1460,6 +1489,97 @@
     if (e.target.classList && e.target.classList.contains('photoq') && e.target.files && e.target.files[0]) { showPhotoQ(e.target.files[0], e.target.closest('form.search')); e.target.value = ''; }
   });
   /* البحث بالصورة: من الكاميرا، أو الاستوديو/الملفات/أي تخزين، أو بالسحب والإفلات، أو باللصق */
+  /* تعرّف تقريبي بلا إنترنت: بصمة لون (هيستوجرام HSV موزون نحو المنتصف) + بصمة شكل/نقوش (اتجاهات الحواف في 2×2) لكل صورة نوع مضمّنة، ومقارنتها بصورتك */
+  const FEAT_N = 48;
+  function imgFeat(im) {
+    const c = document.createElement('canvas'); c.width = c.height = FEAT_N; const x = c.getContext('2d', { willReadFrequently: true });
+    const w = im.naturalWidth || im.width, h = im.naturalHeight || im.height, k = Math.min(w, h * 1.5);
+    x.drawImage(im, (w - k) / 2, (h - k / 1.5) / 2, k, k / 1.5, 0, 0, FEAT_N, FEAT_N);
+    const d = x.getImageData(0, 0, FEAT_N, FEAT_N).data, col = new Float32Array(16), tex = new Float32Array(32), g = new Float32Array(FEAT_N * FEAT_N);
+    for (let y = 0; y < FEAT_N; y++) for (let xx = 0; xx < FEAT_N; xx++) {
+      const o = (y * FEAT_N + xx) * 4, r = d[o] / 255, gg = d[o + 1] / 255, b = d[o + 2] / 255, mx = Math.max(r, gg, b), mn = Math.min(r, gg, b), dl = mx - mn;
+      const dx = (xx - FEAT_N / 2) / (FEAT_N / 2), dy = (y - FEAT_N / 2) / (FEAT_N / 2), wt = Math.exp(-(dx * dx + dy * dy) * 1.2);
+      g[y * FEAT_N + xx] = 0.3 * r + 0.59 * gg + 0.11 * b;
+      const sat = mx ? dl / mx : 0;
+      if (sat < 0.22 || mx < 0.15) col[12 + Math.min(3, Math.floor(mx * 4))] += wt;
+      else { let hu = mx === r ? ((gg - b) / dl) % 6 : mx === gg ? (b - r) / dl + 2 : (r - gg) / dl + 4; hu = (hu * 60 + 360) % 360; col[Math.floor(hu / 30) % 12] += wt * sat; col[12 + Math.min(3, Math.floor(mx * 4))] += wt * (1 - sat) * 0.5; }
+    }
+    for (let y = 1; y < FEAT_N - 1; y++) for (let xx = 1; xx < FEAT_N - 1; xx++) {
+      const gx = g[y * FEAT_N + xx + 1] - g[y * FEAT_N + xx - 1], gy = g[(y + 1) * FEAT_N + xx] - g[(y - 1) * FEAT_N + xx], m = Math.hypot(gx, gy); if (m < 0.04) continue;
+      const a = Math.floor(((Math.atan2(gy, gx) + Math.PI) % Math.PI) / Math.PI * 8) % 8, q = (y < FEAT_N / 2 ? 0 : 2) + (xx < FEAT_N / 2 ? 0 : 1);
+      tex[q * 8 + a] += m;
+    }
+    const nz = v => { let t = 0; for (let i = 0; i < v.length; i++) t += v[i]; if (t) for (let i = 0; i < v.length; i++) v[i] /= t; return v; };
+    return { c: nz(col), t: nz(tex) };
+  }
+  const featSim = (a, b) => { let c = 0, t = 0; for (let i = 0; i < 16; i++) c += Math.sqrt(a.c[i] * b.c[i]); for (let i = 0; i < 32; i++) t += Math.sqrt(a.t[i] * b.t[i]); return 0.62 * c + 0.38 * t; };
+  let SPFEAT = null;
+  const loadImg = src => new Promise(res => { const im = new Image(); im.onload = () => res(im); im.onerror = () => res(null); im.src = src; });
+  async function spFeats() {
+    if (SPFEAT) return SPFEAT;
+    const out = [];
+    for (const s of SG) {
+      const src = deckPhoto(s) || img('sp_' + s.id); if (!src) continue;
+      const im = await loadImg(src); if (im) out.push({ s, src, f: imgFeat(im) });
+    }
+    return (SPFEAT = out);
+  }
+  /* نموذج رؤية (MobileNet v2 المدرَّب على ImageNet) يُحمَّل من الإنترنت عند أول استخدام ويُخزَّن في ذاكرة المتصفح؛
+     بنستخرج منه «بصمة» 1280 رقم لكل صورة ونقارنها ببصمات صور الأنواع (تُحسب مرة وتُحفظ على الجهاز). */
+  const TFJS = ['https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js', 'https://unpkg.com/@tensorflow/tfjs@4.22.0/dist/tf.min.js'];
+  const VIS_URL = 'https://storage.googleapis.com/tfjs-models/savedmodel/mobilenet_v2_1.0_224/model.json', VIS_OUT = 'module_apply_default/MobilenetV2/Logits/AvgPool', EMB_KEY = 'sayad:emb1';
+  let VIS = null;
+  const addScript = src => new Promise((ok, no) => { const e = document.createElement('script'); e.src = src; e.onload = ok; e.onerror = no; document.head.appendChild(e); });
+  function visModel() {
+    if (!VIS) VIS = (async () => {
+      if (typeof tf === 'undefined') { let ok = false; for (const u of TFJS) { try { await addScript(u); ok = true; break; } catch (e) {} } if (!ok) throw new Error('tf'); }
+      return tf.loadGraphModel(VIS_URL);
+    })().catch(e => { VIS = null; throw e; });
+    return VIS;
+  }
+  function embed(m, im) {
+    const c = document.createElement('canvas'); c.width = c.height = 224; const x = c.getContext('2d');
+    const w = im.naturalWidth || im.width, h = im.naturalHeight || im.height, k = Math.min(w, h);
+    x.drawImage(im, (w - k) / 2, (h - k) / 2, k, k, 0, 0, 224, 224);
+    return tf.tidy(() => { const v = m.execute({ images: tf.browser.fromPixels(c).toFloat().div(255).expandDims(0) }, VIS_OUT).reshape([-1]); return v.div(v.norm()).dataSync().slice(); });
+  }
+  async function spEmbeds(m, prog) {
+    const list = SG.map(s => ({ s, src: deckPhoto(s) || img('sp_' + s.id) })).filter(e => e.src);
+    let cache = {}; try { cache = JSON.parse(localStorage.getItem(EMB_KEY) || '{}'); } catch (e) {}
+    const out = []; let changed = false;
+    for (let i = 0; i < list.length; i++) {
+      const e = list[i], key = e.s.id + ':' + e.src.length; let v = null;
+      if (cache[key]) { const b = atob(cache[key]), q = new Int8Array(b.length); for (let j = 0; j < b.length; j++) q[j] = b.charCodeAt(j) << 24 >> 24; v = Float32Array.from(q, z => z / 127); }
+      else {
+        const im = await loadImg(e.src); if (!im) continue; v = embed(m, im);
+        let mx = 0; v.forEach(z => { mx = Math.max(mx, Math.abs(z)); }); const q = new Int8Array(v.length); for (let j = 0; j < v.length; j++) q[j] = Math.round(v[j] / mx * 127);
+        cache[key] = btoa(String.fromCharCode.apply(null, new Uint8Array(q.buffer))); changed = true;
+        if (prog && i % 10 === 0) { prog(i, list.length); await new Promise(r => setTimeout(r, 0)); }
+      }
+      out.push({ s: e.s, src: e.src, v });
+    }
+    if (changed) try { localStorage.setItem(EMB_KEY, JSON.stringify(cache)); } catch (e) {}
+    return out;
+  }
+  const cosSim = (a, b) => { let d = 0, na = 0, nb = 0; for (let i = 0; i < a.length; i++) { d += a[i] * b[i]; na += a[i] * a[i]; nb += b[i] * b[i]; } return d / Math.sqrt(na * nb || 1); };
+  const matchCard = (s, src) => '<a class="card" href="#/sp/' + s.id + '" style="padding:6px;text-decoration:none"><img loading="lazy" src="' + src + '" alt="' + esc(s.ar) + '" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:8px"><div class="small" style="font-weight:600">' + esc(dispName(s)) + '</div><div class="muted small latin">' + esc(s.en) + '</div></a>';
+  async function photoMatch(url, box) {
+    const im = await loadImg(url); if (!im) { box.innerHTML = '<div class="notice">تعذّر قراءة الصورة.</div>'; return; }
+    try {
+      box.innerHTML = '<div class="muted small">جاري تحميل نموذج التعرّف على الصور (مرة واحدة تقريبًا 14 ميجا، وبعدها بيتخزن)…</div>';
+      const m = await Promise.race([visModel(), new Promise((_, no) => setTimeout(() => no(new Error('timeout')), 45000))]);
+      const all = await spEmbeds(m, (i, n) => { box.innerHTML = '<div class="muted small">تجهيز بصمات صور الأنواع لأول مرة: ' + i + ' من ' + n + '…</div>'; });
+      const q = embed(m, im), top = all.map(e => ({ e, v: cosSim(q, e.v) })).sort((a, b) => b.v - a.v).slice(0, 8);
+      const conf = top[0].v > 0.75 ? 'تشابه قوي' : top[0].v > 0.6 ? 'تشابه متوسط' : 'تشابه ضعيف — يمكن النوع مش موجود في الدليل أو الصورة مش واضحة';
+      box.innerHTML = '<h3 class="h3" style="margin:0">أقرب الأنواع شبهًا لصورتك</h3><div class="muted small">تعرّف تلقائي بنموذج رؤية على جهازك (' + conf + '). الترتيب من الأقرب، وهو ترشيح مش تأكيد: افتح النوع وقارن الزعانف والنقوش والفم قبل ما تحكم.</div>' +
+        '<div class="vargrid">' + top.map(x => matchCard(x.e.s, x.e.src)).join('') + '</div>';
+    } catch (err) {
+      const f = imgFeat(im), all = await spFeats();
+      const top = all.map(e => ({ e, v: featSim(f, e.f) })).sort((a, b) => b.v - a.v).slice(0, 8);
+      box.innerHTML = '<h3 class="h3" style="margin:0">ترشيحات تقريبية (بدون إنترنت)</h3><div class="muted small">نموذج التعرّف محتاج إنترنت لأول مرة. لحد ما يتحمّل، دي مقارنة بسيطة باللون والنقوش فقط ودقتها ضعيفة، فاعتبرها بداية للبحث بس.</div>' +
+        '<div class="vargrid">' + top.map(x => matchCard(x.e.s, x.e.src)).join('') + '</div>';
+    }
+  }
   function showPhotoQ(file, form) {
     if (!file || !/^image\//.test(file.type || 'image/')) { toast('الملف ده مش صورة.'); return; }
     {
@@ -1468,8 +1588,10 @@
         let prev = form.nextElementSibling;
         if (!prev || !prev.classList || !prev.classList.contains('photoqprev')) { prev = document.createElement('div'); prev.className = 'photoqprev card stack'; form.insertAdjacentElement('afterend', prev); }
         prev.innerHTML = '<img src="' + url + '" alt="صورة سمكتك" style="width:100%;max-height:240px;object-fit:contain;border-radius:12px;border:1px solid var(--line)">' +
-          '<div class="notice">لسه مفيش تعرّف تلقائي بالذكاء الاصطناعي على الصورة. قارن صورتك بصور النتائج تحت أو دوّر بالاسم، ولما تلاقي النوع هتلاقي في صفحته لو سام أو غير صالح للأكل.</div>' +
+          '<div class="photoqres stack"><div class="muted small">جاري مقارنة صورتك بصور الأنواع…</div></div>' +
+          '<div class="notice info">للتعرّف الأدق بالذكاء الاصطناعي (يحتاج إنترنت): ارفع نفس الصورة في <a href="https://www.inaturalist.org/computer_vision_demo" target="_blank" rel="noopener">أداة التعرّف المجانية من iNaturalist</a>، أو افتحها بـ Google Lens من معرض الصور في موبايلك، وبعدين دوّر هنا بالاسم اللي يطلع لك.</div>' +
           '<button class="btn ghost small" data-act="photoqclear">مسح الصورة</button>';
+        photoMatch(url, prev.querySelector('.photoqres'));
         prev.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
     }
