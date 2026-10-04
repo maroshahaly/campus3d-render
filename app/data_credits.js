@@ -1404,6 +1404,56 @@ const PHOTO_CREDITS = {
 "by": "Mathieu Pélissié",
 "lic": "CC-BY-NC",
 "src": "inat:423313194"
+},
+"gear_speargun": {
+"by": "Maximfil",
+"lic": "CC BY-SA 3.0",
+"src": "commons:File:Подводный арбалет Beuchat-mundial-competition.jpg"
+},
+"gear_castnet": {
+"by": "Vardhini reddy",
+"lic": "CC BY-SA 4.0",
+"src": "commons:File:\"The two best times to fish is when it's raining and when it ain't\".jpg"
+},
+"gear_gillnet": {
+"by": "Vikiçizer",
+"lic": "CC BY-SA 4.0",
+"src": "commons:File:Amasra 407.JPG"
+},
+"gear_liftnet": {
+"by": "Sanjib Chaudhary",
+"lic": "CC BY-SA 4.0",
+"src": "commons:File:A Chinese fishing net in Fort Kochi.jpg"
+},
+"gear_basket": {
+"by": "Paul Asman and Jill Lenoble",
+"lic": "CC BY 2.0",
+"src": "commons:File:Buoys and traps on boat in Seldom Harbour (29470106793).jpg"
+},
+"gear_crabpot": {
+"by": "Lewis Clarke",
+"lic": "CC BY-SA 2.0",
+"src": "commons:File:Boscastle , Crab Cages - geograph.org.uk - 2491330.jpg"
+},
+"gear_weir": {
+"by": "LBM1948",
+"lic": "CC BY-SA 4.0",
+"src": "commons:File:Acaraú (2007) 02.jpg"
+},
+"gear_bowfish": {
+"by": "USFWS Mountain-Prairie",
+"lic": "CC BY 2.0",
+"src": "commons:File:Bow Hunting for Fish (15665842788).jpg"
+},
+"gear_spearfish": {
+"by": "Johnmartindavies",
+"lic": "CC BY-SA 3.0",
+"src": "commons:File:15 metres visibility.JPG"
+},
+"w_k_bimini": {
+"by": "User:StromBer",
+"lic": "CC BY-SA 3.0",
+"src": "commons:File:BiminiKnotReep5WindgAlles.JPG"
 }
 };
 /* فيديوهات قصيرة مضمّنة (vids.json بمعرّف النوع): مقاطع 8 ثواني بلا صوت من Pixabay (رخصة Pixabay: استخدام مجاني بلا إلزام بنسب)، اتراجعت لقطاتها يدويًا: بلا علامات مائية ولا أشخاص */

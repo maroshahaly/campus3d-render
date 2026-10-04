@@ -357,17 +357,32 @@
   }
   function toolKnots(el) {
     el.innerHTML = '<div class="stack"><p class="muted" style="margin:0">أهم عقد الصيد: بتستخدم في إيه وإزاي تتربط خطوة بخطوة. لمشاهدة الرسوم المتحركة لكل عقدة اضغط «شوف الحركة».</p><div class="geargrid">' +
-      FKNOTS.map((k, i) => '<article class="card knotcard stack">' + (({ 'Improved Clinch Knot': 'w_k_clinch', 'Dropper Loop': 'w_k_dropper' })[k.en] ? '<div class="knotphoto"><img loading="lazy" alt="' + esc(k.t) + ' (صورة حقيقية)" src="' + IMGS[({ 'Improved Clinch Knot': 'w_k_clinch', 'Dropper Loop': 'w_k_dropper' })[k.en]] + '"></div>' : '') + '<div class="knotart"><svg viewBox="' + (k.flip ? '-70 0 380 120' : '0 0 310 120') + '" role="img" aria-label="' + esc(k.t) + '">' + k.svg + '</svg></div>' +
+      FKNOTS.map((k, i) => '<article class="card knotcard stack">' + (({ 'Improved Clinch Knot': 'w_k_clinch', 'Dropper Loop': 'w_k_dropper', 'Bimini Twist': 'w_k_bimini' })[k.en] ? '<div class="knotphoto"><img loading="lazy" alt="' + esc(k.t) + ' (صورة حقيقية)" src="' + IMGS[({ 'Improved Clinch Knot': 'w_k_clinch', 'Dropper Loop': 'w_k_dropper', 'Bimini Twist': 'w_k_bimini' })[k.en]] + '"></div>' : '') + '<div class="knotart"><svg viewBox="' + (k.flip ? '-70 0 380 120' : '0 0 310 120') + '" role="img" aria-label="' + esc(k.t) + '">' + k.svg + '</svg></div>' +
         '<h2 class="h3"><span class="gearn">' + (i + 1) + '</span>' + esc(k.t) + ' <span class="muted small latin">' + esc(k.en) + '</span></h2><p style="margin:0">' + esc(k.use) + '</p>' +
         '<ol class="knotsteps">' + k.steps.map(t => '<li>' + esc(t) + '</li>').join('') + '</ol>' +
         '<a class="btn ghost small" target="_blank" rel="noopener" href="' + KNOT_BASE + k.u + '">شوف الحركة خطوة بخطوة</a></article>').join('') + '</div>' +
       '<a class="btn ghost" target="_blank" rel="noopener" href="' + KNOT_BASE + 'fishing-knots">كل عقد الصيد بالرسوم المتحركة</a></div>';
   }
+  const gearPic = (g, big) => g.img && IMGS['gear_' + g.id] ? '<img loading="lazy" alt="' + esc(g.t) + '" src="' + IMGS['gear_' + g.id] + '">' + (PHOTO_CREDITS['gear_' + g.id] && !/^(CC0|Pixabay)$/.test(PHOTO_CREDITS['gear_' + g.id].lic) ? '<span class="muted small gearcr">' + credit('gear_' + g.id) + '</span>' : '') : '<svg viewBox="0 0 120 120" role="img" aria-label="' + esc(g.t) + '">' + (GEAR_SVG[g.id] || '') + '</svg>';
   function toolGear(el) {
-    el.innerHTML = '<div class="stack"><p class="muted" style="margin:0">كل اللي بيستخدمه الصياد، مرتّب من أصغر قطعة لأكبرها: شكلها، وبتستخدم في إيه.</p><div class="geargrid">' +
-      GEAR.map((g, i) => '<article class="card gearcard"><div class="gearimg">' + (g.img && IMGS['gear_' + g.id] ? '<img loading="lazy" alt="' + esc(g.t) + '" src="' + IMGS['gear_' + g.id] + '">' + (PHOTO_CREDITS['gear_' + g.id] && !/^(CC0|Pixabay)$/.test(PHOTO_CREDITS['gear_' + g.id].lic) ? '<span class="muted small gearcr">' + credit('gear_' + g.id) + '</span>' : '') : '<svg viewBox="0 0 120 120" role="img" aria-label="' + esc(g.t) + '">' + GEAR_SVG[g.id] + '</svg>') + '</div>' +
-        '<div class="stack" style="gap:6px"><h2 class="h3"><span class="gearn">' + (i + 1) + '</span>' + esc(g.t) + '</h2><p style="margin:0">' + esc(g.d) + '</p><p class="muted small" style="margin:0"><b>الاستخدام: </b>' + esc(g.u) + '</p></div></article>').join('') + '</div></div>';
+    const grps = Object.keys(GEAR_GRP);
+    el.innerHTML = '<div class="stack"><p class="muted" style="margin:0">كل اللي بيستخدمه الصياد: شكله، وبيستخدم في إيه. اضغط على أي أداة تفتح صفحتها بالأنواع والمقاسات.</p>' +
+      grps.map(gk => { const L = GEAR.filter(g => (g.grp || 'tackle') === gk); return L.length ? '<h2 class="h2" style="margin:8px 0 0">' + esc(GEAR_GRP[gk]) + '</h2><div class="geargrid">' + L.map(g => { const i = GEAR.indexOf(g);
+        return '<a class="card gearcard" href="#/gear/' + g.id + '" style="text-decoration:none;color:inherit"><div class="gearimg">' + gearPic(g) + '</div>' +
+        '<div class="stack" style="gap:6px"><h3 class="h3"><span class="gearn">' + (i + 1) + '</span>' + esc(g.t) + '</h3><p style="margin:0">' + esc(g.d) + '</p><p class="muted small" style="margin:0"><b>الاستخدام: </b>' + esc(g.u) + '</p>' + (GEAR_INFO[g.id] ? '<span class="tag ok" style="align-self:flex-start">الأنواع والمقاسات ←</span>' : '') + '</div></a>'; }).join('') + '</div>' : ''; }).join('') + '</div>';
   }
+  V.gear = function (a) {
+    const g = GEAR.find(x => x.id === a[0]);
+    if (!g) return '<div class="stack"><h1 class="h1">الأدوات</h1><a class="btn" href="#/tools?t=gear">كل أدوات الصياد</a></div>';
+    const inf = GEAR_INFO[g.id] || {}, i = GEAR.indexOf(g), prev = GEAR[i - 1], next = GEAR[i + 1];
+    return '<div class="stack-lg"><div class="row between"><a class="btn ghost small" href="#/tools?t=gear">كل الأدوات</a><span class="muted small">' + esc(GEAR_GRP[g.grp || 'tackle']) + '</span></div>' +
+      '<header class="stack"><h1 class="h1">' + esc(g.t) + '</h1></header>' +
+      '<div class="card gearhero"><div class="gearimg big">' + gearPic(g, 1) + '</div></div>' +
+      '<section class="card stack"><p style="margin:0">' + esc(g.d) + '</p><p class="muted" style="margin:0"><b>الاستخدام: </b>' + esc(g.u) + '</p></section>' +
+      (inf.types ? '<section class="card stack"><h2 class="h2" style="margin:0">الأنواع</h2><dl class="kv" style="margin:0">' + inf.types.map(t => '<dt>' + esc(t[0]) + '</dt><dd>' + esc(t[1]) + '</dd>').join('') + '</dl></section>' : '') +
+      (inf.sizes ? '<section class="card stack"><h2 class="h2" style="margin:0">المقاسات</h2><div class="tbl"><table><thead><tr>' + inf.sizes.h.map(h => '<th>' + esc(h) + '</th>').join('') + '</tr></thead><tbody>' + inf.sizes.r.map(r => '<tr>' + r.map(c => '<td>' + esc(c) + '</td>').join('') + '</tr>').join('') + '</tbody></table></div>' + (inf.note ? '<div class="notice info">' + esc(inf.note) + '</div>' : '') + '</section>' : (inf.note ? '<div class="notice info">' + esc(inf.note) + '</div>' : '')) +
+      '<div class="row between">' + (prev ? '<a class="btn ghost small" href="#/gear/' + prev.id + '">→ ' + esc(prev.t.split(' (')[0]) + '</a>' : '<span></span>') + (next ? '<a class="btn ghost small" href="#/gear/' + next.id + '">' + esc(next.t.split(' (')[0]) + ' ←</a>' : '') + '</div></div>';
+  };
   function toolToday(el) {
     const loc = getLoc(), di = dayInfo(loc), sun = di.sun;
     const slots = di.slots.map(s => '<div class="slot ' + s.kind + '"><span>' + esc(s.label) + '<br><span class="muted small">' + (s.kind === 'major' ? 'فترة رئيسية ≈ ساعتان' : 'فترة ثانوية ≈ ساعة') + '</span></span><b class="num">' + T(new Date(s.t.getTime() - (s.kind === 'major' ? 3600000 : 1800000))) + ' – ' + T(new Date(s.t.getTime() + (s.kind === 'major' ? 3600000 : 1800000))) + '</b></div>').join('');
@@ -1396,7 +1411,7 @@
   }
 
   /* ---------- الموجّه ---------- */
-  const NAVS = [['#/', 'home', 'الرئيسية', 'home'], ['#/here', 'pin', 'هنا الآن', 'here'], ['#/species', 'fish', 'الأنواع', 'species|sp|fish|fishlist|tech|months|month|compare'], ['#/tools', 'tools', 'الأدوات', 'tools|world|safety'], ['#/links', 'book', 'المراجع', 'links|about']];
+  const NAVS = [['#/', 'home', 'الرئيسية', 'home'], ['#/here', 'pin', 'هنا الآن', 'here'], ['#/species', 'fish', 'الأنواع', 'species|sp|fish|fishlist|tech|months|month|compare'], ['#/tools', 'tools', 'الأدوات', 'tools|world|safety|gear'], ['#/links', 'book', 'المراجع', 'links|about']];
   function parse() {
     const h = location.hash.replace(/^#\/?/, ''), qi = h.indexOf('?'), path = qi < 0 ? h : h.slice(0, qi), qs = {};
     if (qi >= 0) h.slice(qi + 1).split('&').forEach(p => { const [k, v] = p.split('='); if (k) qs[k] = decodeURIComponent(v || ''); });
