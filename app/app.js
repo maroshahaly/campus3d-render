@@ -269,7 +269,7 @@
     if (qs.q != null) fishQ = qs.q;
     return '<div class="stack"><div class="row between"><div><div class="eyebrow">ملف مساعد الصيد (مصر)</div><h1 class="h1">أسماك الملف</h1></div><a class="btn ghost small" href="#/species">الأنواع العالمية</a></div>' +
       searchForm('fq', fishQ, 'ابحث باسم السمكة أو الطُّعم أو المكان', 'بحث في الأسماك') +
-      '<div class="chips" id="ff">' + [['all', 'الكل'], ['now', 'موسمها الآن'], ['fish', 'أسماك بحرية'], ['shell', 'رخويات وقشريات'], ['fresh', 'مياه عذبة']].map(([k, l]) => '<button class="chip" data-ff="' + k + '" aria-pressed="' + (fishF === k) + '">' + l + '</button>').join('') + '</div>' +
+      '<a class="card bothlink" href="#/both"><b>🌊🏞️ أسماك البحر والنهر</b><span class="muted small">البوري والقاروص والبلطي… الفرق بين اللي من البحر واللي من النهر في الشكل والحجم والطعم وطرق الصيد</span></a>' + '<div class="chips" id="ff">' + [['all', 'الكل'], ['now', 'موسمها الآن'], ['fish', 'أسماك بحرية'], ['shell', 'رخويات وقشريات'], ['fresh', 'مياه عذبة']].map(([k, l]) => '<button class="chip" data-ff="' + k + '" aria-pressed="' + (fishF === k) + '">' + l + '</button>').join('') + '</div>' +
       '<div id="flist" class="fishgrid"></div></div>';
   };
   function drawFishList() {
@@ -283,8 +283,15 @@
     let extra = fishF === 'now' ? [] : SG.filter(g => inEgypt(g) && !DECK[g.id] && grpOf(g) !== 'orn' && toks.every(t => g[qf].indexOf(t) > -1)).map(g => ({ s: g }));
     if (fishF !== 'all') extra = extra.filter(x => kindG(x) === fishF || (fishF === 'fresh' && x.s.R.has('f_naf')));
     extra.sort((x, y) => x.s.ar.localeCompare(y.s.ar, 'ar'));
-    el.innerHTML = (list.length ? list.map(fcard).join('') : (extra.length ? '' : '<div class="empty" style="grid-column:1/-1">لا نتائج. جرّب كلمة أقصر أو فلترًا آخر.</div>')) +
-      (extra.length ? '<h2 class="h2" style="grid-column:1/-1;margin-top:18px">أنواع تانية في مصر (من الدليل العالمي)</h2>' + extra.map(x => '<a class="card gcard stack" href="#/sp/' + x.s.id + '" style="gap:6px"><div class="gtop">' + gthumb(x.s) + '<div class="gnm"><b class="h3" style="margin:0">' + esc(dispName(x.s)) + '</b><div class="muted small latin">' + esc(x.s.en) + '</div></div></div></a>').join('') : '');
+    /* قائمة واحدة مدموجة: أسماك الملف + باقي أنواع مصر من الدليل العالمي، مقسّمة بالبيئة ومرتّبة بموسم الشهر ده ثم الاسم */
+    const kindF = s => FRESH_TOO.indexOf(s.id) > -1 && s.kind !== 'shell' ? (s.kind === 'fresh' ? 'fresh' : s.kind) : s.kind;
+    const regsNow = regionsAt({ lat: 30.5, lng: 31 }), lvG = g => { const m = monthScores(g, { lat: 30.5, lng: 31 }, regsNow, null); return m ? m[CUR] : 0; };
+    const gcardF = x => '<a class="card gcard stack" href="#/sp/' + x.s.id + '" style="gap:6px"><div class="gtop">' + gthumb(x.s) + '<div class="gnm"><b class="h3" style="margin:0">' + esc(dispName(x.s)) + '</b><div class="muted small latin">' + esc(x.s.en) + '</div></div></div></a>';
+    const items = list.map(s => ({ k: kindF(s), lv: s.lv[CUR], nm: s.name, h: fcard(s) })).concat(extra.map(x => ({ k: kindG(x), lv: lvG(x.s), nm: x.s.ar, h: gcardF(x) })));
+    items.sort((x, y) => (y.lv - x.lv) || x.nm.localeCompare(y.nm, 'ar'));
+    const GRP = [['fish', 'أسماك البحر (المتوسط والأحمر)'], ['shell', 'رخويات وقشريات'], ['fresh', 'المياه العذبة (النيل والبحيرات)']];
+    el.innerHTML = !items.length ? '<div class="empty" style="grid-column:1/-1">لا نتائج. جرّب كلمة أقصر أو فلترًا آخر.</div>' :
+      (fishF === 'all' ? GRP.map(g => { const L = items.filter(x => x.k === g[0]); return L.length ? '<h2 class="h2 grph" style="grid-column:1/-1">' + g[1] + ' <span class="muted small num">' + L.length + '</span></h2>' + L.map(x => x.h).join('') : ''; }).join('') + items.filter(x => GRP.every(g => g[0] !== x.k)).map(x => x.h).join('') : items.map(x => x.h).join(''));
     hydratePhotos();
   }
 
@@ -347,7 +354,7 @@
     const wph = (k, cap) => IMGS[k] ? '<figure class="wph" style="margin:0"><img loading="lazy" alt="" src="' + IMGS[k] + '">' + (cap || PHOTO_CREDITS[k] && !/^(CC0|Pixabay)$/.test(PHOTO_CREDITS[k].lic) ? '<figcaption class="muted small">' + (cap ? esc(cap) + ' ' : '') + (PHOTO_CREDITS[k] && !/^(CC0|Pixabay)$/.test(PHOTO_CREDITS[k].lic) ? credit(k) : '') + '</figcaption>' : '') + '</figure>' : '';
     const TECH_PH = [['w_t_cast'], ['w_t_bottom'], ['gear_sabiki', 'سبحة (سابيكي) طالع عليها سمكتين في رمية واحدة.'], ['w_t_float'], ['w_t_troll'], ['w_t_jig'], ['w_t_popper'], ['w_t_live', 'سرب سمك صغير، وده الطُّعم الحي اللي بيتصاد ويتركب.'], ['w_t_comm']];
     const LINE_PH = ['gear_line', 'w_l_fluoro', 'w_l_braid', 'gear_leader', 'gear_hook', 'gear_sinker'];
-    if (worldTab === 'tech') body = '<div>' + TECHNIQUES.map((t, i) => '<details class="acc"' + (i === 0 ? ' open' : '') + '><summary><span>' + esc(t.t) + '<br><span class="muted small latin">' + esc(t.en) + '</span></span></summary><div class="body stack">' + (TECH_PH[i] ? wph(TECH_PH[i][0], TECH_PH[i][1]) : '') + '<p>' + esc(t.what) + '</p>' +
+    if (worldTab === 'tech') body = '<div>' + TECHNIQUES.map((t, i) => '<details class="acc"' + (i === 0 ? ' open' : '') + '><summary><span>' + esc(t.t) + '<br><span class="muted small latin">' + esc(t.en) + '</span></span></summary><div class="body stack">' + (TECH_PH[i] ? wph(TECH_PH[i][0], TECH_PH[i][1]) : '') + (i === 2 ? RigArt.render(GENRIGS.sabha, esc) : i === 1 ? RigArt.render(GENRIGS.tarqeed, esc) : '') + '<p>' + esc(t.what) + '</p>' +
       '<dl class="kv" style="margin:0"><dt>الوقت</dt><dd>' + esc(t.when) + '</dd><dt>العدة</dt><dd>' + esc(t.gear) + '</dd></dl><ul style="margin:0;padding-inline-start:20px">' + t.tips.map(x => '<li>' + esc(x) + '</li>').join('') + '</ul></div></details>').join('') + '</div>';
     else if (worldTab === 'knots') body = '<div id="knotbody"></div>';
     else body = '<div class="stack">' + LINE_INFO.map((x, i) => '<div class="card stack">' + (LINE_PH[i] ? wph(LINE_PH[i]) : '') + '<h3 class="h3" style="margin:0">' + esc(x.t) + '</h3><p class="muted">' + esc(x.p) + '</p></div>').join('') + '</div>';
@@ -397,6 +404,7 @@
       '<header class="stack"><h1 class="h1">' + esc(g.t) + '</h1></header>' +
       '<div class="card gearhero"><div class="gearimg big">' + gearPic(g, 1) + '</div></div>' +
       '<section class="card stack"><p style="margin:0">' + esc(g.d) + '</p><p class="muted" style="margin:0"><b>الاستخدام: </b>' + esc(g.u) + '</p></section>' +
+      (g.id === 'sabiki' ? '<section class="card stack"><h2 class="h2" style="margin:0">شكل تركيب السبحة</h2>' + RigArt.render(GENRIGS.sabha, esc) + '<a class="btn ghost small" href="#/tech?t=sabha">شرح السبحة كامل من الملف</a></section>' : '') +
       (inf.types ? '<section class="card stack"><h2 class="h2" style="margin:0">الأنواع</h2><dl class="kv" style="margin:0">' + inf.types.map(t => '<dt>' + esc(t[0]) + '</dt><dd>' + esc(t[1]) + '</dd>').join('') + '</dl></section>' : '') +
       (inf.sizes ? '<section class="card stack"><h2 class="h2" style="margin:0">المقاسات</h2><div class="tbl"><table><thead><tr>' + inf.sizes.h.map(h => '<th>' + esc(h) + '</th>').join('') + '</tr></thead><tbody>' + inf.sizes.r.map(r => '<tr>' + r.map(c => '<td>' + esc(c) + '</td>').join('') + '</tr>').join('') + '</tbody></table></div>' + (inf.note ? '<div class="notice info">' + esc(inf.note) + '</div>' : '') + '</section>' : (inf.note ? '<div class="notice info">' + esc(inf.note) + '</div>' : '')) +
       '<div class="row between">' + (prev ? '<a class="btn ghost small" href="#/gear/' + prev.id + '">→ ' + esc(prev.t.split(' (')[0]) + '</a>' : '<span></span>') + (next ? '<a class="btn ghost small" href="#/gear/' + next.id + '">' + esc(next.t.split(' (')[0]) + ' ←</a>' : '') + '</div></div>';
@@ -834,6 +842,7 @@
       '<div class="bars' + (real ? '' : ' hyp') + '" role="img" aria-label="نسبة ذروة موسم ' + esc(s.ar) + (real ? '' : ' (افتراضي لموطنه الأصلي)') + '">' + sc.map((l, i) => { const pct = Math.round(l * 100 / 3); return '<div class="col l' + l + (i === CUR ? ' cur' : '') + '"><b class="pct">' + pct + '%</b><div class="batt"><i style="height:' + pct + '%"></i></div><span>' + MONTHS[i].slice(0, 3) + '</span></div>'; }).join('') + '</div>' +
       (real ? '<div class="legend"><span><i style="background:var(--lv0)"></i>0%</span><span><i style="background:var(--lv1)"></i>33%</span><span><i style="background:var(--lv2)"></i>66%</span><span><i style="background:var(--lv3)"></i>100%</span></div>' : '<div class="muted small">تدرّج رمادي عمدًا لأنه تقدير افتراضي غير مرتبط بمنطقتك الحالية.</div>') +
       '<div class="muted small">' + (egyptReal && hem === 'n' ? 'هذه نسب ميدانية حقيقية من ملف «مساعد الصيد» في مصر (نفس بيانات صفحته التفصيلية)، وليست تقديرًا عامًا — لذلك قد تختلف عن أنواع أخرى تعرض تقديرًا تقريبيًا فقط. ' : 'الشهور ' + (hem === 's' ? 'مقلوبة لنصف الكرة الجنوبي.' : 'لنصف الكرة الشمالي.')) + (Math.abs(loc.lat) < 6 && real && !egyptReal ? ' قرب خط الاستواء الموسمية ضعيفة فتُعرض متوسطة طوال السنة.' : '') + '</div></section>' +
+      bothFor(s.id) +
       '<section class="card stack"><h2 class="h2" style="margin:0">أين يعيش؟</h2>' + mapHtml('map-sp', { sp: s.id, span: 360, h: 330 }) + legendMap + '<div class="muted small">' + (occPts(s.id) ? 'كل نقطة ذهبية مشاهدة حقيقية موثقة للنوع (مقرّبة لخلية ≈ 5 كم)، والصناديق المنقطة الباهتة أقاليم تواجده العامة. ' : 'الظل الذهبي أقاليم تواجد النوع (صناديق تقريبية). ') + '<b>البيئة:</b> ' + esc(habText(s)) + '. الدبوس الأحمر مكانك.</div>' + egSpHtml(s.id) + '</section>' +
       (howHtml ? '<section class="card stack"><h2 class="h2" style="margin:0">طريقة الصيد</h2>' + howHtml + '</section>' : '') +
       (real ? '<section class="card stack"><h2 class="h2" style="margin:0">اليوم في ' + esc(loc.name) + '</h2><div class="wins">' + (winHtml(ws, di.sun) || '<span class="muted small">لا نوافذ محددة لليوم.</span>') + '</div><div class="muted small">النجمة ★ = تتزامن مع فترة قمرية رئيسية. الأوقات تقريبية وبتوقيت ' + (loc.tz ? 'المدينة' : 'جهازك') + '.</div></section>' : '') +
@@ -1434,7 +1443,7 @@
 
   /*@@TRIP@@*/
   /* ---------- الموجّه ---------- */
-  const NAVS = [['#/', 'home', 'الرئيسية', 'home'], ['#/here', 'pin', 'هنا الآن', 'here|egypt|trip|track'], ['#/species', 'fish', 'الأنواع', 'species|sp|fish|fishlist|tech|months|month|compare'], ['#/tools', 'tools', 'الأدوات', 'tools|world|safety|gear'], ['#/links', 'book', 'المراجع', 'links|about']];
+  const NAVS = [['#/', 'home', 'الرئيسية', 'home'], ['#/here', 'pin', 'هنا الآن', 'here|egypt|trip|track'], ['#/species', 'fish', 'الأنواع', 'species|sp|fish|fishlist|tech|months|month|compare|both'], ['#/tools', 'tools', 'الأدوات', 'tools|world|safety|gear'], ['#/links', 'book', 'المراجع', 'links|about']];
   function parse() {
     const h = location.hash.replace(/^#\/?/, ''), qi = h.indexOf('?'), path = qi < 0 ? h : h.slice(0, qi), qs = {};
     if (qi >= 0) h.slice(qi + 1).split('&').forEach(p => { const [k, v] = p.split('='); if (k) qs[k] = decodeURIComponent(v || ''); });

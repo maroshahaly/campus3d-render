@@ -273,3 +273,16 @@
       '<div class="muted small">المربعات البرتقالي على الخريطة (≈ 550 م) حوالين كل مكان، ولونها أغمق كل ما نسبة النوع هناك أعلى.</div><div class="chips">' +
       L.slice(0, 12).map(x => '<a class="chip" href="#/egypt/' + x.s[0] + '"><span class="dot w-' + x.s[4] + '" style="width:9px;height:9px"></span> ' + esc(x.s[1].split(' (')[0]) + ' <b class="num">' + x.p + '%</b></a>').join('') + '</div></div>';
   }
+  /* ---------- أسماك البحر والنهر ---------- */
+  const bothCard = b => { const ids = b.ids || [b.id], s = BYG[b.id];
+    return '<article class="card stack bothcard"><div class="row" style="gap:10px;flex-wrap:nowrap">' + (s ? '<img class="tripimg" alt="" src="' + spPhoto(s) + '">' : '') + '<div style="flex:1;min-width:0"><h3 class="h3" style="margin:0">' + esc(b.t) + '</h3><div class="muted small">' + esc(BOTH_TYPE[b.type]) + '</div>' +
+      '<div class="chips" style="margin-top:6px">' + ids.filter(i => BYG[i]).map(i => '<a class="chip" href="#/sp/' + i + '">' + esc(dispName(BYG[i])) + '</a>').join('') + '</div></div></div>' +
+      '<div class="both2"><div><b>🌊 في البحر</b><p>' + esc(b.sea) + '</p></div><div><b>🏞️ في النهر والبحيرات</b><p>' + esc(b.fresh) + '</p></div></div>' +
+      '<dl class="kv" style="margin:0"><dt>الطعم</dt><dd>' + esc(b.taste) + '</dd><dt>طرق الصيد</dt><dd>' + esc(b.fish) + '</dd></dl></article>'; };
+  V.both = function () {
+    return '<div class="stack-lg"><div><div class="eyebrow">مالح وعذب</div><h1 class="h1">أسماك البحر والنهر</h1></div>' +
+      '<p class="muted" style="margin:0">أنواع بتعيش في البحر وكمان في الأنهار أو البحيرات. نفس النوع بيختلف شكله وحجمه وطعمه وطريقة صيده حسب المية اللي اتصاد منها.</p>' +
+      '<div class="chips">' + Object.keys(BOTH_TYPE).map(k => '<span class="chip">' + esc(BOTH_TYPE[k]) + '</span>').join('') + '</div>' +
+      BOTH.map(bothCard).join('') + '</div>';
+  };
+  const bothFor = id => { const b = BOTH.find(x => (x.ids || [x.id]).indexOf(id) > -1); return b ? '<section class="stack"><h2 class="h2" style="margin:0">في البحر وفي النهر</h2>' + bothCard(b) + '<a class="btn ghost small" href="#/both">كل أسماك البحر والنهر</a></section>' : ''; };

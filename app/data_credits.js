@@ -1474,6 +1474,11 @@ const PHOTO_CREDITS = {
 "by": "tdenling",
 "lic": "CC-BY-NC",
 "src": "inat:319272056"
+},
+"var_oreochromis_sp": {
+"by": "Michael Cantillo",
+"lic": "CC-BY",
+"src": "inat:387436892"
 }
 };
 /* فيديوهات قصيرة مضمّنة (vids.json بمعرّف النوع): مقاطع 8 ثواني بلا صوت من Pixabay (رخصة Pixabay: استخدام مجاني بلا إلزام بنسب)، اتراجعت لقطاتها يدويًا: بلا علامات مائية ولا أشخاص */
