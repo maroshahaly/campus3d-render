@@ -1575,11 +1575,17 @@
     let nn = 0; for (let i = 0; i < D; i++) { v[i] = e[i] + e[D + i]; nn += v[i] * v[i]; } nn = Math.sqrt(nn) || 1; for (let i = 0; i < D; i++) v[i] /= nn;
     return [v];
   }
-  let CLSW = null;
+  let CLSW = null, CLSP = null;
   function classify(vs) {
     if (!CLSW) { const bs = atob(SPCLS.w), q = new Int8Array(bs.length); for (let i = 0; i < bs.length; i++) q[i] = bs.charCodeAt(i) << 24 >> 24; CLSW = q; }
     const C = SPCLS.ids.length, D = SPCLS.d, z = new Float64Array(C);
     vs.forEach(v => { const acc = new Float64Array(C); for (let d = 0; d < D; d++) { const xv = v[d]; if (!xv) continue; const o = d * C; for (let c = 0; c < C; c++) acc[c] += xv * CLSW[o + c]; } for (let c = 0; c < C; c++) z[c] += (acc[c] * SPCLS.sc[c] + SPCLS.b[c]) / vs.length; });
+    if (SPCLS.p) { /* مطابقة مباشرة: أعلى تشابه بين صورتك وكل صورة مرجعية من صور النوع الحقيقية */
+      if (!CLSP) { const bs = atob(SPCLS.p), q = new Int8Array(bs.length); for (let i = 0; i < bs.length; i++) q[i] = bs.charCodeAt(i) << 24 >> 24; CLSP = q; }
+      const best = new Float64Array(C).fill(-1e9), v = vs[0];
+      for (let j = 0; j < SPCLS.pc.length; j++) { let d = 0; const o = j * D; for (let k = 0; k < D; k++) d += v[k] * CLSP[o + k]; d *= SPCLS.psc; const c = SPCLS.pc[j]; if (d > best[c]) best[c] = d; }
+      for (let c = 0; c < C; c++) z[c] += SPCLS.pa * best[c];
+    }
     let mx = -1e9; z.forEach(v => { mx = Math.max(mx, v); }); let sum = 0; const p = Array.from(z, v => { const e = Math.exp(v - mx); sum += e; return e; });
     return p.map((v, i) => ({ id: SPCLS.ids[i], p: v / sum })).sort((x, y) => y.p - x.p);
   }
@@ -1595,7 +1601,7 @@
       const vs = await embed2(sess, im);
       const res = classify(vs).filter(r => BYG[r.id]).slice(0, 5), p0 = res[0].p;
       const head = p0 >= 0.6 ? 'غالبًا دي: <b>' + esc(dispName(BYG[res[0].id])) + '</b>' : p0 >= 0.3 ? 'الأقرب: <b>' + esc(dispName(BYG[res[0].id])) + '</b> (مش متأكد تمامًا، قارن بالبدائل)' : 'مش متأكد: ممكن النوع مش ضمن الـ ' + SPCLS.ids.length + ' نوع في الدليل أو الصورة مش واضحة';
-      box.innerHTML = '<h3 class="h3" style="margin:0">نتيجة التعرّف</h3><div>' + head + '</div><div class="muted small">نموذج BioCLIP المتخصص في تمييز الكائنات الحية، مع مصنّف مدرَّب على حوالي 10 آلاف صورة حقيقية لأنواع الدليل، وبيشتغل على جهازك. النسبة = درجة ثقة النموذج.</div>' +
+      box.innerHTML = '<h3 class="h3" style="margin:0">نتيجة التعرّف</h3><div>' + head + '</div><div class="muted small">بنقارن شكل سمكتك وزعانفها ونقوشها بحوالي 10 آلاف صورة حقيقية لأنواع الدليل (مع 8 صور مرجعية لكل نوع للمطابقة المباشرة)، والتعرّف كله بيتم على جهازك. النسبة = درجة الثقة.</div>' +
         '<div class="vargrid">' + res.map(r => { const sp = BYG[r.id], src = deckPhoto(sp) || img('sp_' + sp.id); return matchCard(sp, src).replace('</a>', '<div class="small" style="font-weight:700">' + Math.round(r.p * 100) + '%</div></a>'); }).join('') + '</div>';
     } catch (err) {
       try { console.warn('photoMatch fallback:', err && (err.stack || err.message || err)); } catch (e) {}
@@ -1614,7 +1620,6 @@
         if (!prev || !prev.classList || !prev.classList.contains('photoqprev')) { prev = document.createElement('div'); prev.className = 'photoqprev card stack'; form.insertAdjacentElement('afterend', prev); }
         prev.innerHTML = '<img src="' + url + '" alt="صورة سمكتك" style="width:100%;max-height:240px;object-fit:contain;border-radius:12px;border:1px solid var(--line)">' +
           '<div class="photoqres stack"><div class="muted small">جاري مقارنة صورتك بصور الأنواع…</div></div>' +
-          '<div class="notice info">للتعرّف الأدق بالذكاء الاصطناعي (يحتاج إنترنت): ارفع نفس الصورة في <a href="https://www.inaturalist.org/computer_vision_demo" target="_blank" rel="noopener">أداة التعرّف المجانية من iNaturalist</a>، أو افتحها بـ Google Lens من معرض الصور في موبايلك، وبعدين دوّر هنا بالاسم اللي يطلع لك.</div>' +
           '<button class="btn ghost small" data-act="photoqclear">مسح الصورة</button>';
         photoMatch(url, prev.querySelector('.photoqres'));
         prev.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
