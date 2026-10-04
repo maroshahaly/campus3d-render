@@ -1151,9 +1151,9 @@ const PHOTO_CREDITS = {
 "src": "commons:File:Fishfinder display showing the mark at Flash Pinnacle P7280213.jpg"
 },
 "gear_gaff": {
-"by": "Peter from Wellesley",
-"lic": "CC BY 2.0",
-"src": "commons:File:Bringing in the barracuda.jpg"
+"by": "Markus Bärlocher",
+"lic": "Public domain",
+"src": "commons:File:Gaff.jpg"
 },
 "var_chelon_ramada": {
 "by": "Alfred Passath",
@@ -1641,9 +1641,9 @@ const PHOTO_CREDITS = {
 "src": "https://commons.wikimedia.org/w/index.php?curid=4525602"
 },
 "gt_hook_long": {
-"by": "Oolmadefoto",
-"lic": "Pixabay",
-"src": "pixabay:7418284"
+"by": "Mike Cline",
+"lic": "CC BY-SA 3.0",
+"src": "commons:File:HookEyes.jpg"
 },
 "gt_hook_treble": {
 "by": "PublicDomainPictures",
@@ -1651,14 +1651,14 @@ const PHOTO_CREDITS = {
 "src": "pixabay:71527"
 },
 "gt_float_pencil": {
-"by": "artellliii72",
-"lic": "Pixabay",
-"src": "pixabay:7552506"
+"by": "Geotek",
+"lic": "CC BY-SA 3.0",
+"src": "commons:File:Freshwater fishing floats.jpg"
 },
 "gt_float_oval": {
-"by": "PublicDomainPictures",
-"lic": "Pixabay",
-"src": "pixabay:70797"
+"by": "Santeri Viinamäki",
+"lic": "CC BY 4.0",
+"src": "commons:File:Fishing float.jpg"
 },
 "gt_spoon_cast": {
 "by": "Podknox",
@@ -1794,6 +1794,86 @@ const PHOTO_CREDITS = {
 "by": "Support.and.Defend",
 "lic": "CC BY-SA 3.0",
 "src": "commons:File:11-0 and 6-0 hooks.JPG"
+},
+"gt_gaff_long": {
+"by": "Markus Bärlocher",
+"lic": "Public domain",
+"src": "commons:File:Gaff.jpg"
+},
+"gt_float_slide": {
+"by": "Frank-Christian Baum",
+"lic": "CC BY-SA 3.0",
+"src": "commons:File:Schwimmer(Posen).jpg"
+},
+"gt_float_all": {
+"by": "Tomomarusan",
+"lic": "CC BY 2.5",
+"src": "commons:File:Floaters(fishing).JPG"
+},
+"gt_float_sea": {
+"by": "Pohled 111",
+"lic": "CC BY-SA 4.0",
+"src": "commons:File:Splávky používané podle druhu - do proudící vody (čtyři malé vpravo).jpg"
+},
+"gt_line_braid": {
+"by": "George Chernilevsky",
+"lic": "CC BY 4.0",
+"src": "commons:File:Fishing lines 2025 G1.jpg"
+},
+"gt_line_mono": {
+"by": "Jay Erickson",
+"lic": "CC BY 2.0",
+"src": "commons:File:GreenFishingLine.jpg"
+},
+"gt_ld_mono": {
+"by": "Raboe001",
+"lic": "CC BY-SA 2.5",
+"src": "commons:File:Angeln zubehoer haken.jpg"
+},
+"gt_hook_jig": {
+"by": "Горлов Вячеслав",
+"lic": "CC BY-SA 3.0",
+"src": "commons:File:Djig3.png"
+},
+"gt_rod_tele": {
+"by": "User:StromBer",
+"lic": "CC BY-SA 3.0",
+"src": "commons:File:Teleskopangel.JPG"
+},
+"gt_rod_tele2": {
+"by": "Oleg Bor",
+"lic": "CC BY-SA 4.0",
+"src": "commons:File:Telescopic rod. Lake Baikal. Eastern Siberia.jpg"
+},
+"gt_spoon_spinner": {
+"by": "サミー",
+"lic": "Public domain",
+"src": "commons:File:スピナー.jpg"
+},
+"gt_lure_spinner2": {
+"by": "Frank-Christian Baum",
+"lic": "CC BY-SA 3.0",
+"src": "commons:File:Spinner (Köder).jpg"
+},
+"gt_egi": {
+"by": "Irønie",
+"lic": "CC BY-SA 3.0",
+"src": "commons:File:Turlutte.jpg"
+},
+"gt_pilker": {
+"by": "Gordito1869",
+"lic": "CC BY 3.0",
+"src": "commons:File:Pilker 1.JPG"
+},
+"gt_soft": {
+"by": "Danndorfer1914",
+"lic": "CC0",
+"src": "commons:File:Mehrere Gummifische in Unterschiedlichen Größen, Farben und Formen.jpg"
+},
+"gt_spoon_trout": {
+"by": "サミー",
+"lic": "Public domain",
+"src": "commons:File:スプーン.jpg"
 }
 };
 /* فيديوهات قصيرة مضمّنة (vids.json بمعرّف النوع): مقاطع 8 ثواني بلا صوت من Pixabay (رخصة Pixabay: استخدام مجاني بلا إلزام بنسب)، اتراجعت لقطاتها يدويًا: بلا علامات مائية ولا أشخاص */

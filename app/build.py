@@ -21,7 +21,7 @@ app = rd(A + '/app.js').replace('  /*@@TRIP@@*/', rd(A + '/trip.js'))
 # module.exports guard in astro is harmless in browsers
 
 # بصمة إصدار: تاريخ البناء + هاش قصير من محتوى الشيفرة، لإثبات ملكية أي نسخة موزّعة عند التنازع
-_fp = hashlib.sha256((code + app + css).encode('utf-8')).hexdigest()[:8].upper()
+_fp = hashlib.sha256((code + app + css + imgs).encode('utf-8')).hexdigest()[:8].upper()
 BUILD_ID = 'SYD-' + datetime.date.today().strftime('%Y%m%d') + '-' + _fp
 
 def minify_js(src):
