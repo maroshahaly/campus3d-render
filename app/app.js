@@ -345,7 +345,7 @@
     if (qs.t) worldTab = qs.t;
     let body = '';
     const wph = (k, cap) => IMGS[k] ? '<figure class="wph" style="margin:0"><img loading="lazy" alt="" src="' + IMGS[k] + '">' + (cap || PHOTO_CREDITS[k] && !/^(CC0|Pixabay)$/.test(PHOTO_CREDITS[k].lic) ? '<figcaption class="muted small">' + (cap ? esc(cap) + ' ' : '') + (PHOTO_CREDITS[k] && !/^(CC0|Pixabay)$/.test(PHOTO_CREDITS[k].lic) ? credit(k) : '') + '</figcaption>' : '') + '</figure>' : '';
-    const TECH_PH = [['w_t_cast'], ['w_t_bottom'], ['w_k_dropper', 'حلقة الفرع (دروبر لوب) اللي بتتعلّق فيها سنانير السبحة.'], ['w_t_float'], ['w_t_troll'], ['w_t_jig'], ['w_t_popper'], ['w_t_live', 'سرب سمك صغير، وده الطُّعم الحي اللي بيتصاد ويتركب.'], ['w_t_comm']];
+    const TECH_PH = [['w_t_cast'], ['w_t_bottom'], ['gear_sabiki', 'سبحة (سابيكي) طالع عليها سمكتين في رمية واحدة.'], ['w_t_float'], ['w_t_troll'], ['w_t_jig'], ['w_t_popper'], ['w_t_live', 'سرب سمك صغير، وده الطُّعم الحي اللي بيتصاد ويتركب.'], ['w_t_comm']];
     const LINE_PH = ['gear_line', 'w_l_fluoro', 'w_l_braid', 'gear_leader', 'gear_hook', 'gear_sinker'];
     if (worldTab === 'tech') body = '<div>' + TECHNIQUES.map((t, i) => '<details class="acc"' + (i === 0 ? ' open' : '') + '><summary><span>' + esc(t.t) + '<br><span class="muted small latin">' + esc(t.en) + '</span></span></summary><div class="body stack">' + (TECH_PH[i] ? wph(TECH_PH[i][0], TECH_PH[i][1]) : '') + '<p>' + esc(t.what) + '</p>' +
       '<dl class="kv" style="margin:0"><dt>الوقت</dt><dd>' + esc(t.when) + '</dd><dt>العدة</dt><dd>' + esc(t.gear) + '</dd></dl><ul style="margin:0;padding-inline-start:20px">' + t.tips.map(x => '<li>' + esc(x) + '</li>').join('') + '</ul></div></details>').join('') + '</div>';

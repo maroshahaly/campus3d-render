@@ -1469,6 +1469,11 @@ const PHOTO_CREDITS = {
 "by": "Aen Tan",
 "lic": "CC BY-NC-SA 2.0",
 "src": "flickr:3903405424"
+},
+"gear_sabiki": {
+"by": "tdenling",
+"lic": "CC-BY-NC",
+"src": "inat:319272056"
 }
 };
 /* فيديوهات قصيرة مضمّنة (vids.json بمعرّف النوع): مقاطع 8 ثواني بلا صوت من Pixabay (رخصة Pixabay: استخدام مجاني بلا إلزام بنسب)، اتراجعت لقطاتها يدويًا: بلا علامات مائية ولا أشخاص */
