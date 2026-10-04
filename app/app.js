@@ -211,6 +211,11 @@
       '<section class="card stack"><div class="row between"><h2 class="h2" style="margin:0">الأنسب الآن — ' + esc(loc.name) + '</h2><a class="btn ghost small" href="#/here">التفاصيل والأوقات</a></div>' + locSummary(loc) +
       (top.length ? '<div class="chips">' + top.map(c => '<a class="chip" href="#/sp/' + c.s.id + '">' + esc(c.s.ar) + '</a>').join('') + '</div>' : '<div class="muted small">لا أنواع بذروة هذا الشهر في هذا الموقع. افتح «هنا الآن» لترى الجيد والمتوسط.</div>') +
       (loc.def ? '<a class="btn" href="#/here">' + ico('pin', 20) + ' حدّد موقعك لتحصل على أسماك مكانك</a><div class="muted small">الموقع الافتراضي الإسكندرية.</div>' : '') + '</section>' +
+      '<section class="quick">' +
+        '<a class="qcard" href="#/trip">' + ico('fish', 26) + '<b>خطة رحلة اليوم</b><span>الطُّعم والعدة وأقرب مكان</span></a>' +
+        '<a class="qcard" href="#/egypt">' + ico('pin', 26) + '<b>مناطق الصيد في مصر</b><span>48 مكان ونسب الأنواع</span></a>' +
+        '<a class="qcard" href="#/track">' + ico('tools', 26) + '<b>رحلتي والطوارئ</b><span>تتبع، سجل، ونداء استغاثة</span></a>' +
+        '<a class="qcard" href="#/tools?t=gear">' + ico('tools', 26) + '<b>أدوات الصيد</b><span>الأنواع والمقاسات بالصور</span></a></section>' +
       '<section class="card stack"><h2 class="h2" style="margin:0">اليوم</h2>' +
       '<div class="row" style="flex-wrap:nowrap">' + moonSvg(di.ph) + '<div class="now" style="flex:1;min-width:0"><div><b class="num">' + T(di.sun.rise) + '</b><span>شروق الشمس</span></div><div><b class="num">' + T(di.sun.set) + '</b><span>غروب الشمس</span></div><div><b>' + Astro.phaseName(di.ph.phase).split(' ')[0] + '</b><span>القمر ' + Math.round(di.ph.fraction * 100) + '%</span></div></div></div></section>' +
       '<section><div class="tiles">' +
@@ -1018,6 +1023,7 @@
     const dpp = st.span / W, cl = st.span <= 120 ? Math.max(0.15, Math.cos(st.lat * Math.PI / 180)) : 1;
     const wrapEl = cv.closest('.mapbox'), spId = (wrapEl && wrapEl.dataset.sp) || '', pts = occPts(spId), boxes = spBoxes(spId), lons = new Float64Array(W), bm = pts ? 0.2 : 0.58;
     const cols = new Int32Array(W * 4), wxs = new Float32Array(W * 4);
+    const fine = st.span < 30 && st.lat > 15 && st.lat < 38 && st.lng > 18 && st.lng < 43;
     for (let x = 0; x < W; x++) {
       const lo = wrapLng(st.lng + (x - W / 2 + 0.5) * dpp); lons[x] = lo;
       const fj = (lo + 180) * MR - 0.5, j0 = Math.floor(fj), w = crW(fj - j0);
@@ -1034,6 +1040,7 @@
         else {
           const lo = lons[x], k4 = x * 4;
           let v = 0; for (let r = 0; r < 4; r++) { const rb = rix[r]; v += wy[r] * (wxs[k4] * GRD[rb + cols[k4]] + wxs[k4 + 1] * GRD[rb + cols[k4 + 1]] + wxs[k4 + 2] * GRD[rb + cols[k4 + 2]] + wxs[k4 + 3] * GRD[rb + cols[k4 + 3]]); }
+          if (fine) { const ev = egVal(la, lo); if (ev >= 0) v = ev; }
           const isL = v > 0.5;
           if (isL) { c0 = land[0]; c1 = land[1]; c2 = land[2]; }
           if (boxes.length) {
@@ -1069,6 +1076,7 @@
         if (st.span <= 36) { ctx.lineWidth = 3 * S; ctx.strokeStyle = 'rgba(6,32,44,.75)'; ctx.strokeText(p[0], x, y - 6 * S); ctx.fillStyle = '#fff'; ctx.fillText(p[0], x, y - 6 * S); }
       });
     }
+    if (wrapEl && wrapEl.dataset.spots) drawEgSpots(ctx, px, py, W, H, S, st.span, wrapEl.dataset.egsp || '');
     const lc = getLoc(), x = px(lc.lng), y = py(lc.lat);
     if (x > -20 && x < W + 20 && y > -20 && y < H + 20) {
       ctx.fillStyle = 'rgba(0,0,0,.28)'; ctx.beginPath(); ctx.ellipse(x, y + 1 * S, 8 * S, 3 * S, 0, 0, 6.3); ctx.fill();
@@ -1151,7 +1159,7 @@
       street.addTo(map);
       const marker = L.circleMarker([loc.lat, loc.lng], { radius: 7, color: '#06202C', weight: 2, fillColor: '#E8A800', fillOpacity: 1 }).addTo(map);
       LMAP[id] = { map, street, sat, cur: 'street', marker, rects: [] };
-      mapDrawSpRects(id);
+      mapDrawSpRects(id); leafEgSpots(id);
       let shown = false;
       let hadError = false, settled = false;
       const showLeaf = () => { if (settled) return; settled = true; shown = true; leafEl.hidden = false; cv.hidden = true; if (offNote) offNote.hidden = true; };
@@ -1410,8 +1418,9 @@
     }, { passive: true });
   }
 
+  /*@@TRIP@@*/
   /* ---------- الموجّه ---------- */
-  const NAVS = [['#/', 'home', 'الرئيسية', 'home'], ['#/here', 'pin', 'هنا الآن', 'here'], ['#/species', 'fish', 'الأنواع', 'species|sp|fish|fishlist|tech|months|month|compare'], ['#/tools', 'tools', 'الأدوات', 'tools|world|safety|gear'], ['#/links', 'book', 'المراجع', 'links|about']];
+  const NAVS = [['#/', 'home', 'الرئيسية', 'home'], ['#/here', 'pin', 'هنا الآن', 'here|egypt|trip|track'], ['#/species', 'fish', 'الأنواع', 'species|sp|fish|fishlist|tech|months|month|compare'], ['#/tools', 'tools', 'الأدوات', 'tools|world|safety|gear'], ['#/links', 'book', 'المراجع', 'links|about']];
   function parse() {
     const h = location.hash.replace(/^#\/?/, ''), qi = h.indexOf('?'), path = qi < 0 ? h : h.slice(0, qi), qs = {};
     if (qi >= 0) h.slice(qi + 1).split('&').forEach(p => { const [k, v] = p.split('='); if (k) qs[k] = decodeURIComponent(v || ''); });
