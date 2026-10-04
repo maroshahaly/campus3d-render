@@ -308,7 +308,7 @@
     'الأخطبوط عنده 3 قلوب ودمه أزرق.',
     'السمك بيسمع الصوت وبيحس بالحركة بخط جانبي على جسمه؛ عشان كده الهدوء على الشط بيفرق.',
     'القمر بيأثر على المد والجزر، وأيام البدر والمحاق المد بيبقى أقوى والسمك غالبًا أنشط.',
-    'الكابوريا الزرقاء أصلها من الأطلسي ووصلت البحر المتوسط ومصر عن طريق مية صابورة السفن.',
+    'الكابوريا الزرقاء أصلها من المحيط الأطلسي، ووصلت البحر المتوسط ومصر مع «مية الصابورة»: المية اللي السفن بتملا بيها خزانات في قاعها عشان تتزن وهي فاضية، وبتفرّغها في ميناء تاني ومعاها كائنات صغيرة ويرقات.',
     'البلطي الأم بتحضن البيض والزريعة جوه بُقها لحد ما يقدروا يعيشوا لوحدهم.',
     'سمكة الشراع أسرع سمكة معروفة، وممكن توصل لحوالي 100 كم/ساعة في الانقضاض.',
     'القاروص بيحب الموج والرغوة لأنها بتلخبط السمك الصغير وتسهّل صيده.',
@@ -322,7 +322,50 @@
     'التونة والماكريل لازم يفضلوا يعوموا طول الوقت عشان المية تعدّي على خياشيمهم ويتنفسوا.',
     'الشفش (اللبط) بيعمل صوت طبول بعضلات جنب مثانة العوم، والصيادين بيسمعوه أحيانًا.',
     'عمر السمكة ممكن يتعرف من حلقات في قشرها زي حلقات الشجر.',
-    'المحار بيفلتر حوالي 50 لتر مية في اليوم وبينضّف البحيرات.'
+    'المحار بيفلتر حوالي 50 لتر مية في اليوم وبينضّف البحيرات.',
+    'مية الصابورة هي مية بتسحبها السفينة الفاضية في خزانات تحت عشان تتزن، ولما تحمّل بضاعة بترميها؛ وده نقل كائنات كتير من بحر لبحر.',
+    'قناة السويس فتحت طريق لأكتر من 400 نوع من البحر الأحمر يدخلوا المتوسط، ومنهم البطاطا (السيجان) والسمكة المنتفخة الفضية.',
+    'السمكة المنتفخة الفضية (الأرنب) سامة جدًا ومحرّم أكلها، وأسنانها بتقطع السنانير والشباك.',
+    'بحيرة البردويل من أملح البحيرات في مصر، والصيد فيها بيتقفل في شهور الشتا عشان تكاثر السمك.',
+    'بحيرة قارون أملح من مية البحر، عشان كده الأسماك اللي فيها أنواع بحرية زي البوري والموسى.',
+    'بحيرة ناصر من أكبر البحيرات الصناعية في العالم، وطولها حوالي 500 كم.',
+    'البحر الأحمر من أملح بحار العالم ومن أدفاها، وده سبب تنوع الشعاب المرجانية فيه.',
+    'البحر المتوسط عند السواحل المصرية فقير نسبيًا في المغذيات، عشان كده السمك بيتجمع عند الصخور والحطام والمصبات.',
+    'مصب النيل في رشيد ودمياط بيخلط المية العذبة بالمالحة، وده بيجذب البوري والقاروص.',
+    'الرياح الشمالية الغربية هي الغالبة على ساحل إسكندرية، وبتجيب موج مناسب لصيد القاروص من الصخور.',
+    'المد والجزر في المتوسط ضعيف (حوالي 30 سم)، لكن في خليج السويس ممكن يوصل لأكتر من متر ونص.',
+    'أحسن مية للصيد غالبًا «المية المعكّرة شوية» بعد نوة: السمك بيقرّب يدوّر على أكل اتقلّب من القاع.',
+    'النوة في إسكندرية ليها مواعيد شبه ثابتة كل سنة زي نوة الفيضة الصغرى والكرم والمكنسة.',
+    'السمك أبو أسنان زي المياس والباراكودا محتاج طرف سلك (واير) عشان مايقطعش الخيط.',
+    'الطُّعم الطازة دايمًا أحسن من المتلّج، وريحة الطُّعم أهم من شكله في الترقيد.',
+    'استخدم أصغر سنارة تناسب الطُّعم: السنارة الكبيرة بتخوّف السمك الحذر.',
+    'الخيط الرفيع بيجيب ضربات أكتر في المية الصافية، بس محتاج فرامل مكنة مضبوطة.',
+    'لو السمك بيلمس الطُّعم ومش بيشد، صغّر السنارة أو الطُّعم أو استخدم ليدر فلوروكربون.',
+    'اعرف المقاس الأدنى المسموح لكل نوع ورجّع السمك الصغير للمية بسرعة وبإيد مبلولة.',
+    'الإطلاق الصحيح: قلّل وقت السمكة بره المية، وماتمسكهاش من الخياشيم.',
+    'الضوء في الليل بيجذب الجمبري والسمك الصغير، ووراهم بتيجي المفترسات؛ ده سر الصيد الليلي جنب الأرصفة المنورة.',
+    'البارومتر النازل قبل العاصفة غالبًا بيخلي السمك ياكل بشراهة، وبعدها بيهدى.',
+    'في الصيف السمك بيروح للمية الأعمق والأبرد نص النهار، وبيطلع للشط الصبح بدري وبالليل.',
+    'في الشتا السمك أبطأ، فلمّ الطُّعم الصناعي ببطء أكتر وانزل لعمق أكبر.',
+    'السمك بيشوف الألوان: في المية الصافية الألوان الطبيعية أحسن، وفي العكرة الألوان الفاقعة أو الغامقة.',
+    'سمكة الحجر (الحجرية) في البحر الأحمر من أسمّ الأسماك في العالم؛ البس حذاء وانت ماشي على الشعاب.',
+    'البوبيت (سمكة الأسد) أشواكها سامة لكن لحمها حلو وآمن بعد شيل الأشواك، وصيدها بيحمي الشعاب.',
+    'سلطان إبراهيم بيدوّر على أكله في الرمل بشنبين تحت بقه.',
+    'الوقار (الهامور) بيقعد في نفس الجحر سنين، ولو اتصاد واحد من جحر غالبًا هييجي غيره مكانه.',
+    'التونة بتقدر ترفع حرارة جسمها عن حرارة المية، وده بيخليها سريعة في المية الباردة.',
+    'الحبار والسبيط بيتصادوا أحسن بالليل بالنور وبالطُّعم الصناعي المسمى «إيجي».',
+    'الأخطبوط ذكي جدًا وبيعرف يفتح برطمانات، وبيتصاد في مصايد فخار في بعض البلاد.',
+    'الدنيس بيكسر الصدف والجمبري بأسنان ضروس قوية، عشان كده بيحب طُعم الكابوريا والبلح.',
+    'القرموط بيتنفس هوا من السطح، فبيعيش في مية قليلة الأكسجين في الترع.',
+    'البلطي النيلي من أقدم الأسماك المربّاة: المصريين القدماء رسموه على جدران المقابر.',
+    'قشر البياض (فرخ النيل) دخل بحيرة فيكتوريا وغيّر نظامها البيئي بالكامل.',
+    'الماكريل بيمشي في أسراب كبيرة وبيتصاد بالسبيكي والملاعق الصغيرة.',
+    'سمك الإبرة بيقفز فوق المية، وفي الليل ممكن ينط ناحية النور.',
+    'الشعري (الإمبيرور) في البحر الأحمر بيكتر صيده بالليل على القاع.',
+    'الأسماك بتحس بالضغط الجوي والتغيرات في المية بالمثانة الهوائية.',
+    'خط الماية الأبيض (الرغوة) على الصخور مكان ممتاز للقاروص والمياس.',
+    'حطام السفن تحت المية بيتحول لشعاب صناعية وبيجمع أسماك كتير.',
+    'كل ما الريح كانت من البحر للشط، الطُّعم والأكل بيتدفعوا ناحية الشط والسمك بيقرّب.'
   ];
   const dayKey = () => { const d = new Date(); return d.getFullYear() * 400 + d.getMonth() * 32 + d.getDate(); };
   const hashN = (n, m) => ((n * 2654435761) >>> 0) % m;
@@ -355,8 +398,61 @@
       '<div class="gauge" style="--p:' + chance + '"><b class="num">' + chance + '%</b><span>فرصتك</span></div></div>' +
       (fact ? '<p style="margin:0">💡 ' + esc(fact) + '.</p>' : '') + '<div class="chips"><a class="chip" href="#/trip?add=' + s.id + '">+ ضيفها لخطة اليوم</a><a class="chip" href="#/sp/' + s.id + '">الطُّعم والمكان</a></div></section>';
   }
-  function factHtml() { const i = hashN(dayKey() + 7, FACTS.length); return '<section class="card fact" data-fi="' + i + '"><div class="row between"><b>🤔 هل تعرف؟</b><button class="btn ghost small" data-act="nextfact">معلومة تانية</button></div><p class="factx" style="margin:0">' + esc(FACTS[i]) + '</p></section>'; }
-  document.addEventListener('click', e => { const b = e.target.closest('[data-act="nextfact"]'); if (!b) return; const c = b.closest('.fact'), i = (+c.dataset.fi + 1) % FACTS.length; c.dataset.fi = i; const p = c.querySelector('.factx'); p.style.opacity = 0; setTimeout(() => { p.textContent = FACTS[i]; p.style.opacity = 1; }, 180); });
+  /* أكتر من 1000 معلومة: أولًا عن أماكن الصيد الأقرب لموقعك، بعدين أنواع منطقتك، بعدين معلومات عامة */
+  const MN = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
+  let FCACHE = null;
+  function allFacts() {
+    const loc = getLoc(), key = loc.lat.toFixed(2) + loc.lng.toFixed(2); if (FCACHE && FCACHE.k === key) return FCACHE.L;
+    const L = [], add = (c, x) => { if (x) L.push([c, x]); };
+    spotsByDist(loc).forEach(o => { const s = o.s, P = (EG_PRES[s[0]] || []).filter(r => BYG[r[0]]), nm = s[1].split(' (')[0];
+      add('مكان', nm + ' على بُعد ' + fmtKm(o.km) + ' منك (' + WATER_L[s[4]] + '): ' + s[6]);
+      if (P.length) add('مكان', 'أكتر الأنواع تواجدًا في ' + nm + ': ' + P.slice(0, 4).map(r => spName(r[0]) + ' ' + r[1] + '%').join('، ') + '.');
+      if (P.length > 4) add('مكان', 'في ' + nm + ' كمان: ' + P.slice(4, 9).map(r => spName(r[0])).join('، ') + '.');
+      add('مكان', 'طبيعة ' + nm + ': ' + s[5].split(',').map(x => SPOT_T[x]).join(' و') + (s[4] === 'fw' ? '؛ مية عذبة أو قليلة الملوحة.' : '؛ مية مالحة.'));
+      const top = P[0] && BYG[P[0][0]]; if (top) add('مكان', 'لو رايح ' + nm + ' عشان ' + spName(top.id) + '، الطُّعم المناسب: ' + listNames(top.bt, BAIT).slice(0, 3).join('، ') + '.');
+    });
+    const regs = regionsAt(loc), lv = s => { const m = monthScores(s, loc, { m: regs.m, f: regs.f }, null); return m ? m[CUR] : -1; };
+    SG.slice().sort((a, b) => lv(b) - lv(a)).forEach(s => { const n = spName(s.id);
+      if (s.n) s.n.split(/(?<=[.!؟])\s+/).slice(0, 2).forEach(x => add('سمكة', n + ': ' + x.trim()));
+      if (s.sz) add('سمكة', 'الحجم المعتاد لـ' + n + ': ' + s.sz + '.');
+      if (s.sst) add('سمكة', n + ' بيحب مية حرارتها بين ' + s.sst[0] + ' و' + s.sst[1] + '°م.');
+      if (s.pk && s.pk.length && s.pk.length < 12) add('سمكة', 'ذروة موسم ' + n + ' (شمال الكرة): ' + s.pk.map(m => MN[m - 1]).join('، ') + '.');
+      if (s.bt) add('سمكة', 'طُعم ' + n + ': ' + listNames(s.bt, BAIT).join('، ') + '.');
+      if (s.how) add('سمكة', 'طرق صيد ' + n + ': ' + listNames(s.how, HOW).slice(0, 3).join('، ') + '.');
+      if (s.fam) add('سمكة', n + ' من ' + s.fam + '.');
+      if (s.dp) add('سمكة', 'بتلاقي ' + n + ' في ' + DP_L[s.dp] + (s.tod ? '، وأحسن وقت: ' + todText(s) : '') + '.');
+    });
+    FACTS.forEach(x => add('عامة', x));
+    FCACHE = { k: key, L }; return L;
+  }
+  function factHtml() { const L = allFacts(), i = store.get('fi', hashN(dayKey(), Math.min(40, L.length))) % L.length, on = store.get('fnote', false);
+    return '<section class="card fact" data-fi="' + i + '"><div class="row between"><b>🤔 هل تعرف؟ <span class="tag gold fcat">' + L[i][0] + '</span></b><span class="muted small num fcnt">' + (i + 1) + ' / ' + L.length + '</span></div>' +
+      '<p class="factx" style="margin:0">' + esc(L[i][1]) + '</p><div class="row between"><div class="row" style="gap:6px"><button class="btn ghost small" data-act="factstep" data-d="-1">→ السابقة</button><button class="btn ghost small" data-act="factstep" data-d="1">التالية ←</button></div>' +
+      '<button class="btn ghost small" data-act="factnote">' + (on ? '🔔 الإشعارات شغالة' : '🔕 خليها إشعار يومي') + '</button></div></section>'; }
+  document.addEventListener('click', e => {
+    const b = e.target.closest('[data-act="factstep"]');
+    if (b) { const c = b.closest('.fact'), L = allFacts(), i = (+c.dataset.fi + +b.dataset.d + L.length) % L.length; c.dataset.fi = i; store.set('fi', i); const p = c.querySelector('.factx'); p.style.opacity = 0; setTimeout(() => { p.textContent = L[i][1]; c.querySelector('.fcat').textContent = L[i][0]; c.querySelector('.fcnt').textContent = (i + 1) + ' / ' + L.length; p.style.opacity = 1; }, 160); return; }
+    if (e.target.closest('[data-act="factnote"]')) factNoteToggle();
+  });
+  /* الإشعارات: الصفحة بتحفظ 60 معلومة في الكاش والعامل بيعرض واحدة كل يوم (تزامن دوري على أندرويد للنسخة المثبتة) + إشعار طول ما التطبيق مفتوح في الخلفية */
+  async function factsToCache() { try { const L = allFacts(), s = store.get('fi', 0), f = []; for (let k = 0; k < 60; k++) f.push(L[(s + 1 + k) % L.length][1]); const c = await caches.open('sayad-facts'); await c.put('facts.json', new Response(JSON.stringify({ f, i: 0 }))); } catch (e) {} }
+  async function factNoteToggle() {
+    if (store.get('fnote', false)) { store.set('fnote', false); toast('وقفت الإشعارات.'); render(); return; }
+    if (!('Notification' in window)) { toast('المتصفح ده مش بيدعم الإشعارات.'); return; }
+    const pm = await Notification.requestPermission(); if (pm !== 'granted') { toast('لازم تسمح بالإشعارات من إعدادات المتصفح.'); return; }
+    store.set('fnote', true); store.set('fnlast', 0); await factsToCache();
+    try { const r = await navigator.serviceWorker.ready; if (r.periodicSync) await r.periodicSync.register('sayad-fact', { minInterval: 12 * 3600000 }); } catch (e) {}
+    showFactNote(); toast('تمام! هيوصلك إشعار بمعلومة كل يوم.'); render();
+  }
+  async function showFactNote() {
+    const L = allFacts(), i = (store.get('fni', 0)) % L.length; store.set('fni', i + 1); store.set('fnlast', Date.now());
+    const body = L[i][1], opt = { body, icon: 'icon-192.png', tag: 'sayad-fact', lang: 'ar', dir: 'rtl' };
+    try { if (navigator.serviceWorker && navigator.serviceWorker.controller) { const r = await navigator.serviceWorker.ready; return r.showNotification('🤔 هل تعرف؟ — الصنّارة', opt); } } catch (e) {}
+    try { new Notification('🤔 هل تعرف؟ — الصنّارة', opt); } catch (e) {}
+  }
+  /* لو التطبيق مفتوح في الخلفية: إشعار كل 6 ساعات، وعند الفتح لو عدّى يوم */
+  setInterval(() => { if (store.get('fnote', false) && 'Notification' in window && Notification.permission === 'granted' && Date.now() - store.get('fnlast', 0) > 6 * 3600000) showFactNote(); }, 60000);
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && store.get('fnote', false)) factsToCache(); });
   /* الإنجازات من السجل والرحلات */
   function badgesHtml() {
     const log = store.get('log', []), trips = store.get('trips', []), sp = new Set(log.map(c => c.sp).filter(Boolean)), dawn = log.some(c => { const h = +(c.at || '').slice(11, 13); return h >= 4 && h < 7; }), night = log.some(c => { const h = +(c.at || '').slice(11, 13); return h >= 21 || h < 3; });
