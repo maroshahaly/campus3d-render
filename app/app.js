@@ -318,7 +318,7 @@
     const rigs = s.rigs.length ? '<section class="stack"><h2 class="h2" style="margin:0">الأرمات والقرم</h2><div class="stack">' + s.rigs.map(m => '<div class="stack"><div class="small" style="font-weight:700">' + esc(m.t) + '</div>' + (m.secs.length ? prose(m.secs) : '') + rigOrFig(m) + '</div>').join('') + '</div></section>' : '';
     return '<div class="stack-lg"><div class="row between"><a class="btn ghost small" href="#/fish">كل الأسماك</a>' + (inSeason(s) ? '<span class="tag ok">موسمها الآن</span>' : '') + '</div>' +
       '<header class="stack"><div><h1 class="h1">' + esc(s.name) + '</h1>' + (s.en ? '<div class="muted latin" style="margin-top:2px">' + esc(s.en) + '</div>' : '') + '</div><div class="chips"><span class="tag">' + KIND_L[s.kind] + '</span></div></header>' +
-      (s.photo ? '<button class="fishhero figure" data-zoom="' + s.photo + '" aria-label="تكبير صورة ' + esc(s.name) + '"><img src="' + img(s.photo) + '" alt="' + esc(s.name) + '"><span class="figmag">' + ico('search', 18) + '</span></button>' + (PHOTO_CREDITS[s.photo] ? '<div class="muted small">' + credit(s.photo) + '</div>' : '') :
+      (s.photo ? '<button class="fishhero figure" data-zoom="' + s.photo + '" aria-label="تكبير صورة ' + esc(s.name) + '"><img src="' + img(s.photo) + '" alt="' + esc(s.name) + '"><span class="figmag">' + ico('search', 18) + '</span></button>' + (PHOTO_CREDITS[s.photo] ? '<div class="muted small credit">' + credit(s.photo) + '</div>' : '') :
         (fishPhotoTitles(s) ? '<button class="fishhero figure" data-fph="' + s.id + '" aria-label="صورة ' + esc(s.name) + '"><span class="muted small fphload" style="display:block;padding:24px;text-align:center">' + (STANDALONE ? 'جارٍ تحميل صورة حقيقية موثوقة…' : 'الصورة الحقيقية تظهر في النسخة المتصلة بالإنترنت') + '</span></button>'
           : '')) +
       vidHtml(DECK_REV[s.id]) + varHtml(DECK_REV[s.id]) +
@@ -389,13 +389,28 @@
       '<a class="btn ghost" target="_blank" rel="noopener" href="' + KNOT_BASE + 'fishing-knots">كل عقد الصيد بالرسوم المتحركة</a></div>';
   }
   const gearPic = (g, big) => g.img && IMGS['gear_' + g.id] ? '<img loading="lazy" alt="' + esc(g.t) + '" src="' + IMGS['gear_' + g.id] + '">' + (PHOTO_CREDITS['gear_' + g.id] && !/^(CC0|Pixabay)$/.test(PHOTO_CREDITS['gear_' + g.id].lic) ? '<span class="muted small gearcr">' + credit('gear_' + g.id) + '</span>' : '') : '<svg viewBox="0 0 120 120" role="img" aria-label="' + esc(g.t) + '">' + (GEAR_SVG[g.id] || '') + '</svg>';
+  const GRP_ORDER = ['tackle', 'nets', 'traps', 'spear', 'elec', 'boats', 'safety'];
+  const GRP_DESC = { nets: 'الطرّاحة، الغزل والدبة والمنسوجة، وشبكة الرفع', traps: 'الجوابي والقفاص، مصايد الكابوريا والإستاكوزا، والحوش', spear: 'البندقية (الهاربون)، الحربة والنبلة، وقوس صيد السمك', elec: 'أنواع السونار وخواصها، والمسح الجانبي، والملاحة', boats: 'أنواع القوارب ومسافات الإبحار والمواد والمحركات والجاهزية', safety: 'سترة النجاة، الطوق، حبل الإنقاذ، مسدس الإشارة، اللاسلكي وغيرها' };
+  const EXTRA_PH = { boats: [['gear_boat', 'مراكب الصيد قدام قلعة قايتباي في إسكندرية'], ['gear_boat2', 'فلوكة صيد في بحيرة']], spear: [['gear_speargun2', 'بندقية صيد تحت الماء وصيدها']] };
+  const infoHtml = inf => (inf.types ? '<dl class="kv" style="margin:0">' + inf.types.map(t => '<dt>' + esc(t[0]) + '</dt><dd>' + esc(t[1]) + '</dd>').join('') + '</dl>' : '') +
+    (inf.sizes ? '<div class="tbl"><table><thead><tr>' + inf.sizes.h.map(h => '<th>' + esc(h) + '</th>').join('') + '</tr></thead><tbody>' + inf.sizes.r.map(r => '<tr>' + r.map(c => '<td>' + esc(c) + '</td>').join('') + '</tr>').join('') + '</tbody></table></div>' : '') +
+    (inf.note ? '<div class="notice info">' + esc(inf.note) + '</div>' : '');
   function toolGear(el) {
-    const grps = Object.keys(GEAR_GRP);
-    el.innerHTML = '<div class="stack"><p class="muted" style="margin:0">كل اللي بيستخدمه الصياد: شكله، وبيستخدم في إيه. اضغط على أي أداة تفتح صفحتها بالأنواع والمقاسات.</p>' +
-      grps.map(gk => { const L = GEAR.filter(g => (g.grp || 'tackle') === gk); return L.length ? '<h2 class="h2" style="margin:8px 0 0">' + esc(GEAR_GRP[gk]) + '</h2><div class="geargrid">' + L.map(g => { const i = GEAR.indexOf(g);
-        return '<a class="card gearcard" href="#/gear/' + g.id + '" style="text-decoration:none;color:inherit"><div class="gearimg">' + gearPic(g) + '</div>' +
-        '<div class="stack" style="gap:6px"><h3 class="h3"><span class="gearn">' + (i + 1) + '</span>' + esc(g.t) + '</h3><p style="margin:0">' + esc(g.d) + '</p><p class="muted small" style="margin:0"><b>الاستخدام: </b>' + esc(g.u) + '</p>' + (GEAR_INFO[g.id] ? '<span class="tag ok" style="align-self:flex-start">الأنواع والمقاسات ←</span>' : '') + '</div></a>'; }).join('') + '</div>' : ''; }).join('') + '</div>';
+    const tackle = GEAR.filter(g => !g.grp || g.grp === 'tackle');
+    el.innerHTML = '<div class="stack"><p class="muted" style="margin:0">كل اللي بيستخدمه الصياد. اضغط على أي أداة أو مجموعة تفتح صفحتها بالصور والأنواع والمقاسات.</p>' +
+      '<div class="grpgrid">' + GRP_ORDER.slice(1).map(gk => { const L = GEAR.filter(g => g.grp === gk); return '<a class="card grpcard" href="#/gearg/' + gk + '"><div class="grpimgs">' + L.slice(0, 4).map(g => '<div>' + gearPic(g) + '</div>').join('') + '</div><div class="stack" style="gap:4px;padding:10px"><b class="h3" style="margin:0">' + esc(GEAR_GRP[gk]) + ' <span class="muted small num">' + L.length + '</span></b><span class="muted small">' + esc(GRP_DESC[gk] || '') + '</span></div></a>'; }).join('') + '</div>' +
+      '<h2 class="h2" style="margin:8px 0 0">' + esc(GEAR_GRP.tackle) + '</h2><div class="geargrid">' + tackle.map((g, i) =>
+        '<a class="card gearcard" href="#/gear/' + g.id + '" style="text-decoration:none;color:inherit"><div class="gearimg">' + gearPic(g) + '</div>' +
+        '<div class="stack" style="gap:6px"><h3 class="h3"><span class="gearn">' + (i + 1) + '</span>' + esc(g.t) + '</h3><p style="margin:0">' + esc(g.d) + '</p><p class="muted small" style="margin:0"><b>الاستخدام: </b>' + esc(g.u) + '</p>' + (GEAR_INFO[g.id] ? '<span class="tag ok" style="align-self:flex-start">الأنواع والمقاسات ←</span>' : '') + '</div></a>').join('') + '</div></div>';
   }
+  V.gearg = function (a) {
+    const gk = a[0], L = GEAR.filter(g => g.grp === gk); if (!L.length) return V.gear([]);
+    return '<div class="stack-lg"><div class="row between"><a class="btn ghost small" href="#/tools?t=gear">كل الأدوات</a></div><header><h1 class="h1">' + esc(GEAR_GRP[gk]) + '</h1><p class="muted" style="margin:4px 0 0">' + esc(GRP_DESC[gk] || '') + '</p></header>' +
+      '<nav class="chips">' + L.map(g => '<a class="chip" href="#/gearg/' + gk + '?#g-' + g.id + '" data-jump="g-' + g.id + '">' + esc(g.t.split(' (')[0]) + '</a>').join('') + '</nav>' +
+      L.map(g => '<article class="card stack" id="g-' + g.id + '"><div class="gearimg big">' + gearPic(g, 1) + '</div><h2 class="h2" style="margin:0">' + esc(g.t) + '</h2><p style="margin:0">' + esc(g.d) + '</p><p class="muted" style="margin:0"><b>الاستخدام: </b>' + esc(g.u) + '</p>' + (GEAR_INFO[g.id] ? infoHtml(GEAR_INFO[g.id]) : '') + '</article>').join('') +
+      (EXTRA_PH[gk] ? '<section class="card stack"><h2 class="h2" style="margin:0">صور تانية</h2>' + EXTRA_PH[gk].map(x => IMGS[x[0]] ? '<figure class="wph" style="margin:0"><img loading="lazy" alt="" src="' + IMGS[x[0]] + '"><figcaption class="muted small">' + esc(x[1]) + (PHOTO_CREDITS[x[0]] ? ' · ' + credit(x[0]) : '') + '</figcaption></figure>' : '').join('') + '</section>' : '') + '</div>';
+  };
+  document.addEventListener('click', e => { const j = e.target.closest('[data-jump]'); if (j) { e.preventDefault(); const t = document.getElementById(j.dataset.jump); if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' }); } });
   V.gear = function (a) {
     const g = GEAR.find(x => x.id === a[0]);
     if (!g) return '<div class="stack"><h1 class="h1">الأدوات</h1><a class="btn" href="#/tools?t=gear">كل أدوات الصياد</a></div>';
@@ -1443,7 +1458,7 @@
 
   /*@@TRIP@@*/
   /* ---------- الموجّه ---------- */
-  const NAVS = [['#/', 'home', 'الرئيسية', 'home'], ['#/here', 'pin', 'هنا الآن', 'here|egypt|trip|track'], ['#/species', 'fish', 'الأنواع', 'species|sp|fish|fishlist|tech|months|month|compare|both'], ['#/tools', 'tools', 'الأدوات', 'tools|world|safety|gear'], ['#/links', 'book', 'المراجع', 'links|about']];
+  const NAVS = [['#/', 'home', 'الرئيسية', 'home'], ['#/here', 'pin', 'هنا الآن', 'here|egypt|trip|track'], ['#/species', 'fish', 'الأنواع', 'species|sp|fish|fishlist|tech|months|month|compare|both'], ['#/tools', 'tools', 'الأدوات', 'tools|world|safety|gear|gearg'], ['#/links', 'book', 'المراجع', 'links|about']];
   function parse() {
     const h = location.hash.replace(/^#\/?/, ''), qi = h.indexOf('?'), path = qi < 0 ? h : h.slice(0, qi), qs = {};
     if (qi >= 0) h.slice(qi + 1).split('&').forEach(p => { const [k, v] = p.split('='); if (k) qs[k] = decodeURIComponent(v || ''); });
@@ -1711,7 +1726,7 @@
     const app = $('#app');
     app.innerHTML = '<div class="wmark-tile" aria-hidden="true"></div>' +
       '<header class="top"><div class="wrap"><a class="brand" href="#/">' + LOGO_MARK(24, 'hdr') + '<span>الصنّارة</span></a>' +
-      '<a class="iconbtn sostop" href="#/track" aria-label="الطوارئ ونداء الاستغاثة">SOS</a><button class="iconbtn fsbtn" id="fsbtn" aria-label="تكبير الخط">أ+</button>' +
+      '<a class="iconbtn sostop" href="#/track" aria-label="الطوارئ ونداء الاستغاثة">SOS</a><span class="fsgrp"><button class="iconbtn fsbtn" id="fsdn" aria-label="تصغير الخط">−</button><button class="iconbtn fsbtn" id="fsup" aria-label="تكبير الخط">+</button></span>' +
       (STANDALONE ? '<button class="iconbtn" id="themebtn" aria-label="تبديل الوضع الليلي">' + ico('theme', 22) + '</button>' : '') + '</div></header>' +
       '<main class="wrap" id="main"></main>' +
       '<nav class="nav" aria-label="التنقل الرئيسي"><ul>' + NAVS.map(n => '<li><a href="' + n[0] + '" data-m="' + n[3] + '">' + ico(n[1], 24) + '<span>' + n[2] + '</span></a></li>').join('') + '</ul></nav>' +
@@ -1719,7 +1734,8 @@
       '<div class="lightbox" id="lb" role="dialog" aria-label="عرض الصورة"><button class="iconbtn x" aria-label="إغلاق">' + ico('x', 22) + '</button><img alt=""></div>';
     const FS = [100, 112, 125, 140], applyFs = v => { document.documentElement.style.fontSize = v + '%'; };
     applyFs(store.get('fs', 100));
-    $('#fsbtn').onclick = () => { const i = (FS.indexOf(store.get('fs', 100)) + 1) % FS.length; store.set('fs', FS[i]); applyFs(FS[i]); toast('حجم الخط: ' + FS[i] + '%'); };
+    const stepFs = d => { const L = [88, 94, 100, 112, 125, 140], i = Math.max(0, Math.min(L.length - 1, (L.indexOf(store.get('fs', 100)) < 0 ? 2 : L.indexOf(store.get('fs', 100))) + d)); store.set('fs', L[i]); applyFs(L[i]); toast('حجم الخط: ' + L[i] + '%'); };
+    $('#fsup').onclick = () => stepFs(1); $('#fsdn').onclick = () => stepFs(-1);
     const tb = $('#themebtn');
     if (tb) {
       const apply = m => { if (m === 'auto') document.documentElement.removeAttribute('data-theme'); else document.documentElement.setAttribute('data-theme', m); };

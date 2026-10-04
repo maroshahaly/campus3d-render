@@ -591,14 +591,14 @@ const PHOTO_CREDITS = {
 "src": "pixabay:1007936"
 },
 "gear_lifering": {
-"by": "dimitrisvetsikas1969",
-"lic": "Pixabay",
-"src": "pixabay:2435653"
+"by": "Naval History & Heritage Command from Wa",
+"lic": "CC BY 2.0",
+"src": "commons:File:Life Ring, VP-43 (22551383358).jpg"
 },
 "gear_boat": {
-"by": "mariya_m",
-"lic": "Pixabay",
-"src": "pixabay:7850627"
+"by": "Dennis G. Jarvis",
+"lic": "CC BY-SA 2.0",
+"src": "commons:File:Flickr - archer10 (Dennis) - Egypt-14A-067.jpg"
 },
 "sp_goldsardine": {
 "by": "sarangib",
@@ -1421,9 +1421,9 @@ const PHOTO_CREDITS = {
 "src": "commons:File:Amasra 407.JPG"
 },
 "gear_liftnet": {
-"by": "Sanjib Chaudhary",
-"lic": "CC BY-SA 4.0",
-"src": "commons:File:A Chinese fishing net in Fort Kochi.jpg"
+"by": "Colegota",
+"lic": "CC BY-SA 2.5 es",
+"src": "commons:File:Bhamo-ayeyarwady-d06.jpg"
 },
 "gear_basket": {
 "by": "Paul Asman and Jill Lenoble",
@@ -1479,6 +1479,86 @@ const PHOTO_CREDITS = {
 "by": "Michael Cantillo",
 "lic": "CC-BY",
 "src": "inat:387436892"
+},
+"gear_sidescan": {
+"by": "NOAA Photo Library",
+"lic": "CC BY 2.0",
+"src": "flickr:87a3e1f5-cfb2-41bf-b7e4-8440709f0e94"
+},
+"gear_chartplotter": {
+"by": "M Hs RS bilder",
+"lic": "CC BY-NC 2.0",
+"src": "flickr:8cf5ffb5-5426-4392-819a-23d923339266"
+},
+"gear_felucca": {
+"by": "Angel Aroca Escámez",
+"lic": "CC BY-SA 3.0",
+"src": "commons:File:Falúa.jpg"
+},
+"gear_fiberboat": {
+"by": "Ron Shawley",
+"lic": "CC BY 3.0",
+"src": "commons:File:Carolina Skiff in Kittanning - Putting the skiff to the test. - panoramio (3).jpg"
+},
+"gear_rib": {
+"by": "Matti Blume",
+"lic": "CC BY-SA 4.0",
+"src": "commons:File:Interboot 2023, Friedrichshafen (P1130433).jpg"
+},
+"gear_aluboat": {
+"by": "Bengt Nyman from Vaxholm, Sweden",
+"lic": "CC BY 2.0",
+"src": "commons:File:Boat D81 6421 (49898492618).jpg"
+},
+"gear_kayak": {
+"by": "James Morrison",
+"lic": "CC BY-NC-SA 2.0",
+"src": "flickr:b7f6429d-e950-4b3b-a822-0350d2ee0685"
+},
+"gear_lifejacket": {
+"by": "Mykhailo Petelytskyy",
+"lic": "CC BY-SA 3.0",
+"src": "wikimedia:b5b986c3-81c5-4731-b1a6-0e7ec0150de8"
+},
+"gear_throwbag": {
+"by": "Alien65",
+"lic": "CC BY-SA 2.5",
+"src": "commons:File:Rettungswurfleine.jpg"
+},
+"gear_flaregun": {
+"by": "Krispyap",
+"lic": "CC BY-SA 4.0",
+"src": "commons:File:26.5mm Flare Gun.jpg"
+},
+"gear_whistle": {
+"by": "Silar",
+"lic": "CC BY-SA 4.0",
+"src": "commons:File:020210904 Railway whistle, World War II in Poland.jpg"
+},
+"gear_vhf": {
+"by": "ansik",
+"lic": "CC BY 2.0",
+"src": "flickr:5cc059d5-6c39-4a21-90d0-3a6ca16ff990"
+},
+"gear_epirb": {
+"by": "Mark Blevis",
+"lic": "CC BY-NC-SA 2.0",
+"src": "flickr:44c7a03f-95c5-4cb9-8811-15ed3a1f859e"
+},
+"gear_firstaid": {
+"by": "Ray Swi-hymn from Sijhih-Taipei, Taiwan",
+"lic": "CC BY-SA 2.0",
+"src": "commons:File:20190129 Salzwelten 9425 (46661929424).jpg"
+},
+"gear_speargun2": {
+"by": "Phuketian.S",
+"lic": "CC BY 2.0",
+"src": "flickr:785d3163-38b5-4d42-b495-53878f8562b6"
+},
+"gear_boat2": {
+"by": "Myousry6666",
+"lic": "CC BY-SA 4.0",
+"src": "commons:File:Fishers and small island in Lake Burullus - Egypt.jpg"
 }
 };
 /* فيديوهات قصيرة مضمّنة (vids.json بمعرّف النوع): مقاطع 8 ثواني بلا صوت من Pixabay (رخصة Pixabay: استخدام مجاني بلا إلزام بنسب)، اتراجعت لقطاتها يدويًا: بلا علامات مائية ولا أشخاص */

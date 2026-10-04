@@ -28,7 +28,7 @@
 }
 * { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
-body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.7 var(--f-body); }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 1rem/1.7 var(--f-body); }
 #app { direction: rtl; min-height: 100vh; }
 a { color: var(--teal); }
 button, input, select, textarea { font: inherit; color: inherit; }
@@ -412,3 +412,26 @@ header.stack .latin { display: block; text-align: right; }
 .both2 p { margin: 4px 0 0; font-size: .92rem; }
 @media (max-width: 420px) { .both2 { grid-template-columns: 1fr; } }
 .bothlink { display: flex; flex-direction: column; gap: 4px; padding: 12px 14px; text-decoration: none; color: inherit; border-inline-start: 4px solid var(--gold); }
+.grpgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+@media (min-width: 720px) { .grpgrid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.grpcard { padding: 0; overflow: hidden; text-decoration: none; color: inherit; }
+.grpimgs { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; background: var(--line); aspect-ratio: 4/3; }
+.grpimgs > div { background: var(--tealsoft); overflow: hidden; display: grid; place-items: center; }
+.grpimgs img { width: 100%; height: 100%; object-fit: cover; } .grpimgs svg { width: 60%; height: 60%; }
+.grpimgs .gearcr { display: none; }
+.fsgrp { display: inline-flex; gap: 4px; margin-inline-end: 6px; }
+.fsgrp .fsbtn { margin: 0; font-size: 1.25rem; font-weight: 800; width: 40px; }
+/* بيانات الصورة والمصوّر والحقوق: أصغر وأهدى */
+#phcredit, .gearcr, .wph figcaption, .phcr, [id$="credit"], .credit { font-size: .68rem !important; opacity: .7; line-height: 1.35; }
+.gearcr { font-size: 9px !important; padding: 0 5px; }
+/* ===== لمسات مظهر ===== */
+.card { box-shadow: 0 1px 2px rgba(6,32,44,.06), 0 6px 18px rgba(6,32,44,.06); transition: transform .15s ease, box-shadow .15s ease; }
+a.card:hover, a.card:focus-visible { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(6,32,44,.10), 0 14px 30px rgba(6,32,44,.10); }
+.hero { background: linear-gradient(160deg, var(--sea) 0%, #0b5266 60%, #0e6a7d 100%); box-shadow: 0 10px 30px rgba(6,32,44,.25); }
+.qcard { background: linear-gradient(180deg, var(--card, #fff), var(--tealsoft)); box-shadow: 0 2px 8px rgba(6,32,44,.08); transition: transform .15s ease; }
+.qcard:hover { transform: translateY(-2px); }
+.qcard svg { background: var(--sea); color: var(--gold); border-radius: 12px; padding: 6px; width: 40px; height: 40px; }
+.h1 { letter-spacing: -.01em; }
+.chip { transition: background .15s ease, border-color .15s ease; }
+.nav a[aria-current="page"] { box-shadow: 0 6px 16px rgba(11,100,120,.35); }
+.gearcard .gearimg img, .gcard img { transition: transform .3s ease; } .gearcard:hover .gearimg img { transform: scale(1.04); }
