@@ -503,3 +503,21 @@ a.card:hover, .fcard:hover, .qcard:hover { border-color: #F5C542 !important; box
 .shpart{color:#E6F1F4;background:rgba(10,35,66,.55);border-radius:10px;padding:6px}
 .shpart svg{width:100%;height:76px;display:block}
 .sbreal svg{width:100%;max-width:340px;height:auto;display:block;margin:auto}
+/* صور الأدوات: مفيش فراغ رمادي — الخلفية نسخة مموّهة من نفس الصورة */
+.gearimg { position: relative; overflow: hidden; }
+.gearimg img.bgb { position: absolute; inset: -16px; width: calc(100% + 32px) !important; height: calc(100% + 32px) !important; max-height: none !important; object-fit: cover !important; filter: blur(16px) brightness(.75) saturate(1.1); transform: none !important; }
+.gearimg img.fg { position: relative; z-index: 1; }
+.gearimg .gearcr { z-index: 2; }
+.grpimgs img.bgb { display: none; }
+.gearcr { background: rgba(6,24,44,.72) !important; color: #E6F1F4 !important; opacity: 1 !important; max-width: calc(100% - 12px); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.gearcr a { color: #9FE3F2 !important; }
+a.card.gearcard, a.card.gearcard h3, a.card.gearcard p { color: var(--ink); }
+/* صور المجموعة تملى المربع كله مهما كان عددها */
+.grpimgs.n1 > div { grid-column: 1 / -1; grid-row: span 2; }
+.grpimgs.n2 > div { grid-row: span 2; }
+.grpimgs.n3 > div:first-child { grid-row: span 2; }
+.grpimgs { grid-auto-rows: 1fr; }
+/* الاختيار المضغوط لازم يبان جوه المربعات المتدرجة */
+.card .chip[aria-pressed="true"], .card .chip.on, details.acc .chip[aria-pressed="true"], details.acc .chip.on { background: #F5C542 !important; color: #0A2342 !important; border-color: #F5C542 !important; font-weight: 700; box-shadow: 0 0 0 2px rgba(245,197,66,.35); }
+.hemseg { display: inline-flex; border: 1px solid rgba(232,190,80,.8); border-radius: 999px; padding: 3px; gap: 3px; background: rgba(0,0,0,.18); }
+.hemseg .chip { border-radius: 999px; border-color: transparent !important; min-height: 34px; padding: 4px 12px; }

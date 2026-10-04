@@ -388,7 +388,7 @@
         '<a class="btn ghost small" target="_blank" rel="noopener" href="' + KNOT_BASE + k.u + '">شوف الحركة خطوة بخطوة</a></article>').join('') + '</div>' +
       '<a class="btn ghost" target="_blank" rel="noopener" href="' + KNOT_BASE + 'fishing-knots">كل عقد الصيد بالرسوم المتحركة</a></div>';
   }
-  const gearPic = (g, big) => g.img && IMGS['gear_' + g.id] ? '<img loading="lazy" alt="' + esc(g.t) + '" src="' + IMGS['gear_' + g.id] + '">' + (PHOTO_CREDITS['gear_' + g.id] && !/^(CC0|Pixabay)$/.test(PHOTO_CREDITS['gear_' + g.id].lic) ? '<span class="muted small gearcr">' + credit('gear_' + g.id) + '</span>' : '') : '<svg viewBox="0 0 120 120" role="img" aria-label="' + esc(g.t) + '">' + (GEAR_SVG[g.id] || '') + '</svg>';
+  const gearPic = (g, big) => g.img && IMGS['gear_' + g.id] ? '<img class="bgb" alt="" aria-hidden="true" decoding="async" src="' + IMGS['gear_' + g.id] + '"><img class="fg" decoding="async" alt="' + esc(g.t) + '" src="' + IMGS['gear_' + g.id] + '">' + (PHOTO_CREDITS['gear_' + g.id] && !/^(CC0|Pixabay)$/.test(PHOTO_CREDITS['gear_' + g.id].lic) ? '<span class="muted small gearcr">' + credit('gear_' + g.id) + '</span>' : '') : '<svg viewBox="0 0 120 120" role="img" aria-label="' + esc(g.t) + '">' + (GEAR_SVG[g.id] || '') + '</svg>';
   const GRP_ORDER = ['tackle', 'nets', 'traps', 'spear', 'elec', 'boats', 'safety'];
   const GRP_DESC = { nets: 'الطرّاحة، الغزل والدبة والمنسوجة، وشبكة الرفع', traps: 'الجوابي والقفاص، مصايد الكابوريا والإستاكوزا، والحوش', spear: 'البندقية (الهاربون)، الحربة والنبلة، وقوس صيد السمك', elec: 'أنواع السونار وخواصها، والمسح الجانبي، والملاحة', boats: 'أنواع القوارب ومسافات الإبحار والمواد والمحركات والجاهزية', safety: 'سترة النجاة، الطوق، حبل الإنقاذ، مسدس الإشارة، اللاسلكي وغيرها' };
   const EXTRA_PH = { boats: [['gear_boat', 'مراكب الصيد قدام قلعة قايتباي في إسكندرية'], ['gear_boat2', 'فلوكة صيد في بحيرة']], spear: [['gear_speargun2', 'بندقية صيد تحت الماء وصيدها'], ['gear_polespear3', 'غطّاس بالحربة تحت الماء']] };
@@ -400,10 +400,11 @@
   function toolGear(el) {
     const tackle = GEAR.filter(g => !g.grp || g.grp === 'tackle');
     el.innerHTML = '<div class="stack"><p class="muted" style="margin:0">كل اللي بيستخدمه الصياد. اضغط على أي أداة أو مجموعة تفتح صفحتها بالصور والأنواع والمقاسات.</p>' +
-      '<div class="grpgrid">' + GRP_ORDER.slice(1).map(gk => { const L = GEAR.filter(g => g.grp === gk); return '<a class="card grpcard" href="#/gearg/' + gk + '"><div class="grpimgs">' + L.slice(0, 4).map(g => '<div>' + gearPic(g) + '</div>').join('') + '</div><div class="stack" style="gap:4px;padding:10px"><b class="h3" style="margin:0">' + esc(GEAR_GRP[gk]) + ' <span class="muted small num">' + L.length + '</span></b><span class="muted small">' + esc(GRP_DESC[gk] || '') + '</span></div></a>'; }).join('') + '</div>' +
-      '<h2 class="h2" style="margin:8px 0 0">' + esc(GEAR_GRP.tackle) + '</h2><div class="geargrid">' + tackle.map((g, i) =>
-        '<a class="card gearcard" href="#/gear/' + g.id + '" style="text-decoration:none;color:inherit"><div class="gearimg">' + gearPic(g) + '</div>' +
-        '<div class="stack" style="gap:6px"><h3 class="h3"><span class="gearn">' + (i + 1) + '</span>' + esc(g.t) + '</h3><p style="margin:0">' + esc(g.d) + '</p><p class="muted small" style="margin:0"><b>الاستخدام: </b>' + esc(g.u) + '</p>' + (GEAR_INFO[g.id] ? '<span class="tag ok" style="align-self:flex-start">الأنواع والمقاسات ←</span>' : '') + '</div></a>').join('') + '</div></div>';
+      '<h2 class="h2" style="margin:0">' + esc(GEAR_GRP.tackle) + '</h2><div class="geargrid">' + tackle.map((g, i) =>
+        '<a class="card gearcard" href="#/gear/' + g.id + '" style="text-decoration:none"><div class="gearimg">' + gearPic(g) + '</div>' +
+        '<div class="stack" style="gap:6px"><h3 class="h3"><span class="gearn">' + (i + 1) + '</span>' + esc(g.t) + '</h3><p style="margin:0">' + esc(g.d) + '</p><p class="muted small" style="margin:0"><b>الاستخدام: </b>' + esc(g.u) + '</p>' + (GEAR_INFO[g.id] ? '<span class="tag ok" style="align-self:flex-start">الأنواع والمقاسات ←</span>' : '') + '</div></a>').join('') + '</div>' +
+      '<h2 class="h2" style="margin:8px 0 0">باقي الأدوات (كل مجموعة في صفحة واحدة)</h2><div class="grpgrid">' + GRP_ORDER.slice(1).map(gk => { const L = GEAR.filter(g => g.grp === gk); return '<a class="card grpcard" href="#/gearg/' + gk + '"><div class="grpimgs n' + Math.min(4, L.length) + '">' + L.slice(0, 4).map(g => '<div>' + gearPic(g) + '</div>').join('') + '</div><div class="stack" style="gap:4px;padding:10px"><b class="h3" style="margin:0">' + esc(GEAR_GRP[gk]) + ' <span class="muted small num">' + L.length + '</span></b><span class="muted small">' + esc(GRP_DESC[gk] || '') + '</span></div></a>'; }).join('') + '</div>' +
+      '</div></div>';
   }
   V.gearg = function (a) {
     const gk = a[0], L = GEAR.filter(g => g.grp === gk); if (!L.length) return V.gear([]);
@@ -416,7 +417,8 @@
   V.gear = function (a) {
     const g = GEAR.find(x => x.id === a[0]);
     if (!g) return '<div class="stack"><h1 class="h1">الأدوات</h1><a class="btn" href="#/tools?t=gear">كل أدوات الصياد</a></div>';
-    const inf = GEAR_INFO[g.id] || {}, i = GEAR.indexOf(g), prev = GEAR[i - 1], next = GEAR[i + 1];
+    if (g.grp && g.grp !== 'tackle') { setTimeout(() => { const t = document.getElementById('g-' + g.id); if (t) t.scrollIntoView({ block: 'start' }); }, 60); return V.gearg([g.grp]); }
+    const TK = GEAR.filter(x => !x.grp || x.grp === 'tackle'), inf = GEAR_INFO[g.id] || {}, i = TK.indexOf(g), prev = TK[i - 1], next = TK[i + 1];
     return '<div class="stack-lg"><div class="row between"><a class="btn ghost small" href="#/tools?t=gear">كل الأدوات</a><span class="muted small">' + esc(GEAR_GRP[g.grp || 'tackle']) + '</span></div>' +
       '<header class="stack"><h1 class="h1">' + esc(g.t) + '</h1></header>' +
       '<div class="card gearhero"><div class="gearimg big">' + gearPic(g, 1) + '</div></div>' +
@@ -599,7 +601,7 @@
   };
   const SC_L = ['غير متاح غالبًا', 'ضعيف', 'جيد', 'ذروة'];
   const SC_CLS = ['bad', '', 'ok', 'gold'];
-  const WARN_L = { cr: ['قوانين أو حصص أو حماية: راجع قانون بلدك قبل الصيد أو الإبقاء', 'warn'], cig: ['قد يحمل سم السيجواتيرا في بعض المناطق (الكبيرة خصوصًا)', 'warn'], tox: ['سام أو له أشواك سامة: تعامل معه بحذر شديد', 'bad'], inv: ['نوع دخيل أو مقلق بيئيًا: اتبع الإرشاد المحلي', 'warn'] };
+  const WARN_L = { cr: ['قوانين أو حصص أو حماية: راجع قانون بلدك أو محافظتك قبل الصيد أو الإبقاء', 'warn'], cig: ['قد يحمل سم السيجواتيرا في بعض المناطق (الكبيرة خصوصًا)', 'warn'], tox: ['سام أو له أشواك سامة: تعامل معه بحذر شديد', 'bad'], inv: ['نوع دخيل أو مقلق بيئيًا: اتبع الإرشاد المحلي', 'warn'] };
 
   const inBox = (b, la, lo) => la >= b[0] && la <= b[1] && lo >= b[2] && lo <= b[3];
   const boxDist = (b, la, lo) => {
@@ -859,11 +861,12 @@
       '<div class="sphero"><div style="position:relative">' + gthumb(s, true) + '<span class="figmag">' + ico('zoomin', 18) + '</span></div>' + '<div class="muted small" id="phcredit" data-sp="' + esc(s.id) + '">' + (deckPhoto(s) ? 'الصورة من ملف «مساعد الصيد».' : IMGS['sp_' + s.id] ? credit('sp_' + s.id) : (STANDALONE ? 'جارٍ تحميل صورة حقيقية للنوع من ويكيبيديا…' : 'الصورة الحقيقية تظهر في النسخة المحمّلة عند الاتصال بالإنترنت.')) + '</div></div>' + vidHtml(s.id) + varHtml(s.id) +
       (s.w ? s.w.split(',').map(w => '<div class="notice ' + (WARN_L[w][1] === 'bad' ? 'bad' : 'warn') + '">' + esc(WARN_L[w][0]) + '.</div>').join('') : '') +
       (real ? '' : '<div class="notice info">هذا النوع <b>غير مسجَّل في منطقتك الحالية</b>. الأرقام في الجدول أدناه افتراضية لموطنه الأصلي حسب نصف الكرة المختار فقط، وليست تقييمًا لفرصك الفعلية عندك. <a href="#/here">غيّر موقعك</a></div>') +
-      '<section class="card stack"><div class="row between"><h2 class="h2" style="margin:0">' + (real ? 'الموسم على مدار السنة' : 'موسمه الافتراضي في موطنه الأصلي (ليس عندك)') + '</h2><div class="chips"><a class="chip" href="#/sp/' + s.id + '?h=n" aria-pressed="' + (hem === 'n') + '">شمال</a><a class="chip" href="#/sp/' + s.id + '?h=s" aria-pressed="' + (hem === 's') + '">جنوب</a></div></div>' +
+      '<section class="card stack"><div class="row between"><h2 class="h2" style="margin:0">' + (real ? 'الموسم على مدار السنة' : 'موسمه الافتراضي في موطنه الأصلي (ليس عندك)') + '</h2><div class="hemseg" role="group" aria-label="نصف الكرة"><a class="chip" href="#/sp/' + s.id + '?h=n" aria-pressed="' + (hem === 'n') + '">' + (hem === 'n' ? '✓ ' : '') + 'شمال الكرة</a><a class="chip" href="#/sp/' + s.id + '?h=s" aria-pressed="' + (hem === 's') + '">' + (hem === 's' ? '✓ ' : '') + 'جنوب الكرة</a></div></div>' +
       '<div class="bars' + (real ? '' : ' hyp') + '" role="img" aria-label="نسبة ذروة موسم ' + esc(s.ar) + (real ? '' : ' (افتراضي لموطنه الأصلي)') + '">' + sc.map((l, i) => { const pct = Math.round(l * 100 / 3); return '<div class="col l' + l + (i === CUR ? ' cur' : '') + '"><b class="pct">' + pct + '%</b><div class="batt"><i style="height:' + pct + '%"></i></div><span>' + MONTHS[i].slice(0, 3) + '</span></div>'; }).join('') + '</div>' +
       (real ? '<div class="legend"><span><i style="background:var(--lv0)"></i>0%</span><span><i style="background:var(--lv1)"></i>33%</span><span><i style="background:var(--lv2)"></i>66%</span><span><i style="background:var(--lv3)"></i>100%</span></div>' : '<div class="muted small">تدرّج رمادي عمدًا لأنه تقدير افتراضي غير مرتبط بمنطقتك الحالية.</div>') +
       '<div class="muted small">' + (egyptReal && hem === 'n' ? 'هذه نسب ميدانية حقيقية من ملف «مساعد الصيد» في مصر (نفس بيانات صفحته التفصيلية)، وليست تقديرًا عامًا — لذلك قد تختلف عن أنواع أخرى تعرض تقديرًا تقريبيًا فقط. ' : 'الشهور ' + (hem === 's' ? 'مقلوبة لنصف الكرة الجنوبي.' : 'لنصف الكرة الشمالي.')) + (Math.abs(loc.lat) < 6 && real && !egyptReal ? ' قرب خط الاستواء الموسمية ضعيفة فتُعرض متوسطة طوال السنة.' : '') + '</div></section>' +
       bothFor(s.id) +
+      (DIET[s.id] ? '<section class="card stack diet"><h2 class="h2" style="margin:0">بياكل إيه؟ (غذاؤه الأساسي)</h2><p style="margin:0">' + esc(DIET[s.id]) + '</p><p class="muted small" style="margin:0">أحسن طُعم غالبًا هو اللي بيشبه أكله الطبيعي في المكان والموسم.</p></section>' : '') +
       '<section class="card stack"><h2 class="h2" style="margin:0">أين يعيش؟</h2>' + mapHtml('map-sp', { sp: s.id, span: 360, h: 330 }) + legendMap + '<div class="muted small">' + (occPts(s.id) ? 'كل نقطة ذهبية مشاهدة حقيقية موثقة للنوع (مقرّبة لخلية ≈ 5 كم)، والصناديق المنقطة الباهتة أقاليم تواجده العامة. ' : 'الظل الذهبي أقاليم تواجد النوع (صناديق تقريبية). ') + '<b>البيئة:</b> ' + esc(habText(s)) + '. النقطة الحمرا مكانك.</div>' + egSpHtml(s.id) + '</section>' +
       (howHtml ? '<section class="card stack"><h2 class="h2" style="margin:0">طريقة الصيد</h2>' + howHtml + '</section>' : '') +
       (real ? '<section class="card stack"><h2 class="h2" style="margin:0">اليوم في ' + esc(loc.name) + '</h2><div class="wins">' + (winHtml(ws, di.sun) || '<span class="muted small">لا نوافذ محددة لليوم.</span>') + '</div><div class="muted small">النجمة ★ = تتزامن مع فترة قمرية رئيسية. الأوقات تقريبية وبتوقيت ' + (loc.tz ? 'المدينة' : 'جهازك') + '.</div></section>' : '') +

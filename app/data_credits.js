@@ -1564,6 +1564,11 @@ const PHOTO_CREDITS = {
 "by": "ParaScubaSailor",
 "lic": "CC BY-NC-SA 2.0",
 "src": "flickr:5418279474"
+},
+"sp_silvercarp": {
+"by": "MP Zhou",
+"lic": "CC-BY-NC",
+"src": "inat:134016604"
 }
 };
 /* فيديوهات قصيرة مضمّنة (vids.json بمعرّف النوع): مقاطع 8 ثواني بلا صوت من Pixabay (رخصة Pixabay: استخدام مجاني بلا إلزام بنسب)، اتراجعت لقطاتها يدويًا: بلا علامات مائية ولا أشخاص */
