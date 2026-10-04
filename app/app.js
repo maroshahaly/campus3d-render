@@ -223,7 +223,7 @@
       '<section class="card stack"><div class="row between"><h2 class="h2" style="margin:0">الأنسب الآن — ' + esc(loc.name) + '</h2><a class="btn ghost small" href="#/here">التفاصيل والأوقات</a></div>' + locSummary(loc) +
       (top.length ? '<div class="chips">' + top.map(c => '<a class="chip" href="#/sp/' + c.s.id + '">' + esc(c.s.ar) + '</a>').join('') + '</div>' : '<div class="muted small">لا أنواع بذروة هذا الشهر في هذا الموقع. افتح «هنا الآن» لترى الجيد والمتوسط.</div>') +
       (loc.def ? '<a class="btn" href="#/here">' + ico('pin', 20) + ' حدّد موقعك لتحصل على أسماك مكانك</a><div class="muted small">الموقع الافتراضي الإسكندرية.</div>' : '') + '</section>' +
-      lvlHtml() +
+      countdownHtml() + fishOfDay() + lvlHtml() + factHtml() +
       '<section class="quick">' +
         '<a class="qcard" href="#/trip">' + ico('fish', 26) + '<b>خطة رحلة اليوم</b><span>الطُّعم والعدة وأقرب مكان</span></a>' +
         '<a class="qcard" href="#/egypt">' + ico('pin', 26) + '<b>مناطق الصيد في مصر</b><span>48 مكان ونسب الأنواع</span></a>' +
@@ -1119,7 +1119,9 @@
     else if (egd) drawEgSpots(ctx, px, py, W, H, S, st.span, spId);
     const lc = getLoc(), x = px(lc.lng), y = py(lc.lat);
     if (x > -20 && x < W + 20 && y > -20 && y < H + 20) {
-      ctx.fillStyle = '#e11d1d'; ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5 * S; ctx.beginPath(); ctx.arc(x, y, 4 * S, 0, 6.3); ctx.fill(); ctx.stroke();
+      ctx.strokeStyle = 'rgba(225,29,29,.55)'; ctx.lineWidth = 2 * S; ctx.beginPath(); ctx.arc(x, y, 11 * S, 0, 6.3); ctx.stroke();
+      ctx.strokeStyle = 'rgba(225,29,29,.9)'; ctx.lineWidth = 1 * S; ctx.beginPath(); ctx.moveTo(x - 16 * S, y); ctx.lineTo(x - 7 * S, y); ctx.moveTo(x + 7 * S, y); ctx.lineTo(x + 16 * S, y); ctx.moveTo(x, y - 16 * S); ctx.lineTo(x, y - 7 * S); ctx.moveTo(x, y + 7 * S); ctx.lineTo(x, y + 16 * S); ctx.stroke();
+      ctx.fillStyle = '#e11d1d'; ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5 * S; ctx.beginPath(); ctx.arc(x, y, 3.5 * S, 0, 6.3); ctx.fill(); ctx.stroke();
     }
     const cap = $('#mapcap'); if (cap && cv.id === 'map-here') cap.textContent = 'عرض الخريطة ≈ ' + Math.round(st.span * 111 * (st.span <= 120 ? cl : 1)).toLocaleString('en') + ' كم · المركز ' + st.lat.toFixed(2) + '، ' + st.lng.toFixed(2);
   }
@@ -1194,7 +1196,7 @@
       const street = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', { maxZoom: 18, attribution: 'Esri' });
       const sat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 18, attribution: 'Esri, Maxar, Earthstar Geographics' });
       street.addTo(map);
-      const marker = L.circleMarker([loc.lat, loc.lng], { radius: 4.5, color: '#fff', weight: 1.5, fillColor: '#e11d1d', fillOpacity: 1, interactive: false }).addTo(map);
+      const marker = L.marker([loc.lat, loc.lng], { icon: L.divIcon({ className: 'mepin', html: '<i></i><b></b>', iconSize: [36, 36], iconAnchor: [18, 18] }), interactive: false, keyboard: false, zIndexOffset: 1000 }).addTo(map);
       LMAP[id] = { map, street, sat, cur: 'street', marker, rects: [] };
       mapDrawSpRects(id); leafEgSpots(id);
       let shown = false;

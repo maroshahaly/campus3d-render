@@ -33,17 +33,21 @@
     const fy = (la - M.la0) / M.r - 0.5, fx = (lo - M.lo0) / M.r - 0.5, y0 = Math.max(0, Math.floor(fy)), x0 = Math.max(0, Math.floor(fx)), y1 = Math.min(M.h - 1, y0 + 1), x1 = Math.min(M.w - 1, x0 + 1), ty = Math.min(1, Math.max(0, fy - y0)), tx = Math.min(1, Math.max(0, fx - x0)), g = E.g, W = M.w;
     return (g[y0 * W + x0] * (1 - tx) + g[y0 * W + x1] * tx) * (1 - ty) + (g[y1 * W + x0] * (1 - tx) + g[y1 * W + x1] * tx) * ty;
   }
+  const EGOC = {};
+  const egObs = id => { if (typeof EG_OBS === 'undefined' || !EG_OBS[id]) return null; if (!EGOC[id]) { const b = atob(EG_OBS[id]), u = new Uint8Array(b.length); for (let i = 0; i < b.length; i++) u[i] = b.charCodeAt(i); EGOC[id] = new Int16Array(u.buffer); } return EGOC[id]; };
   /* رسم أماكن الصيد المصرية فوق الخريطة المرسومة */
   function drawEgSpots(ctx, px, py, W, H, S, span, egsp) {
+    const ob = egsp ? egObs(egsp) : null;
+    if (ob) { ctx.fillStyle = '#FFE08A'; ctx.strokeStyle = 'rgba(6,32,44,.85)'; ctx.lineWidth = .8 * S; ctx.beginPath(); for (let q = 0; q < ob.length; q += 2) { const x = px(ob[q + 1] / 100), y = py(ob[q] / 100); if (x < 0 || x > W || y < 0 || y > H) continue; ctx.moveTo(x + 2 * S, y); ctx.arc(x, y, 2 * S, 0, 6.3); } ctx.fill(); ctx.stroke(); }
     ctx.font = (10.5 * S) + 'px "IBM Plex Sans Arabic",Tahoma,sans-serif'; ctx.textAlign = 'center';
     EG_SPOTS.forEach(s => {
       const x = px(s[3]), y = py(s[2]); if (x < -10 || x > W + 10 || y < -10 || y > H + 10) return;
       const pc = egsp ? presOf(s[0], egsp) : 0; if (egsp && !pc) { ctx.fillStyle = 'rgba(255,255,255,.35)'; ctx.beginPath(); ctx.arc(x, y, 2.2 * S, 0, 6.3); ctx.fill(); return; }
-      if (egsp) { const Rk = s[4] === 'fw' ? 12 : 20, rp = Math.max(12 * S, Rk / (111 * span / W)); ctx.fillStyle = 'rgba(255,138,0,' + (0.22 + Math.min(0.45, pc / 50)) + ')'; ctx.strokeStyle = 'rgba(200,80,0,.8)'; ctx.lineWidth = 1 * S; ctx.beginPath(); ctx.arc(x, y, rp, 0, 6.3); ctx.fill(); ctx.stroke(); }
-      const r = (egsp ? 3 : 4.5) * S;
+      if (egsp) { const Rk = s[4] === 'fw' ? 12 : 20, rp = Math.max(7 * S, Rk / (111 * span / W)); ctx.fillStyle = 'rgba(255,138,0,' + (0.22 + Math.min(0.45, pc / 50)) + ')'; ctx.strokeStyle = 'rgba(200,80,0,.8)'; ctx.lineWidth = 1 * S; ctx.beginPath(); ctx.arc(x, y, rp, 0, 6.3); ctx.fill(); ctx.stroke(); }
+      const r = (egsp ? 2.2 : 3) * S;
       ctx.fillStyle = s[4] === 'fw' ? '#2bb3a3' : s[4] === 'red' ? '#e0675a' : '#3f8fdc'; ctx.strokeStyle = '#06202C'; ctx.lineWidth = 1.5 * S;
       ctx.beginPath(); ctx.arc(x, y, r, 0, 6.3); ctx.fill(); ctx.stroke();
-      if (span <= 7 || egsp) { const lab = egsp ? pc + '%' : s[1].split(' (')[0]; ctx.lineWidth = 3 * S; ctx.strokeStyle = 'rgba(6,32,44,.8)'; ctx.strokeText(lab, x, y - r - 3 * S); ctx.fillStyle = '#fff'; ctx.fillText(lab, x, y - r - 3 * S); }
+      if (span <= 6) { const lab = egsp ? pc + '%' : s[1].split(' (')[0]; ctx.lineWidth = 3 * S; ctx.strokeStyle = 'rgba(6,32,44,.8)'; ctx.strokeText(lab, x, y - r - 3 * S); ctx.fillStyle = '#fff'; ctx.fillText(lab, x, y - r - 3 * S); }
     });
   }
   /* نفس الأماكن على خريطة Leaflet الحقيقية */
@@ -53,7 +57,7 @@
     const egsp = wrap.dataset.egsp || '';
     EG_SPOTS.forEach(s => {
       const pc = egsp ? presOf(s[0], egsp) : 0; if (egsp && !pc) return;
-      const m = L.circleMarker([s[2], s[3]], { radius: egsp ? 6 + Math.min(10, pc / 3) : 7, color: '#06202C', weight: 2, fillColor: s[4] === 'fw' ? '#2bb3a3' : s[4] === 'red' ? '#e0675a' : '#3f8fdc', fillOpacity: .95 }).addTo(L2.map);
+      const m = L.circleMarker([s[2], s[3]], { radius: egsp ? 3 + Math.min(4, pc / 6) : 4, color: '#06202C', weight: 1, fillColor: s[4] === 'fw' ? '#2bb3a3' : s[4] === 'red' ? '#e0675a' : '#3f8fdc', fillOpacity: .95 }).addTo(L2.map);
       m.bindTooltip(s[1] + (egsp ? ' · ' + pc + '%' : ''), { direction: 'top' }); m.on('click', () => { location.hash = '#/egypt/' + s[0]; });
       L2.spots.push(m);
     });
@@ -200,6 +204,7 @@
       '<div class="chips">' + (t.on ? '<button class="btn" data-act="trkstop">إيقاف وحفظ الرحلة</button>' : '<button class="btn" data-act="trkstart">ابدأ التتبع</button>') + '<button class="btn ghost" data-act="trkshare">شارك موقعي الآن</button>' + (t.pts.length ? '<button class="btn ghost" data-act="trkgpx">نزّل خط السير (GPX)</button>' : '') + '</div>' +
       '<div class="muted small">التتبع بيشتغل طول ما التطبيق مفتوح والشاشة شغالة (بنحاول نمنع الشاشة تقفل). المتابعة اللحظية من جهاز تاني محتاجة سيرفر مش موجود في التطبيق، فبدلها ابعت موقعك كل شوية بزرار «شارك موقعي الآن» أو ابعت خط السير كله في الآخر.</div></section>' +
       mapHtml('map-trk', { span: MAPST['map-trk'].span, h: 300 }).replace('class="mapbox"', 'class="mapbox" data-spots="1" data-track="1"') +
+      badgesHtml() +
       '<section class="card stack"><h2 class="h2" style="margin:0">سجّل صيدة هنا</h2><form class="stack" data-form="catchhere" style="gap:8px"><div class="field"><label for="chsp">السمكة</label><input id="chsp" list="spl2" required placeholder="اختار أو اكتب"><datalist id="spl2">' + SG.map(s => '<option value="' + esc(s.ar) + '">').join('') + '</datalist></div>' +
       '<div class="grid2"><div class="field"><label for="chlen">الطول (سم)</label><input id="chlen" inputmode="decimal"></div><div class="field"><label for="chbt">الطُّعم</label><input id="chbt"></div></div><button class="btn" type="submit">سجّل بموقعي الحالي</button></form></section>' +
       (mySpots.length ? '<section class="card stack"><h2 class="h2" style="margin:0">أماكني الأنجح</h2>' + mySpots.map(c => '<div class="row between"><span>' + Object.keys(c.sp).slice(0, 4).map(esc).join('، ') + '</span><span class="row" style="gap:6px"><b class="num">' + c.n + '</b><a class="btn ghost small" href="' + geoHref(c.la.toFixed(5), c.lo.toFixed(5), 'مكان صيد') + '">افتح</a></span></div>').join('') + '</section>' : '') +
@@ -254,6 +259,7 @@
   const egCell = (la, lo) => { const E = egMask(); if (!E) return -1; const M = E.M, r = Math.floor((la - M.la0) / M.r), c = Math.floor((lo - M.lo0) / M.r); return r < 0 || c < 0 || r >= M.h || c >= M.w ? -1 : r * M.w + c; };
   /* طبقة Leaflet: صورة شفافة بخلايا التوزيع + نسبة كل مكان */
   function leafEgDist(L2, id) {
+    const ob = egObs(id); if (ob && typeof L !== 'undefined') { if (!L2.rend) L2.rend = L.canvas({ padding: .3 }); for (let q = 0; q < ob.length; q += 2) L2.rects.push(L.circleMarker([ob[q] / 100, ob[q + 1] / 100], { renderer: L2.rend, radius: 2.5, color: '#06202C', weight: .8, fillColor: '#FFE08A', fillOpacity: 1, interactive: false }).addTo(L2.map)); }
     const D = egDist(id); if (!D || typeof L === 'undefined') return;
     const M = egMask().M, w = D.c1 - D.c0 + 1, h = D.r1 - D.r0 + 1, cv = document.createElement('canvas'); cv.width = w; cv.height = h;
     const x = cv.getContext('2d'), im = x.createImageData(w, h);
@@ -261,7 +267,7 @@
     x.putImageData(im, 0, 0);
     const b = [[M.la0 + D.r0 * M.r, M.lo0 + D.c0 * M.r], [M.la0 + (D.r1 + 1) * M.r, M.lo0 + (D.c1 + 1) * M.r]];
     L2.rects.push(L.imageOverlay(cv.toDataURL(), b, { interactive: false, className: 'pixelated' }).addTo(L2.map));
-    EG_SPOTS.forEach(s => { const p = presOf(s[0], id); if (!p) return; const m = L.circleMarker([s[2], s[3]], { radius: 4, color: '#7a2a00', weight: 1, fillColor: '#ff8a00', fillOpacity: 1 }).addTo(L2.map); m.bindTooltip(s[1].split(' (')[0] + ' · ' + p + '%', { direction: 'top' }); m.on('click', () => { location.hash = '#/egypt/' + s[0]; }); L2.rects.push(m); });
+    EG_SPOTS.forEach(s => { const p = presOf(s[0], id); if (!p) return; const m = L.circleMarker([s[2], s[3]], { radius: 3, color: '#7a2a00', weight: 1, fillColor: '#ff8a00', fillOpacity: 1 }).addTo(L2.map); m.bindTooltip(s[1].split(' (')[0] + ' · ' + p + '%', { direction: 'top' }); m.on('click', () => { location.hash = '#/egypt/' + s[0]; }); L2.rects.push(m); });
   }
   /* دبوس الموقع الرفيع الأحمر (Leaflet) */
   const pinIcon = () => L.divIcon({ className: 'mypin', html: '<svg width="18" height="34" viewBox="0 0 18 34"><path d="M9 33V13" stroke="#8b0000" stroke-width="2.4" stroke-linecap="round"/><circle cx="9" cy="8" r="6.5" fill="#e11d1d" stroke="#fff" stroke-width="2"/></svg>', iconSize: [18, 34], iconAnchor: [9, 33] });
@@ -274,7 +280,7 @@
       MAPST['map-spe'] = { lat: (a0 + a1) / 2, lng: (o0 + o1) / 2, span: Math.max(2.5, Math.min(16, Math.max((o1 - o0) * 1.5, (a1 - a0) * 1.9))) }; }
     return '<div class="stack" style="gap:6px"><h3 class="h3" style="margin:8px 0 0">خريطة تواجده داخل مصر · ' + L.length + ' مكان</h3>' +
       mapHtml('map-spe', { sp: id, span: MAPST['map-spe'].span, h: 380 }) +
-      '<div class="legend"><span><i style="background:#ff8a00"></i>منطقة تواجد (مربعات ≈ 550 م)، الأغمق = نسبة أعلى</span><span><i style="background:#e11d1d;border-radius:50%"></i>موقعك</span></div><div class="chips">' +
+      '<div class="legend"><span><i style="background:#ff8a00"></i>منطقة تواجد (الأغمق = نسبة أعلى)</span><span><i style="background:#FFE08A;border-radius:50%"></i>مشاهدة حقيقية موثقة داخل مصر (≈ 1 كم)</span><span><i style="background:#e11d1d;border-radius:50%"></i>موقعك</span></div><div class="chips">' +
       L.slice(0, 12).map(x => '<a class="chip" href="#/egypt/' + x.s[0] + '"><span class="dot w-' + x.s[4] + '" style="width:9px;height:9px"></span> ' + esc(x.s[1].split(' (')[0]) + ' <b class="num">' + x.p + '%</b></a>').join('') + '</div></div>';
   }
   /* ---------- أسماك البحر والنهر ---------- */
@@ -290,3 +296,73 @@
       BOTH.map(bothCard).join('') + '</div>';
   };
   const bothFor = id => { const b = BOTH.find(x => (x.ids || [x.id]).indexOf(id) > -1); return b ? '<section class="stack"><h2 class="h2" style="margin:0">في البحر وفي النهر</h2>' + bothCard(b) + '<a class="btn ghost small" href="#/both">كل أسماك البحر والنهر</a></section>' : ''; };
+
+  /* ================= التشويق: العد التنازلي، سمكة اليوم، هل تعرف؟، الإنجازات ================= */
+  const FACTS = [
+    'البوري بيقدر يعيش في مية مالحة جدًا وفي مية عذبة، وده سبب إنه موجود من البحر لحد قارون والترع.',
+    'الدنيس بيغيّر جنسه: بيبدأ ذكر وبعدين يتحول لأنثى لما يكبر.',
+    'سمكة أبو سيف بتسخّن عينيها ومخها بعضلة خاصة عشان تشوف كويس في الأعماق الباردة.',
+    'التونة زرقاء الزعنفة ممكن تعدّي المحيط الأطلسي في أقل من شهرين.',
+    'قرش الحوت أكبر سمكة في العالم، وبياكل كائنات صغيرة جدًا (بلانكتون) بس.',
+    'سمكة الأسد (البوبيت) دخلت البحر المتوسط من البحر الأحمر عن طريق قناة السويس.',
+    'الأخطبوط عنده 3 قلوب ودمه أزرق.',
+    'السمك بيسمع الصوت وبيحس بالحركة بخط جانبي على جسمه؛ عشان كده الهدوء على الشط بيفرق.',
+    'القمر بيأثر على المد والجزر، وأيام البدر والمحاق المد بيبقى أقوى والسمك غالبًا أنشط.',
+    'الكابوريا الزرقاء أصلها من الأطلسي ووصلت البحر المتوسط ومصر عن طريق مية صابورة السفن.',
+    'البلطي الأم بتحضن البيض والزريعة جوه بُقها لحد ما يقدروا يعيشوا لوحدهم.',
+    'سمكة الشراع أسرع سمكة معروفة، وممكن توصل لحوالي 100 كم/ساعة في الانقضاض.',
+    'القاروص بيحب الموج والرغوة لأنها بتلخبط السمك الصغير وتسهّل صيده.',
+    'الحبار والكلماري بيغيّروا لونهم في أقل من ثانية للتمويه والتواصل.',
+    'المرجان في البحر الأحمر حيوانات مش صخور، والشعاب بتكون بيت لربع أنواع السمك البحري.',
+    'السلمون بيرجع يبيض في نفس النهر اللي اتولد فيه بعد سنين في البحر، وبيلاقيه بحاسة الشم.',
+    'قشر البياض (فرخ النيل) في بحيرة ناصر ممكن يعدّي 100 كجم.',
+    'سمك الإبرة (الزرقان) عضمه أخضر طبيعي، وده مش ضار.',
+    'أحسن وقت للصيد غالبًا ساعة قبل الغروب لحد ساعة بعده: الضوء الخافت بيخلي المفترسات تقرّب من الشط.',
+    'الريح الخفيفة اللي بتحرّك سطح المية بتخلي السمك أقل حذرًا من المية الهادية الصافية.',
+    'التونة والماكريل لازم يفضلوا يعوموا طول الوقت عشان المية تعدّي على خياشيمهم ويتنفسوا.',
+    'الشفش (اللبط) بيعمل صوت طبول بعضلات جنب مثانة العوم، والصيادين بيسمعوه أحيانًا.',
+    'عمر السمكة ممكن يتعرف من حلقات في قشرها زي حلقات الشجر.',
+    'المحار بيفلتر حوالي 50 لتر مية في اليوم وبينضّف البحيرات.'
+  ];
+  const dayKey = () => { const d = new Date(); return d.getFullYear() * 400 + d.getMonth() * 32 + d.getDate(); };
+  const hashN = (n, m) => ((n * 2654435761) >>> 0) % m;
+  function nextWindow(loc) {
+    const di = dayInfo(loc), s = di.sun, H = 3600000, now = Date.now(), W = [];
+    if (s.rise) W.push({ a: (s.dawn || new Date(s.rise - .5 * H)).getTime(), b: s.rise.getTime() + H, l: 'نشاط الفجر' });
+    if (s.set) W.push({ a: s.set.getTime() - H, b: (s.dusk || new Date(s.set.getTime() + .5 * H)).getTime(), l: 'نشاط الغروب' });
+    di.slots.filter(x => x.kind === 'major').forEach(x => W.push({ a: x.t.getTime() - H, b: x.t.getTime() + H, l: x.label }));
+    const tm = dayInfo(loc, new Date(now + 86400000)).sun; if (tm.rise) W.push({ a: (tm.dawn || new Date(tm.rise - .5 * H)).getTime(), b: tm.rise.getTime() + H, l: 'نشاط فجر بكرة' });
+    W.sort((x, y) => x.a - y.a); const cur = W.find(w => w.a <= now && w.b > now); if (cur) return { now: 1, w: cur };
+    const nx = W.find(w => w.a > now); return nx ? { now: 0, w: nx } : null;
+  }
+  const fmtDur = ms => { const m = Math.max(0, Math.round(ms / 60000)), h = Math.floor(m / 60); return (h ? h + ' س ' : '') + (m % 60) + ' د'; };
+  function countdownHtml() {
+    const loc = getLoc(), n = nextWindow(loc); if (!n) return '';
+    const span = n.w.b - n.w.a, pct = n.now ? Math.round((Date.now() - n.w.a) / span * 100) : Math.max(3, 100 - Math.round((n.w.a - Date.now()) / (6 * 3600000) * 100));
+    return '<section class="card cdown" data-cd="1"><div class="ring" style="--p:' + Math.min(100, pct) + '"><span>' + (n.now ? '🔥' : '⏳') + '</span></div><div style="flex:1;min-width:0"><div class="eyebrow" style="color:var(--gold)">' + (n.now ? 'دلوقتي وقت ذروة!' : 'أحسن وقت جاي') + '</div>' +
+      '<b class="cdt num">' + (n.now ? 'باقي ' + fmtDur(n.w.b - Date.now()) : 'بعد ' + fmtDur(n.w.a - Date.now())) + '</b><div class="muted small">' + esc(n.w.l) + ' · ' + T(new Date(n.w.a)) + '–' + T(new Date(n.w.b)) + '</div></div><a class="btn small" href="#/trip">جهّز الرحلة</a></section>';
+  }
+  setInterval(() => { const c = $('[data-cd]'); if (c) { const t = document.createElement('div'); t.innerHTML = countdownHtml(); if (t.firstChild) c.replaceWith(t.firstChild); } }, 30000);
+  function fishOfDay() {
+    const loc = getLoc(), regs = regionsAt(loc);
+    const L = SG.filter(s => { const m = monthScores(s, loc, { m: regs.m, f: regs.f }, null); return m && m[CUR] >= 2 && s.g !== 'mam' && s.g !== 'orn'; });
+    if (!L.length) return '';
+    const s = L[hashN(dayKey(), L.length)], m = monthScores(s, loc, { m: regs.m, f: regs.f }, null), di = dayInfo(loc);
+    const moonB = di.spring ? 15 : 0, chance = Math.min(95, 35 + m[CUR] * 15 + moonB + (nextWindow(loc) && nextWindow(loc).now ? 10 : 0));
+    const fact = s.n ? s.n.split(/[.!]/)[0] : '';
+    return '<section class="card fod"><div class="eyebrow" style="color:var(--gold)">⭐ سمكة النهارده</div><a class="fodimg" href="#/sp/' + s.id + '"><img alt="" src="' + spPhoto(s) + '"></a>' +
+      '<div class="row between" style="align-items:flex-end"><div><h2 class="h2" style="margin:0"><a href="#/sp/' + s.id + '" style="color:inherit;text-decoration:none">' + esc(dispName(s)) + '</a></h2><div class="muted small latin">' + esc(s.en) + '</div></div>' +
+      '<div class="gauge" style="--p:' + chance + '"><b class="num">' + chance + '%</b><span>فرصتك</span></div></div>' +
+      (fact ? '<p style="margin:0">💡 ' + esc(fact) + '.</p>' : '') + '<div class="chips"><a class="chip" href="#/trip?add=' + s.id + '">+ ضيفها لخطة اليوم</a><a class="chip" href="#/sp/' + s.id + '">الطُّعم والمكان</a></div></section>';
+  }
+  function factHtml() { const i = hashN(dayKey() + 7, FACTS.length); return '<section class="card fact" data-fi="' + i + '"><div class="row between"><b>🤔 هل تعرف؟</b><button class="btn ghost small" data-act="nextfact">معلومة تانية</button></div><p class="factx" style="margin:0">' + esc(FACTS[i]) + '</p></section>'; }
+  document.addEventListener('click', e => { const b = e.target.closest('[data-act="nextfact"]'); if (!b) return; const c = b.closest('.fact'), i = (+c.dataset.fi + 1) % FACTS.length; c.dataset.fi = i; const p = c.querySelector('.factx'); p.style.opacity = 0; setTimeout(() => { p.textContent = FACTS[i]; p.style.opacity = 1; }, 180); });
+  /* الإنجازات من السجل والرحلات */
+  function badgesHtml() {
+    const log = store.get('log', []), trips = store.get('trips', []), sp = new Set(log.map(c => c.sp).filter(Boolean)), dawn = log.some(c => { const h = +(c.at || '').slice(11, 13); return h >= 4 && h < 7; }), night = log.some(c => { const h = +(c.at || '').slice(11, 13); return h >= 21 || h < 3; });
+    const km = trips.reduce((a, t) => a + trackKm(t.pts), 0), big = log.some(c => +c.len >= 50), places = new Set(log.filter(c => c.la).map(c => c.la.toFixed(2) + c.lo.toFixed(2)));
+    const B = [['🎣', 'أول صيدة', log.length >= 1], ['🐟', '10 صيدات', log.length >= 10], ['🏆', '50 صيدة', log.length >= 50], ['🌈', '5 أنواع مختلفة', sp.size >= 5], ['📚', '15 نوع', sp.size >= 15], ['🌅', 'صياد الفجر', dawn], ['🌙', 'صياد الليل', night], ['📏', 'سمكة 50 سم+', big], ['🧭', 'رحلة 5 كم', km >= 5], ['🗺️', '3 أماكن مختلفة', places.size >= 3]];
+    const n = B.filter(b => b[2]).length;
+    return '<section class="card stack"><div class="row between"><h2 class="h2" style="margin:0">إنجازاتك</h2><span class="tag gold num">' + n + ' / ' + B.length + '</span></div><div class="bar"><i style="width:' + Math.round(n / B.length * 100) + '%"></i></div>' +
+      '<div class="badges">' + B.map(b => '<div class="badge' + (b[2] ? ' on' : '') + '"><span>' + b[0] + '</span><small>' + esc(b[1]) + '</small></div>').join('') + '</div></section>';
+  }
