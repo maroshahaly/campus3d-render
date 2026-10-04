@@ -1456,9 +1456,9 @@ const PHOTO_CREDITS = {
 "src": "commons:File:BiminiKnotReep5WindgAlles.JPG"
 },
 "gear_polespear": {
-"by": "ParaScubaSailor",
-"lic": "CC BY-NC-SA 2.0",
-"src": "flickr:5418279474"
+"by": "Dorieo",
+"lic": "CC BY-SA 4.0",
+"src": "commons:File:Arpones filipinos. Museo de América.jpg"
 },
 "w_k_fg": {
 "by": "Aen Tan",
@@ -1559,6 +1559,11 @@ const PHOTO_CREDITS = {
 "by": "Myousry6666",
 "lic": "CC BY-SA 4.0",
 "src": "commons:File:Fishers and small island in Lake Burullus - Egypt.jpg"
+},
+"gear_polespear3": {
+"by": "ParaScubaSailor",
+"lic": "CC BY-NC-SA 2.0",
+"src": "flickr:5418279474"
 }
 };
 /* فيديوهات قصيرة مضمّنة (vids.json بمعرّف النوع): مقاطع 8 ثواني بلا صوت من Pixabay (رخصة Pixabay: استخدام مجاني بلا إلزام بنسب)، اتراجعت لقطاتها يدويًا: بلا علامات مائية ولا أشخاص */

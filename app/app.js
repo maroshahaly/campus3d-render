@@ -286,7 +286,7 @@
     /* قائمة واحدة مدموجة: أسماك الملف + باقي أنواع مصر من الدليل العالمي، مقسّمة بالبيئة ومرتّبة بموسم الشهر ده ثم الاسم */
     const kindF = s => FRESH_TOO.indexOf(s.id) > -1 && s.kind !== 'shell' ? (s.kind === 'fresh' ? 'fresh' : s.kind) : s.kind;
     const regsNow = regionsAt({ lat: 30.5, lng: 31 }), lvG = g => { const m = monthScores(g, { lat: 30.5, lng: 31 }, regsNow, null); return m ? m[CUR] : 0; };
-    const gcardF = x => '<a class="card gcard stack" href="#/sp/' + x.s.id + '" style="gap:6px"><div class="gtop">' + gthumb(x.s) + '<div class="gnm"><b class="h3" style="margin:0">' + esc(dispName(x.s)) + '</b><div class="muted small latin">' + esc(x.s.en) + '</div></div></div></a>';
+    const gcardF = x => { const ph = deckPhoto(x.s) || img('sp_' + x.s.id) || gPhoto(x.s); return '<a class="fcard" href="#/sp/' + x.s.id + '"><span class="ph">' + (ph ? '<img loading="lazy" alt="" src="' + ph + '">' : FISHPH) + '</span><span style="min-width:0;flex:1"><b>' + esc(dispName(x.s)) + '</b><span class="muted small fsub latin">' + esc(x.s.en) + '</span></span></a>'; };
     const items = list.map(s => ({ k: kindF(s), lv: s.lv[CUR], nm: s.name, h: fcard(s) })).concat(extra.map(x => ({ k: kindG(x), lv: lvG(x.s), nm: x.s.ar, h: gcardF(x) })));
     items.sort((x, y) => (y.lv - x.lv) || x.nm.localeCompare(y.nm, 'ar'));
     const GRP = [['fish', 'أسماك البحر (المتوسط والأحمر)'], ['shell', 'رخويات وقشريات'], ['fresh', 'المياه العذبة (النيل والبحيرات)']];
@@ -391,7 +391,7 @@
   const gearPic = (g, big) => g.img && IMGS['gear_' + g.id] ? '<img loading="lazy" alt="' + esc(g.t) + '" src="' + IMGS['gear_' + g.id] + '">' + (PHOTO_CREDITS['gear_' + g.id] && !/^(CC0|Pixabay)$/.test(PHOTO_CREDITS['gear_' + g.id].lic) ? '<span class="muted small gearcr">' + credit('gear_' + g.id) + '</span>' : '') : '<svg viewBox="0 0 120 120" role="img" aria-label="' + esc(g.t) + '">' + (GEAR_SVG[g.id] || '') + '</svg>';
   const GRP_ORDER = ['tackle', 'nets', 'traps', 'spear', 'elec', 'boats', 'safety'];
   const GRP_DESC = { nets: 'الطرّاحة، الغزل والدبة والمنسوجة، وشبكة الرفع', traps: 'الجوابي والقفاص، مصايد الكابوريا والإستاكوزا، والحوش', spear: 'البندقية (الهاربون)، الحربة والنبلة، وقوس صيد السمك', elec: 'أنواع السونار وخواصها، والمسح الجانبي، والملاحة', boats: 'أنواع القوارب ومسافات الإبحار والمواد والمحركات والجاهزية', safety: 'سترة النجاة، الطوق، حبل الإنقاذ، مسدس الإشارة، اللاسلكي وغيرها' };
-  const EXTRA_PH = { boats: [['gear_boat', 'مراكب الصيد قدام قلعة قايتباي في إسكندرية'], ['gear_boat2', 'فلوكة صيد في بحيرة']], spear: [['gear_speargun2', 'بندقية صيد تحت الماء وصيدها']] };
+  const EXTRA_PH = { boats: [['gear_boat', 'مراكب الصيد قدام قلعة قايتباي في إسكندرية'], ['gear_boat2', 'فلوكة صيد في بحيرة']], spear: [['gear_speargun2', 'بندقية صيد تحت الماء وصيدها'], ['gear_polespear3', 'غطّاس بالحربة تحت الماء']] };
   const infoHtml = inf => (inf.types ? '<dl class="kv" style="margin:0">' + inf.types.map(t => '<dt>' + esc(t[0]) + '</dt><dd>' + esc(t[1]) + '</dd>').join('') + '</dl>' : '') +
     (inf.sizes ? '<div class="tbl"><table><thead><tr>' + inf.sizes.h.map(h => '<th>' + esc(h) + '</th>').join('') + '</tr></thead><tbody>' + inf.sizes.r.map(r => '<tr>' + r.map(c => '<td>' + esc(c) + '</td>').join('') + '</tr>').join('') + '</tbody></table></div>' : '') +
     (inf.note ? '<div class="notice info">' + esc(inf.note) + '</div>' : '');
@@ -858,7 +858,7 @@
       (real ? '<div class="legend"><span><i style="background:var(--lv0)"></i>0%</span><span><i style="background:var(--lv1)"></i>33%</span><span><i style="background:var(--lv2)"></i>66%</span><span><i style="background:var(--lv3)"></i>100%</span></div>' : '<div class="muted small">تدرّج رمادي عمدًا لأنه تقدير افتراضي غير مرتبط بمنطقتك الحالية.</div>') +
       '<div class="muted small">' + (egyptReal && hem === 'n' ? 'هذه نسب ميدانية حقيقية من ملف «مساعد الصيد» في مصر (نفس بيانات صفحته التفصيلية)، وليست تقديرًا عامًا — لذلك قد تختلف عن أنواع أخرى تعرض تقديرًا تقريبيًا فقط. ' : 'الشهور ' + (hem === 's' ? 'مقلوبة لنصف الكرة الجنوبي.' : 'لنصف الكرة الشمالي.')) + (Math.abs(loc.lat) < 6 && real && !egyptReal ? ' قرب خط الاستواء الموسمية ضعيفة فتُعرض متوسطة طوال السنة.' : '') + '</div></section>' +
       bothFor(s.id) +
-      '<section class="card stack"><h2 class="h2" style="margin:0">أين يعيش؟</h2>' + mapHtml('map-sp', { sp: s.id, span: 360, h: 330 }) + legendMap + '<div class="muted small">' + (occPts(s.id) ? 'كل نقطة ذهبية مشاهدة حقيقية موثقة للنوع (مقرّبة لخلية ≈ 5 كم)، والصناديق المنقطة الباهتة أقاليم تواجده العامة. ' : 'الظل الذهبي أقاليم تواجد النوع (صناديق تقريبية). ') + '<b>البيئة:</b> ' + esc(habText(s)) + '. الدبوس الأحمر مكانك.</div>' + egSpHtml(s.id) + '</section>' +
+      '<section class="card stack"><h2 class="h2" style="margin:0">أين يعيش؟</h2>' + mapHtml('map-sp', { sp: s.id, span: 360, h: 330 }) + legendMap + '<div class="muted small">' + (occPts(s.id) ? 'كل نقطة ذهبية مشاهدة حقيقية موثقة للنوع (مقرّبة لخلية ≈ 5 كم)، والصناديق المنقطة الباهتة أقاليم تواجده العامة. ' : 'الظل الذهبي أقاليم تواجد النوع (صناديق تقريبية). ') + '<b>البيئة:</b> ' + esc(habText(s)) + '. النقطة الحمرا مكانك.</div>' + egSpHtml(s.id) + '</section>' +
       (howHtml ? '<section class="card stack"><h2 class="h2" style="margin:0">طريقة الصيد</h2>' + howHtml + '</section>' : '') +
       (real ? '<section class="card stack"><h2 class="h2" style="margin:0">اليوم في ' + esc(loc.name) + '</h2><div class="wins">' + (winHtml(ws, di.sun) || '<span class="muted small">لا نوافذ محددة لليوم.</span>') + '</div><div class="muted small">النجمة ★ = تتزامن مع فترة قمرية رئيسية. الأوقات تقريبية وبتوقيت ' + (loc.tz ? 'المدينة' : 'جهازك') + '.</div></section>' : '') +
       '<section class="card"><dl class="kv" style="margin:0">' + facts.map(f => '<dt>' + f[0] + '</dt><dd>' + esc(f[1]) + '</dd>').join('') + '<dt>يتواجد في</dt><dd>' + esc(regList.slice(0, 8).join('، ') + (regList.length > 8 ? '… و' + (regList.length - 8) + ' مناطق أخرى' : '')) + '</dd></dl></section>' +
@@ -1119,8 +1119,7 @@
     else if (egd) drawEgSpots(ctx, px, py, W, H, S, st.span, spId);
     const lc = getLoc(), x = px(lc.lng), y = py(lc.lat);
     if (x > -20 && x < W + 20 && y > -20 && y < H + 20) {
-      ctx.strokeStyle = '#8b0000'; ctx.lineWidth = 2.2 * S; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y - 18 * S); ctx.stroke();
-      ctx.fillStyle = '#e11d1d'; ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.8 * S; ctx.beginPath(); ctx.arc(x, y - 21 * S, 5.5 * S, 0, 6.3); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = '#e11d1d'; ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5 * S; ctx.beginPath(); ctx.arc(x, y, 4 * S, 0, 6.3); ctx.fill(); ctx.stroke();
     }
     const cap = $('#mapcap'); if (cap && cv.id === 'map-here') cap.textContent = 'عرض الخريطة ≈ ' + Math.round(st.span * 111 * (st.span <= 120 ? cl : 1)).toLocaleString('en') + ' كم · المركز ' + st.lat.toFixed(2) + '، ' + st.lng.toFixed(2);
   }
@@ -1195,7 +1194,7 @@
       const street = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', { maxZoom: 18, attribution: 'Esri' });
       const sat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 18, attribution: 'Esri, Maxar, Earthstar Geographics' });
       street.addTo(map);
-      const marker = L.marker([loc.lat, loc.lng], { icon: pinIcon(), interactive: false, keyboard: false }).addTo(map);
+      const marker = L.circleMarker([loc.lat, loc.lng], { radius: 4.5, color: '#fff', weight: 1.5, fillColor: '#e11d1d', fillOpacity: 1, interactive: false }).addTo(map);
       LMAP[id] = { map, street, sat, cur: 'street', marker, rects: [] };
       mapDrawSpRects(id); leafEgSpots(id);
       let shown = false;

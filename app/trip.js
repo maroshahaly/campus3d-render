@@ -39,7 +39,8 @@
     EG_SPOTS.forEach(s => {
       const x = px(s[3]), y = py(s[2]); if (x < -10 || x > W + 10 || y < -10 || y > H + 10) return;
       const pc = egsp ? presOf(s[0], egsp) : 0; if (egsp && !pc) { ctx.fillStyle = 'rgba(255,255,255,.35)'; ctx.beginPath(); ctx.arc(x, y, 2.2 * S, 0, 6.3); ctx.fill(); return; }
-      const r = (egsp ? 3 + Math.min(6, pc / 4) : 4.5) * S;
+      if (egsp) { const Rk = s[4] === 'fw' ? 12 : 20, rp = Math.max(12 * S, Rk / (111 * span / W)); ctx.fillStyle = 'rgba(255,138,0,' + (0.22 + Math.min(0.45, pc / 50)) + ')'; ctx.strokeStyle = 'rgba(200,80,0,.8)'; ctx.lineWidth = 1 * S; ctx.beginPath(); ctx.arc(x, y, rp, 0, 6.3); ctx.fill(); ctx.stroke(); }
+      const r = (egsp ? 3 : 4.5) * S;
       ctx.fillStyle = s[4] === 'fw' ? '#2bb3a3' : s[4] === 'red' ? '#e0675a' : '#3f8fdc'; ctx.strokeStyle = '#06202C'; ctx.lineWidth = 1.5 * S;
       ctx.beginPath(); ctx.arc(x, y, r, 0, 6.3); ctx.fill(); ctx.stroke();
       if (span <= 7 || egsp) { const lab = egsp ? pc + '%' : s[1].split(' (')[0]; ctx.lineWidth = 3 * S; ctx.strokeStyle = 'rgba(6,32,44,.8)'; ctx.strokeText(lab, x, y - r - 3 * S); ctx.fillStyle = '#fff'; ctx.fillText(lab, x, y - r - 3 * S); }
@@ -91,7 +92,7 @@
         list.map(o => spotRow(o, egSp ? ' · <b>' + presOf(o.s[0], egSp) + '%</b>' : '')).join('') + '</div>';
     }
     return '<div class="stack-lg"><div class="row between"><div><div class="eyebrow">' + EG_SPOTS.length + ' مكان على السواحل والنيل والبحيرات</div><h1 class="h1">مناطق الصيد في مصر</h1></div>' + (sel ? '<a class="btn ghost small" href="#/egypt">كل الأماكن</a>' : '') + '</div>' +
-      mapHtml('map-eg', { span: MAPST['map-eg'].span, h: 380 }).replace('class="mapbox"', 'class="mapbox" data-spots="1" data-egsp="' + (sel ? '' : egSp) + '"') +
+      mapHtml('map-eg', { span: MAPST['map-eg'].span, h: 380, sp: sel ? '' : egSp }).replace('class="mapbox"', 'class="mapbox" data-spots="1" data-egsp="' + (sel ? '' : egSp) + '"') +
       '<div class="muted small">الخريطة المرسومة بدون إنترنت لمصر بدقة نحو 550 م (سواحل وبحيرات ومجرى النيل)، ومع الإنترنت بتظهر خريطة الشوارع والقمر الصناعي بتفاصيل لحد عشرات الأمتار. اضغط على أي نقطة تفتح المكان.</div>' + body + '</div>';
   };
 
@@ -240,7 +241,7 @@
     const M = E.M, W = M.w, H = M.h, v = new Float32Array(W * H); let any = 0, r0 = H, r1 = 0, c0 = W, c1 = 0;
     EG_SPOTS.forEach(s => {
       const p = presOf(s[0], id); if (!p) return;
-      const R = s[4] === 'fw' ? 6 : 9, cl = Math.cos(s[2] * Math.PI / 180), cr = Math.round((s[2] - M.la0) / M.r), cc = Math.round((s[3] - M.lo0) / M.r);
+      const R = s[4] === 'fw' ? 12 : 20, cl = Math.cos(s[2] * Math.PI / 180), cr = Math.round((s[2] - M.la0) / M.r), cc = Math.round((s[3] - M.lo0) / M.r);
       const nr = Math.ceil(R / 111 / M.r), nc = Math.ceil(R / (111 * cl) / M.r), base = Math.min(1, 0.25 + p / 22);
       for (let r = Math.max(0, cr - nr); r <= Math.min(H - 1, cr + nr); r++) for (let c = Math.max(0, cc - nc); c <= Math.min(W - 1, cc + nc); c++) {
         const k = r * W + c; if (E.g[k]) continue;
@@ -269,8 +270,11 @@
     if (typeof EG_PRES === 'undefined') return '';
     const loc = getLoc(), L = EG_SPOTS.map(s => ({ s, p: presOf(s[0], id), km: kmBetween(loc.lat, loc.lng, s[2], s[3]) })).filter(x => x.p).sort((a, b) => b.p - a.p);
     if (!L.length) return '<div class="muted small">مش مسجّل في أماكن الصيد المعروفة في مصر.</div>';
-    return '<div class="stack" style="gap:6px"><div class="row between"><b>في مصر: ' + L.length + ' مكان</b><button class="btn ghost small" data-mz="eg" data-for="map-sp">اعرض مصر على الخريطة</button></div>' +
-      '<div class="muted small">المربعات البرتقالي على الخريطة (≈ 550 م) حوالين كل مكان، ولونها أغمق كل ما نسبة النوع هناك أعلى.</div><div class="chips">' +
+    { const la = L.map(x => x.s[2]), lo = L.map(x => x.s[3]), a0 = Math.min.apply(0, la), a1 = Math.max.apply(0, la), o0 = Math.min.apply(0, lo), o1 = Math.max.apply(0, lo);
+      MAPST['map-spe'] = { lat: (a0 + a1) / 2, lng: (o0 + o1) / 2, span: Math.max(2.5, Math.min(16, Math.max((o1 - o0) * 1.5, (a1 - a0) * 1.9))) }; }
+    return '<div class="stack" style="gap:6px"><h3 class="h3" style="margin:8px 0 0">خريطة تواجده داخل مصر · ' + L.length + ' مكان</h3>' +
+      mapHtml('map-spe', { sp: id, span: MAPST['map-spe'].span, h: 380 }) +
+      '<div class="legend"><span><i style="background:#ff8a00"></i>منطقة تواجد (مربعات ≈ 550 م)، الأغمق = نسبة أعلى</span><span><i style="background:#e11d1d;border-radius:50%"></i>موقعك</span></div><div class="chips">' +
       L.slice(0, 12).map(x => '<a class="chip" href="#/egypt/' + x.s[0] + '"><span class="dot w-' + x.s[4] + '" style="width:9px;height:9px"></span> ' + esc(x.s[1].split(' (')[0]) + ' <b class="num">' + x.p + '%</b></a>').join('') + '</div></div>';
   }
   /* ---------- أسماك البحر والنهر ---------- */

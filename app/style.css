@@ -435,3 +435,11 @@ a.card:hover, a.card:focus-visible { transform: translateY(-2px); box-shadow: 0 
 .chip { transition: background .15s ease, border-color .15s ease; }
 .nav a[aria-current="page"] { box-shadow: 0 6px 16px rgba(11,100,120,.35); }
 .gearcard .gearimg img, .gcard img { transition: transform .3s ease; } .gearcard:hover .gearimg img { transform: scale(1.04); }
+/* كروت الأسماك كلها بنفس الحجم الصغير */
+.fishgrid { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 10px; }
+.fishgrid .fcard { height: 88px; box-sizing: border-box; overflow: hidden; padding: 10px 12px; }
+.fishgrid .fcard .ph { width: 64px; height: 64px; }
+.fishgrid .fcard b { font-size: .98rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.fishgrid .fcard .fsub, .fishgrid .fcard .muted.small, .fishgrid .fcard .tag { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; font-size: .74rem; margin-top: 2px; }
+.fishgrid .fcard .strip { display: none; }
+@media (max-width: 560px) { .fishgrid { grid-template-columns: 1fr; } }
