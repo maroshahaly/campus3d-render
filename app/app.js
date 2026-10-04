@@ -201,6 +201,18 @@
   /* ---------- العروض ---------- */
   const V = {};
 
+  /* مستوى الخبرة: يغيّر الاختصارات والنصايح في الرئيسية */
+  const LVL = [['beg', 'مبتدئ', 'أول مرة أصطاد'], ['hob', 'هاوي', 'بصطاد في الإجازات'], ['pro', 'محترف', 'رحلات وطعوم صناعية'], ['job', 'صياد بالمهنة', 'شباك ومراكب ومصايد']];
+  const LVL_TIPS = {
+    beg: [['#/world?t=knots', 'اتعلّم أهم 3 عقد'], ['#/tools?t=gear', 'اعرف عدّتك من الأصغر للأكبر'], ['#/world?t=tech', 'ابدأ بالفلّة أو الترقيد'], ['#/safety', 'السلامة قبل أول رحلة'], ['#/tools?t=chk', 'قائمة الخروج']],
+    hob: [['#/trip', 'خطة رحلة اليوم'], ['#/here', 'الأنسب الآن في مكانك'], ['#/egypt', 'مناطق الصيد القريبة'], ['#/tools?t=log', 'سجل صيدك']],
+    pro: [['#/here?t=tide', 'المد والجزر والموج والرياح'], ['#/egypt', 'نسب الأنواع في كل مكان'], ['#/gear/wobbler', 'مقاسات الرابلات'], ['#/gear/line', 'جدول قوة الخيوط'], ['#/track', 'سجّل المسار والأماكن الناجحة']],
+    job: [['#/gear/gillnet', 'الشباك وفتحات العين'], ['#/gear/castnet', 'شبكة الطرح'], ['#/gear/basket', 'المصايد والجوابي'], ['#/track', 'تتبع الرحلة وطوارئ المركب'], ['#/egypt', 'المصايد والبحيرات']]
+  };
+  const lvlHtml = () => { const L = store.get('lvl', ''); return '<section class="card stack"><h2 class="h2" style="margin:0">' + (L ? 'اختصارات لـ' + LVL.find(x => x[0] === L)[1] : 'انت مين؟') + '</h2>' +
+    '<div class="chips lvl">' + LVL.map(x => '<button class="chip" data-lvl="' + x[0] + '" aria-pressed="' + (x[0] === L) + '"><b>' + x[1] + '</b> <span class="muted small">' + x[2] + '</span></button>').join('') + '</div>' +
+    (L ? '<div class="chips">' + LVL_TIPS[L].map(t => '<a class="chip gold" href="' + t[0] + '">' + t[1] + '</a>').join('') + '</div>' : '<div class="muted small">اختار مستواك عشان نرتّب لك أهم الحاجات.</div>') + '</section>'; };
+  document.addEventListener('click', e => { const b = e.target.closest('[data-lvl]'); if (b) { store.set('lvl', b.dataset.lvl); render(); } });
   V.home = function () {
     const loc = getLoc(), di = dayInfo(loc);
     const top = candidates(loc, { h: 'all', sst: null }).filter(c => c.sc[CUR] === 3).slice(0, 8);
@@ -211,6 +223,7 @@
       '<section class="card stack"><div class="row between"><h2 class="h2" style="margin:0">الأنسب الآن — ' + esc(loc.name) + '</h2><a class="btn ghost small" href="#/here">التفاصيل والأوقات</a></div>' + locSummary(loc) +
       (top.length ? '<div class="chips">' + top.map(c => '<a class="chip" href="#/sp/' + c.s.id + '">' + esc(c.s.ar) + '</a>').join('') + '</div>' : '<div class="muted small">لا أنواع بذروة هذا الشهر في هذا الموقع. افتح «هنا الآن» لترى الجيد والمتوسط.</div>') +
       (loc.def ? '<a class="btn" href="#/here">' + ico('pin', 20) + ' حدّد موقعك لتحصل على أسماك مكانك</a><div class="muted small">الموقع الافتراضي الإسكندرية.</div>' : '') + '</section>' +
+      lvlHtml() +
       '<section class="quick">' +
         '<a class="qcard" href="#/trip">' + ico('fish', 26) + '<b>خطة رحلة اليوم</b><span>الطُّعم والعدة وأقرب مكان</span></a>' +
         '<a class="qcard" href="#/egypt">' + ico('pin', 26) + '<b>مناطق الصيد في مصر</b><span>48 مكان ونسب الأنواع</span></a>' +
@@ -1688,11 +1701,15 @@
     const app = $('#app');
     app.innerHTML = '<div class="wmark-tile" aria-hidden="true"></div>' +
       '<header class="top"><div class="wrap"><a class="brand" href="#/">' + LOGO_MARK(24, 'hdr') + '<span>الصنّارة</span></a>' +
+      '<a class="iconbtn sostop" href="#/track" aria-label="الطوارئ ونداء الاستغاثة">SOS</a><button class="iconbtn fsbtn" id="fsbtn" aria-label="تكبير الخط">أ+</button>' +
       (STANDALONE ? '<button class="iconbtn" id="themebtn" aria-label="تبديل الوضع الليلي">' + ico('theme', 22) + '</button>' : '') + '</div></header>' +
       '<main class="wrap" id="main"></main>' +
       '<nav class="nav" aria-label="التنقل الرئيسي"><ul>' + NAVS.map(n => '<li><a href="' + n[0] + '" data-m="' + n[3] + '">' + ico(n[1], 24) + '<span>' + n[2] + '</span></a></li>').join('') + '</ul></nav>' +
       '<div class="wmark-sig" aria-hidden="true">' + LOGO_MARK(15, 'sig') + '<span>الصنّارة</span></div>' +
       '<div class="lightbox" id="lb" role="dialog" aria-label="عرض الصورة"><button class="iconbtn x" aria-label="إغلاق">' + ico('x', 22) + '</button><img alt=""></div>';
+    const FS = [100, 112, 125, 140], applyFs = v => { document.documentElement.style.fontSize = v + '%'; };
+    applyFs(store.get('fs', 100));
+    $('#fsbtn').onclick = () => { const i = (FS.indexOf(store.get('fs', 100)) + 1) % FS.length; store.set('fs', FS[i]); applyFs(FS[i]); toast('حجم الخط: ' + FS[i] + '%'); };
     const tb = $('#themebtn');
     if (tb) {
       const apply = m => { if (m === 'auto') document.documentElement.removeAttribute('data-theme'); else document.documentElement.setAttribute('data-theme', m); };
