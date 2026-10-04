@@ -405,3 +405,4 @@ header.stack .latin { display: block; text-align: right; }
 .chips.lvl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
 .chips.lvl .chip { display: flex; flex-direction: column; align-items: flex-start; text-align: start; border-radius: 14px; }
 .chips.lvl .chip[aria-pressed="true"] .muted { color: inherit; opacity: .85; }
+.pixelated{image-rendering:pixelated}.mypin{background:none;border:0}

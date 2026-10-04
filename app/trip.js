@@ -39,7 +39,7 @@
     EG_SPOTS.forEach(s => {
       const x = px(s[3]), y = py(s[2]); if (x < -10 || x > W + 10 || y < -10 || y > H + 10) return;
       const pc = egsp ? presOf(s[0], egsp) : 0; if (egsp && !pc) { ctx.fillStyle = 'rgba(255,255,255,.35)'; ctx.beginPath(); ctx.arc(x, y, 2.2 * S, 0, 6.3); ctx.fill(); return; }
-      const r = (egsp ? 4 + Math.min(10, pc / 3) : 4.5) * S;
+      const r = (egsp ? 3 + Math.min(6, pc / 4) : 4.5) * S;
       ctx.fillStyle = s[4] === 'fw' ? '#2bb3a3' : s[4] === 'red' ? '#e0675a' : '#3f8fdc'; ctx.strokeStyle = '#06202C'; ctx.lineWidth = 1.5 * S;
       ctx.beginPath(); ctx.arc(x, y, r, 0, 6.3); ctx.fill(); ctx.stroke();
       if (span <= 7 || egsp) { const lab = egsp ? pc + '%' : s[1].split(' (')[0]; ctx.lineWidth = 3 * S; ctx.strokeStyle = 'rgba(6,32,44,.8)'; ctx.strokeText(lab, x, y - r - 3 * S); ctx.fillStyle = '#fff'; ctx.fillText(lab, x, y - r - 3 * S); }
@@ -67,7 +67,7 @@
   let egSp = '';
   V.egypt = function (a) {
     const loc = getLoc(), near = spotsByDist(loc), sel = a[0] && SPOT[a[0]];
-    if (!MAPST['map-eg'] || sel) MAPST['map-eg'] = sel ? { lat: sel[2], lng: sel[3], span: 1.2 } : { lat: 26.9, lng: 30.9, span: 16.5 };
+    if (!MAPST['map-eg'] || sel) MAPST['map-eg'] = sel ? { lat: sel[2], lng: sel[3], span: 1.2 } : { lat: 27.4, lng: 30.8, span: 19 };
     const allSp = {}; Object.keys(EG_PRES).forEach(k => EG_PRES[k].forEach(r => { if (BYG[r[0]]) allSp[r[0]] = 1; }));
     const opts = Object.keys(allSp).sort((x, y) => spName(x).localeCompare(spName(y), 'ar'));
     const spotRow = (o, extra) => { const s = o.s; return '<a class="card spotrow" href="#/egypt/' + s[0] + '"><span class="dot w-' + s[4] + '"></span><div style="flex:1;min-width:0"><b>' + esc(s[1]) + '</b><div class="muted small">' + s[5].split(',').map(t => SPOT_T[t]).join(' · ') + (extra || '') + '</div></div><span class="num small">' + fmtKm(o.km) + '</span></a>'; };
@@ -231,3 +231,45 @@
       getHere().then(p => { const L = store.get('log', []); L.unshift({ sp, len, bait: bt, at: new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16), la: +p.la.toFixed(6), lo: +p.lo.toFixed(6), place: p.la.toFixed(4) + '، ' + p.lo.toFixed(4) }); store.set('log', L); toast('اتسجلت الصيدة بمكانها.'); render(); })
         .catch(() => toast('مش قادر أحدد موقعك؛ سجّلها من «سجل الصيد».')); }
   }, true);
+
+  /* ---------- توزيع النوع داخل مصر بخلايا ≈ 550 م حول أماكن تواجده (للخرائط المرسومة وLeaflet) ---------- */
+  const EGD = {};
+  function egDist(id) {
+    if (id in EGD) return EGD[id];
+    const E = egMask(); if (!E || typeof EG_PRES === 'undefined') return (EGD[id] = null);
+    const M = E.M, W = M.w, H = M.h, v = new Float32Array(W * H); let any = 0, r0 = H, r1 = 0, c0 = W, c1 = 0;
+    EG_SPOTS.forEach(s => {
+      const p = presOf(s[0], id); if (!p) return;
+      const R = s[4] === 'fw' ? 6 : 9, cl = Math.cos(s[2] * Math.PI / 180), cr = Math.round((s[2] - M.la0) / M.r), cc = Math.round((s[3] - M.lo0) / M.r);
+      const nr = Math.ceil(R / 111 / M.r), nc = Math.ceil(R / (111 * cl) / M.r), base = Math.min(1, 0.25 + p / 22);
+      for (let r = Math.max(0, cr - nr); r <= Math.min(H - 1, cr + nr); r++) for (let c = Math.max(0, cc - nc); c <= Math.min(W - 1, cc + nc); c++) {
+        const k = r * W + c; if (E.g[k]) continue;
+        const d = Math.hypot((r - cr) * M.r * 111, (c - cc) * M.r * 111 * cl); if (d > R) continue;
+        const w = base * (1 - 0.65 * d / R); if (w > v[k]) { v[k] = w; any = 1; if (r < r0) r0 = r; if (r > r1) r1 = r; if (c < c0) c0 = c; if (c > c1) c1 = c; }
+      }
+    });
+    return (EGD[id] = any ? { v, r0, r1, c0, c1 } : null);
+  }
+  const egCell = (la, lo) => { const E = egMask(); if (!E) return -1; const M = E.M, r = Math.floor((la - M.la0) / M.r), c = Math.floor((lo - M.lo0) / M.r); return r < 0 || c < 0 || r >= M.h || c >= M.w ? -1 : r * M.w + c; };
+  /* طبقة Leaflet: صورة شفافة بخلايا التوزيع + نسبة كل مكان */
+  function leafEgDist(L2, id) {
+    const D = egDist(id); if (!D || typeof L === 'undefined') return;
+    const M = egMask().M, w = D.c1 - D.c0 + 1, h = D.r1 - D.r0 + 1, cv = document.createElement('canvas'); cv.width = w; cv.height = h;
+    const x = cv.getContext('2d'), im = x.createImageData(w, h);
+    for (let r = D.r0; r <= D.r1; r++) for (let c = D.c0; c <= D.c1; c++) { const q = D.v[r * M.w + c]; if (!q) continue; const o = ((D.r1 - r) * w + (c - D.c0)) * 4; im.data[o] = 255; im.data[o + 1] = Math.round(150 - 90 * q); im.data[o + 2] = 0; im.data[o + 3] = Math.round(70 + 170 * q); }
+    x.putImageData(im, 0, 0);
+    const b = [[M.la0 + D.r0 * M.r, M.lo0 + D.c0 * M.r], [M.la0 + (D.r1 + 1) * M.r, M.lo0 + (D.c1 + 1) * M.r]];
+    L2.rects.push(L.imageOverlay(cv.toDataURL(), b, { interactive: false, className: 'pixelated' }).addTo(L2.map));
+    EG_SPOTS.forEach(s => { const p = presOf(s[0], id); if (!p) return; const m = L.circleMarker([s[2], s[3]], { radius: 4, color: '#7a2a00', weight: 1, fillColor: '#ff8a00', fillOpacity: 1 }).addTo(L2.map); m.bindTooltip(s[1].split(' (')[0] + ' · ' + p + '%', { direction: 'top' }); m.on('click', () => { location.hash = '#/egypt/' + s[0]; }); L2.rects.push(m); });
+  }
+  /* دبوس الموقع الرفيع الأحمر (Leaflet) */
+  const pinIcon = () => L.divIcon({ className: 'mypin', html: '<svg width="18" height="34" viewBox="0 0 18 34"><path d="M9 33V13" stroke="#8b0000" stroke-width="2.4" stroke-linecap="round"/><circle cx="9" cy="8" r="6.5" fill="#e11d1d" stroke="#fff" stroke-width="2"/></svg>', iconSize: [18, 34], iconAnchor: [9, 33] });
+  /* أماكن النوع في مصر تحت خريطته */
+  function egSpHtml(id) {
+    if (typeof EG_PRES === 'undefined') return '';
+    const loc = getLoc(), L = EG_SPOTS.map(s => ({ s, p: presOf(s[0], id), km: kmBetween(loc.lat, loc.lng, s[2], s[3]) })).filter(x => x.p).sort((a, b) => b.p - a.p);
+    if (!L.length) return '<div class="muted small">مش مسجّل في أماكن الصيد المعروفة في مصر.</div>';
+    return '<div class="stack" style="gap:6px"><div class="row between"><b>في مصر: ' + L.length + ' مكان</b><button class="btn ghost small" data-mz="eg" data-for="map-sp">اعرض مصر على الخريطة</button></div>' +
+      '<div class="muted small">المربعات البرتقالي على الخريطة (≈ 550 م) حوالين كل مكان، ولونها أغمق كل ما نسبة النوع هناك أعلى.</div><div class="chips">' +
+      L.slice(0, 12).map(x => '<a class="chip" href="#/egypt/' + x.s[0] + '"><span class="dot w-' + x.s[4] + '" style="width:9px;height:9px"></span> ' + esc(x.s[1].split(' (')[0]) + ' <b class="num">' + x.p + '%</b></a>').join('') + '</div></div>';
+  }

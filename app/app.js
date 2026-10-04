@@ -834,7 +834,7 @@
       '<div class="bars' + (real ? '' : ' hyp') + '" role="img" aria-label="نسبة ذروة موسم ' + esc(s.ar) + (real ? '' : ' (افتراضي لموطنه الأصلي)') + '">' + sc.map((l, i) => { const pct = Math.round(l * 100 / 3); return '<div class="col l' + l + (i === CUR ? ' cur' : '') + '"><b class="pct">' + pct + '%</b><div class="batt"><i style="height:' + pct + '%"></i></div><span>' + MONTHS[i].slice(0, 3) + '</span></div>'; }).join('') + '</div>' +
       (real ? '<div class="legend"><span><i style="background:var(--lv0)"></i>0%</span><span><i style="background:var(--lv1)"></i>33%</span><span><i style="background:var(--lv2)"></i>66%</span><span><i style="background:var(--lv3)"></i>100%</span></div>' : '<div class="muted small">تدرّج رمادي عمدًا لأنه تقدير افتراضي غير مرتبط بمنطقتك الحالية.</div>') +
       '<div class="muted small">' + (egyptReal && hem === 'n' ? 'هذه نسب ميدانية حقيقية من ملف «مساعد الصيد» في مصر (نفس بيانات صفحته التفصيلية)، وليست تقديرًا عامًا — لذلك قد تختلف عن أنواع أخرى تعرض تقديرًا تقريبيًا فقط. ' : 'الشهور ' + (hem === 's' ? 'مقلوبة لنصف الكرة الجنوبي.' : 'لنصف الكرة الشمالي.')) + (Math.abs(loc.lat) < 6 && real && !egyptReal ? ' قرب خط الاستواء الموسمية ضعيفة فتُعرض متوسطة طوال السنة.' : '') + '</div></section>' +
-      '<section class="card stack"><h2 class="h2" style="margin:0">أين يعيش؟</h2>' + mapHtml('map-sp', { sp: s.id, span: 360, h: 330 }) + legendMap + '<div class="muted small">' + (occPts(s.id) ? 'كل نقطة ذهبية مشاهدة حقيقية موثقة للنوع (مقرّبة لخلية ≈ 5 كم)، والصناديق المنقطة الباهتة أقاليم تواجده العامة. ' : 'الظل الذهبي أقاليم تواجد النوع (صناديق تقريبية). ') + '<b>البيئة:</b> ' + esc(habText(s)) + '. دبوس الموقع مكانك.</div></section>' +
+      '<section class="card stack"><h2 class="h2" style="margin:0">أين يعيش؟</h2>' + mapHtml('map-sp', { sp: s.id, span: 360, h: 330 }) + legendMap + '<div class="muted small">' + (occPts(s.id) ? 'كل نقطة ذهبية مشاهدة حقيقية موثقة للنوع (مقرّبة لخلية ≈ 5 كم)، والصناديق المنقطة الباهتة أقاليم تواجده العامة. ' : 'الظل الذهبي أقاليم تواجد النوع (صناديق تقريبية). ') + '<b>البيئة:</b> ' + esc(habText(s)) + '. الدبوس الأحمر مكانك.</div>' + egSpHtml(s.id) + '</section>' +
       (howHtml ? '<section class="card stack"><h2 class="h2" style="margin:0">طريقة الصيد</h2>' + howHtml + '</section>' : '') +
       (real ? '<section class="card stack"><h2 class="h2" style="margin:0">اليوم في ' + esc(loc.name) + '</h2><div class="wins">' + (winHtml(ws, di.sun) || '<span class="muted small">لا نوافذ محددة لليوم.</span>') + '</div><div class="muted small">النجمة ★ = تتزامن مع فترة قمرية رئيسية. الأوقات تقريبية وبتوقيت ' + (loc.tz ? 'المدينة' : 'جهازك') + '.</div></section>' : '') +
       '<section class="card"><dl class="kv" style="margin:0">' + facts.map(f => '<dt>' + f[0] + '</dt><dd>' + esc(f[1]) + '</dd>').join('') + '<dt>يتواجد في</dt><dd>' + esc(regList.slice(0, 8).join('، ') + (regList.length > 8 ? '… و' + (regList.length - 8) + ' مناطق أخرى' : '')) + '</dd></dl></section>' +
@@ -1032,11 +1032,12 @@
   function mapDraw(cv) {
     const st = MAPST[cv.id]; if (!st) return;
     const W = cv.width, H = cv.height, ctx = cv.getContext('2d'), im = ctx.createImageData(W, H), d = im.data;
-    const sea = rgb(cssv('--sea')), gold = rgb(cssv('--gold')), land = rgb(cssv(sea[0] + sea[1] + sea[2] < 150 ? '--lv2' : '--lv1'));
+    const dk = (document.documentElement.getAttribute('data-theme') === 'dark' || (!document.documentElement.getAttribute('data-theme') && matchMedia('(prefers-color-scheme: dark)').matches)), sea = dk ? [18, 58, 78] : [126, 184, 214], gold = rgb(cssv('--gold')), land = dk ? [52, 62, 52] : [236, 226, 200];
     const dpp = st.span / W, cl = st.span <= 120 ? Math.max(0.15, Math.cos(st.lat * Math.PI / 180)) : 1;
     const wrapEl = cv.closest('.mapbox'), spId = (wrapEl && wrapEl.dataset.sp) || '', pts = occPts(spId), boxes = spBoxes(spId), lons = new Float64Array(W), bm = pts ? 0.2 : 0.58;
     const cols = new Int32Array(W * 4), wxs = new Float32Array(W * 4);
     const fine = st.span < 30 && st.lat > 15 && st.lat < 38 && st.lng > 18 && st.lng < 43;
+    const egd = fine && spId ? egDist(spId) : null;
     for (let x = 0; x < W; x++) {
       const lo = wrapLng(st.lng + (x - W / 2 + 0.5) * dpp); lons[x] = lo;
       const fj = (lo + 180) * MR - 0.5, j0 = Math.floor(fj), w = crW(fj - j0);
@@ -1056,6 +1057,7 @@
           if (fine) { const ev = egVal(la, lo); if (ev >= 0) v = ev; }
           const isL = v > 0.5;
           if (isL) { c0 = land[0]; c1 = land[1]; c2 = land[2]; }
+          if (egd && !isL) { const q = egCell(la, lo); const dv = q >= 0 ? egd.v[q] : 0; if (dv) { const a = 0.3 + 0.6 * dv; c0 = c0 * (1 - a) + 255 * a; c1 = c1 * (1 - a) + (150 - 90 * dv) * a; c2 = c2 * (1 - a); } }
           if (boxes.length) {
             let hit = false;
             for (let q = 0; q < boxes.length && !hit; q++) {
@@ -1081,7 +1083,7 @@
     for (let la = -90; la <= 90; la += gs) { const y = py(la); if (y >= 0 && y <= H) { ctx.moveTo(0, y + .5); ctx.lineTo(W, y + .5); } }
     for (let lo = -180; lo < 180; lo += gs) { const dl = wrapLng(lo - st.lng); if (Math.abs(dl) <= st.span / 2 + gs) { const x = W / 2 + dl / dpp; ctx.moveTo(x + .5, 0); ctx.lineTo(x + .5, H); } }
     ctx.stroke();
-    if (st.span <= 90) {
+    if (st.span <= 90 && !egd) {
       ctx.font = (11 * S) + 'px "IBM Plex Sans Arabic",Tahoma,sans-serif'; ctx.textAlign = 'center';
       PRESETS.forEach(p => {
         const x = px(p[2]), y = py(p[1]); if (x < 4 || x > W - 4 || y < 4 || y > H - 4) return;
@@ -1090,13 +1092,11 @@
       });
     }
     if (wrapEl && wrapEl.dataset.spots) drawEgSpots(ctx, px, py, W, H, S, st.span, wrapEl.dataset.egsp || '');
+    else if (egd) drawEgSpots(ctx, px, py, W, H, S, st.span, spId);
     const lc = getLoc(), x = px(lc.lng), y = py(lc.lat);
     if (x > -20 && x < W + 20 && y > -20 && y < H + 20) {
-      ctx.fillStyle = 'rgba(0,0,0,.28)'; ctx.beginPath(); ctx.ellipse(x, y + 1 * S, 8 * S, 3 * S, 0, 0, 6.3); ctx.fill();
-      ctx.fillStyle = cssv('--gold') || '#E8A800'; ctx.strokeStyle = '#06202C'; ctx.lineWidth = 2 * S;
-      ctx.beginPath(); ctx.arc(x, y - 9 * S, 7 * S, 0, 6.3); ctx.fill(); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(x - 5 * S, y - 5 * S); ctx.lineTo(x, y); ctx.lineTo(x + 5 * S, y - 5 * S); ctx.fill(); ctx.stroke();
-      ctx.fillStyle = '#06202C'; ctx.beginPath(); ctx.arc(x, y - 9 * S, 2.4 * S, 0, 6.3); ctx.fill();
+      ctx.strokeStyle = '#8b0000'; ctx.lineWidth = 2.2 * S; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y - 18 * S); ctx.stroke();
+      ctx.fillStyle = '#e11d1d'; ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.8 * S; ctx.beginPath(); ctx.arc(x, y - 21 * S, 5.5 * S, 0, 6.3); ctx.fill(); ctx.stroke();
     }
     const cap = $('#mapcap'); if (cap && cv.id === 'map-here') cap.textContent = 'عرض الخريطة ≈ ' + Math.round(st.span * 111 * (st.span <= 120 ? cl : 1)).toLocaleString('en') + ' كم · المركز ' + st.lat.toFixed(2) + '، ' + st.lng.toFixed(2);
   }
@@ -1106,7 +1106,7 @@
   const mapHtml = (id, o) => '<div class="mapbox" data-mapid="' + id + '" data-tap="' + (o.tap ? 1 : 0) + '" data-sp="' + (o.sp || '') + '">' +
     '<div class="mapc leafwrap" id="' + id + '-leaf" style="height:' + (o.h || 360) + 'px"></div>' +
     '<canvas class="mapc mapfallback" id="' + id + '" width="600" height="' + (o.h || 360) + '" style="height:' + (o.h || 360) + 'px" data-span="' + (o.span || 40) + '" role="img" aria-label="خريطة العالم (بلا إنترنت)"></canvas>' +
-    '<div class="mapctl">' + [['in', '+'], ['out', '−'], ['r', 'منطقة'], ['w', 'العالم'], ['c', 'موقعي']].map(b => '<button class="btn ghost small" data-mz="' + b[0] + '" data-for="' + id + '"' + (b[0] === 'in' || b[0] === 'out' ? ' aria-label="' + (b[0] === 'in' ? 'تكبير' : 'تصغير') + '"' : '') + '>' + b[1] + '</button>').join('') + '</div>' +
+    '<div class="mapctl">' + [['in', '+'], ['out', '−'], ['eg', 'مصر'], ['r', 'منطقة'], ['w', 'العالم'], ['c', 'موقعي']].map(b => '<button class="btn ghost small" data-mz="' + b[0] + '" data-for="' + id + '"' + (b[0] === 'in' || b[0] === 'out' ? ' aria-label="' + (b[0] === 'in' ? 'تكبير' : 'تصغير') + '"' : '') + '>' + b[1] + '</button>').join('') + '</div>' +
     '<div class="chips maplayer" data-for="' + id + '"><button class="chip" data-ml="street" data-for="' + id + '" aria-pressed="true">خريطة</button><button class="chip" data-ml="sat" data-for="' + id + '" aria-pressed="false">قمر صناعي</button></div>' +
     '<div class="muted small mapoff" id="' + id + '-off" hidden>لا إنترنت الآن: عرض خريطة تقريبية تعمل بلا اتصال. الأجزاء اللي زرتها قبل كده بالخريطة الحقيقية بتفضل محفوظة.</div></div>';
   function tzGuess(la, lo) {
@@ -1131,6 +1131,7 @@
       const r = L.rectangle([[b[0], b[2]], [b[1], b[3]]], pts ? { color: '#E8A800', weight: 1, dashArray: '4 4', fillColor: '#E8A800', fillOpacity: .08, interactive: false } : { color: '#E8A800', weight: 1, fillColor: '#E8A800', fillOpacity: .35, interactive: false }).addTo(L2.map);
       L2.rects.push(r);
     }));
+    if (spId) leafEgDist(L2, spId);
     if (pts) {
       if (!L2.rend) L2.rend = L.canvas({ padding: 0.3 });
       for (let q = 0; q < pts.length; q += 2) L2.rects.push(L.circleMarker([pts[q] / 20, pts[q + 1] / 20], { renderer: L2.rend, radius: 3.5, color: '#06202C', weight: 1, fillColor: '#E8A800', fillOpacity: .95, interactive: false }).addTo(L2.map));
@@ -1170,7 +1171,7 @@
       const street = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', { maxZoom: 18, attribution: 'Esri' });
       const sat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 18, attribution: 'Esri, Maxar, Earthstar Geographics' });
       street.addTo(map);
-      const marker = L.circleMarker([loc.lat, loc.lng], { radius: 7, color: '#06202C', weight: 2, fillColor: '#E8A800', fillOpacity: 1 }).addTo(map);
+      const marker = L.marker([loc.lat, loc.lng], { icon: pinIcon(), interactive: false, keyboard: false }).addTo(map);
       LMAP[id] = { map, street, sat, cur: 'street', marker, rects: [] };
       mapDrawSpRects(id); leafEgSpots(id);
       let shown = false;
@@ -1188,7 +1189,7 @@
   function mapZoom(id, k) {
     const cv = $('#' + id), st = MAPST[id]; if (!cv || !st) return; const loc = getLoc();
     if (k === 'in') st.span = Math.max(spanFromZoom(18), st.span / 2); else if (k === 'out') st.span = Math.min(360, st.span * 2);
-    else if (k === 'w') { st.span = 360; st.lat = 5; } else if (k === 'r') st.span = 40; else if (k === 'c') { st.lat = loc.lat; st.lng = loc.lng; if (st.span > 120) st.span = 40; }
+    else if (k === 'w') { st.span = 360; st.lat = 5; } else if (k === 'eg') { st.lat = 27.4; st.lng = 30.8; st.span = 19; } else if (k === 'r') st.span = 40; else if (k === 'c') { st.lat = loc.lat; st.lng = loc.lng; if (st.span > 120) st.span = 40; }
     mapDraw(cv);
     const L2 = LMAP[id]; if (L2) L2.map.setView([st.lat, st.lng], zoomFromSpan(st.span));
   }
