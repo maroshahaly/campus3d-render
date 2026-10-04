@@ -497,3 +497,9 @@ a.card:hover, .fcard:hover, .qcard:hover { border-color: #F5C542 !important; box
 .hero::after { content: ""; position: absolute; inset: auto -20% -30px -20%; height: 60px; background: radial-gradient(60% 30px at 50% 0, rgba(245,197,66,.18), transparent); animation: shimmer 6s ease-in-out infinite; pointer-events: none; }
 @keyframes shimmer { 50% { transform: translateX(8%); } }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+.finsel{min-height:36px;border-radius:10px;padding:2px 8px;background:#F7FBFD;color:#0A2230;border:1px solid rgba(232,190,80,.6)}
+.shpgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.shp{display:flex;flex-direction:column;gap:4px;padding:10px;border:1px solid rgba(232,190,80,.55);border-radius:12px;background:rgba(255,255,255,.05)}
+.shpart{color:#E6F1F4;background:rgba(10,35,66,.55);border-radius:10px;padding:6px}
+.shpart svg{width:100%;height:76px;display:block}
+.sbreal svg{width:100%;max-width:340px;height:auto;display:block;margin:auto}

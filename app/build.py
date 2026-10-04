@@ -16,7 +16,7 @@ data = js_json(json.load(open(SP + '/data.json', encoding='utf-8')))
 imgs = js_json(json.load(open(SP + '/imgs.json', encoding='utf-8')))
 vids = js_json(json.load(open(SP + '/vids.json', encoding='utf-8'))) if os.path.exists(SP + '/vids.json') else '{}'  # مقاطع فيديو قصيرة مضمّنة (data URI)
 css = rd(A + '/leaflet.css') + '\n' + rd(A + '/style.css')
-code = rd(A + '/leaflet.js') + '\n' + '\n'.join(rd(A + '/' + f) for f in ['astro.js', 'data_mask.js', 'data_geo.js', 'data_species.js', 'data_art.js', 'data_links.js', 'data_world.js', 'data_credits.js', 'data_gear.js', 'rigs.js', 'data_rigs.js', 'data_variants.js', 'data_knots.js', 'data_gear2.js', 'data_both.js', 'data_egmask.js', 'data_egspots.js', 'data_egpres.js', 'data_egobs.js', 'data_occ.js'] + (['data_cls.js'] if os.path.exists(A + '/data_cls.js') else []))
+code = rd(A + '/leaflet.js') + '\n' + '\n'.join(rd(A + '/' + f) for f in ['astro.js', 'data_mask.js', 'data_geo.js', 'data_species.js', 'data_art.js', 'data_links.js', 'data_world.js', 'data_credits.js', 'data_gear.js', 'rigs.js', 'data_rigs.js', 'data_variants.js', 'data_knots.js', 'data_gear2.js', 'data_gear3.js', 'data_both.js', 'data_egmask.js', 'data_egspots.js', 'data_egpres.js', 'data_egobs.js', 'data_occ.js'] + (['data_cls.js'] if os.path.exists(A + '/data_cls.js') else []))
 app = rd(A + '/app.js').replace('  /*@@TRIP@@*/', rd(A + '/trip.js'))
 # module.exports guard in astro is harmless in browsers
 
@@ -72,11 +72,11 @@ json.dump({"name": "الصنّارة — دليل صيد عالمي", "short_nam
                      {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
                      {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}]},
           open(pw + '/manifest.webmanifest', 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
-open(pw + '/sw.js', 'w').write('''const V='sayad-v5',TILES='sayad-tiles-v1',CORE=['./','index.html','manifest.webmanifest','icon-180.png','icon-192.png','icon-512.png'];
+open(pw + '/sw.js', 'w').write(('''const V='sayad-@@BID@@',TILES='sayad-tiles-v1',CORE=['./','index.html','manifest.webmanifest','icon-180.png','icon-192.png','icon-512.png'];
 const TILE_HOSTS=/(server\\.arcgisonline\\.com)$/;
 const TILE_CAP=600; /* أقصى عدد بلاطات خريطة محفوظة، لمنع تضخّم التخزين */
 async function trimTiles(){const c=await caches.open(TILES),ks=await c.keys();if(ks.length>TILE_CAP)for(const k of ks.slice(0,ks.length-TILE_CAP))await c.delete(k);}
-self.addEventListener('install',e=>{e.waitUntil(caches.open(V).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting()))});
+self.addEventListener('install',e=>{e.waitUntil(caches.open(V).then(c=>c.addAll(CORE.map(x=>new Request(x,{cache:'reload'})))).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==V&&x!==TILES).map(x=>caches.delete(x)))).then(()=>self.clients.claim()))});
 self.addEventListener('fetch',e=>{
   const r=e.request; if(r.method!=='GET')return; const u=new URL(r.url);
@@ -88,6 +88,7 @@ self.addEventListener('fetch',e=>{
     })));
     return;
   }
+  if(/version\.json$/.test(u.pathname)){e.respondWith(fetch(r,{cache:'no-store'}));return}  /* رقم النسخة دايمًا من الإنترنت */
   if(u.origin===location.origin){e.respondWith(caches.match(r,{ignoreSearch:true}).then(h=>h||fetch(r).then(x=>{const c=x.clone();caches.open(V).then(k=>k.put(r,c));return x}).catch(()=>caches.match('index.html'))));return}
   if(/fonts\\.(googleapis|gstatic)\\.com$/.test(u.hostname)){e.respondWith(caches.open(V).then(c=>c.match(r).then(h=>{const n=fetch(r).then(x=>{c.put(r,x.clone());return x}).catch(()=>h);return h||n})))}
 });
@@ -97,7 +98,9 @@ async function factNote(){const c=await caches.open('sayad-facts'),r=await c.mat
 self.addEventListener('periodicsync',e=>{if(e.tag==='sayad-fact')e.waitUntil(factNote())});
 self.addEventListener('message',e=>{if(e.data==='sayad-fact-now')e.waitUntil(factNote())});
 self.addEventListener('notificationclick',e=>{e.notification.close();e.waitUntil(clients.matchAll({type:'window'}).then(w=>w.length?w[0].focus():clients.openWindow('./index.html')))});
-''')
+''').replace('@@BID@@', BUILD_ID))
+json.dump({'v': BUILD_ID}, open(pw + '/version.json', 'w'))
+
 ICON_SVG = LOGO + '/icon_hq.svg'  # الشعار الرسمي (نسخة محسّنة: لمعان معدني وظل وتوهج): خطاف وسمكة، خلفية كحلية-تركوازية متدرجة
 if cairosvg and os.path.exists(ICON_SVG):
     for n in (180, 192, 512):
@@ -106,6 +109,9 @@ else:
     print('تنبيه: تخطّيت توليد أيقونات PNG (cairosvg غير متاحة أو ملف الشعار غير موجود) — التطبيق هيشتغل عادي بدونها، بس أيقونة الهاتف هتكون ناقصة لحد ما تتولّد.')
 with zipfile.ZipFile(OUT + '/sayad-guide-pwa.zip', 'w', zipfile.ZIP_DEFLATED) as z:
     for f in sorted(os.listdir(pw)): z.write(pw + '/' + f, 'sayad-guide/' + f)
+# نسخة GitHub Pages: مجلد docs/ في الريبو (Settings → Pages → الفرع → /docs)
+DOCS = os.path.join(os.path.dirname(A), 'docs'); shutil.rmtree(DOCS, ignore_errors=True); shutil.copytree(pw, DOCS)
+open(DOCS + '/.nojekyll', 'w').close()
 for f in sorted(os.listdir(OUT)):
     p = OUT + '/' + f
     if os.path.isfile(p): print(f, os.path.getsize(p))

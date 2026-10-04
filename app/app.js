@@ -395,6 +395,8 @@
   const infoHtml = inf => (inf.types ? '<dl class="kv" style="margin:0">' + inf.types.map(t => '<dt>' + esc(t[0]) + '</dt><dd>' + esc(t[1]) + '</dd>').join('') + '</dl>' : '') +
     (inf.sizes ? '<div class="tbl"><table><thead><tr>' + inf.sizes.h.map(h => '<th>' + esc(h) + '</th>').join('') + '</tr></thead><tbody>' + inf.sizes.r.map(r => '<tr>' + r.map(c => '<td>' + esc(c) + '</td>').join('') + '</tr>').join('') + '</tbody></table></div>' : '') +
     (inf.note ? '<div class="notice info">' + esc(inf.note) + '</div>' : '');
+  const fishTackleHtml = () => '<section class="card stack" id="fishtackle"><h2 class="h2" style="margin:0">ترشيح العدة لكل سمكة (بالوزن)</h2><p class="muted small" style="margin:0">الخيط والطرف والسنارة ومقاس المكنة حسب الوزن الشائع لكل سمكة. لو بتدوّر على الكبيرة اطلع درجة.</p><div class="tbl"><table><thead><tr><th>السمكة</th><th>الوزن الشائع</th><th>الخيط</th><th>الطرف (الليدر)</th><th>السنارة</th><th>المكنة</th><th>الرصاص / الطُّعم</th></tr></thead><tbody>' +
+    FISH_TACKLE.map(r => { const s = SPECIES_G.find(x => x.id === r[0]); return s ? '<tr><td><a href="#/sp/' + s.id + '">' + esc(s.ar) + '</a></td>' + r.slice(1).map(c => '<td>' + esc(c) + '</td>').join('') + '</tr>' : ''; }).join('') + '</tbody></table></div></section>';
   function toolGear(el) {
     const tackle = GEAR.filter(g => !g.grp || g.grp === 'tackle');
     el.innerHTML = '<div class="stack"><p class="muted" style="margin:0">كل اللي بيستخدمه الصياد. اضغط على أي أداة أو مجموعة تفتح صفحتها بالصور والأنواع والمقاسات.</p>' +
@@ -420,8 +422,12 @@
       '<div class="card gearhero"><div class="gearimg big">' + gearPic(g, 1) + '</div></div>' +
       '<section class="card stack"><p style="margin:0">' + esc(g.d) + '</p><p class="muted" style="margin:0"><b>الاستخدام: </b>' + esc(g.u) + '</p></section>' +
       (g.id === 'sabiki' ? '<section class="card stack"><h2 class="h2" style="margin:0">شكل تركيب السبحة</h2>' + RigArt.render(GENRIGS.sabha, esc) + '<a class="btn ghost small" href="#/tech?t=sabha">شرح السبحة كامل من الملف</a></section>' : '') +
+      (g.id === 'sabiki' ? '<section class="card stack"><h2 class="h2" style="margin:0">السبحة شكلها في المياه</h2><div class="sbreal">' + SABIKI_REAL + '</div><p class="muted small" style="margin:0">خيط رئيسي، مدوّرة فوق، أفرع قصيرة عليها سنانير بجلد سمك لامع، ورصاصة في الآخر. بتنزّلها لحد ما تحس بالسرب وتهزّها بالراحة.</p></section>' : '') +
+      (GEAR_SHAPES[g.id] ? '<section class="card stack"><h2 class="h2" style="margin:0">أشكال الأنواع ومقاساتها واستخدامها</h2><div class="shpgrid">' + GEAR_SHAPES[g.id].map(x => '<div class="shp"><div class="shpart">' + x[1] + '</div><b>' + esc(x[0]) + '</b><span class="small">' + esc(x[2]) + '</span><span class="tag ok small">' + esc(x[3]) + '</span></div>').join('') + '</div></section>' : '') +
+      (g.id === 'sinker' ? '<section class="card stack"><h2 class="h2" style="margin:0">صب الرصاص في البيت خطوة بخطوة</h2><div class="notice warn">' + esc(SINKER_CAST.warn) + '</div><ol class="knotsteps">' + SINKER_CAST.steps.map(x => '<li><b>' + esc(x[0]) + ': </b>' + esc(x[1]) + '</li>').join('') + '</ol></section>' : '') +
       (inf.types ? '<section class="card stack"><h2 class="h2" style="margin:0">الأنواع</h2><dl class="kv" style="margin:0">' + inf.types.map(t => '<dt>' + esc(t[0]) + '</dt><dd>' + esc(t[1]) + '</dd>').join('') + '</dl></section>' : '') +
       (inf.sizes ? '<section class="card stack"><h2 class="h2" style="margin:0">المقاسات</h2><div class="tbl"><table><thead><tr>' + inf.sizes.h.map(h => '<th>' + esc(h) + '</th>').join('') + '</tr></thead><tbody>' + inf.sizes.r.map(r => '<tr>' + r.map(c => '<td>' + esc(c) + '</td>').join('') + '</tr>').join('') + '</tbody></table></div>' + (inf.note ? '<div class="notice info">' + esc(inf.note) + '</div>' : '') + '</section>' : (inf.note ? '<div class="notice info">' + esc(inf.note) + '</div>' : '')) +
+      (/^(reel|line|rod|leader|hook)$/.test(g.id) ? fishTackleHtml() : '') +
       '<div class="row between">' + (prev ? '<a class="btn ghost small" href="#/gear/' + prev.id + '">→ ' + esc(prev.t.split(' (')[0]) + '</a>' : '<span></span>') + (next ? '<a class="btn ghost small" href="#/gear/' + next.id + '">' + esc(next.t.split(' (')[0]) + ' ←</a>' : '') + '</div></div>';
   };
   function toolToday(el) {
@@ -1747,5 +1753,12 @@
   shell();
   obsMain();
   render();
-  if (STANDALONE && 'serviceWorker' in navigator && /^https?:$/.test(location.protocol)) navigator.serviceWorker.register('sw.js').catch(() => {});
+  /* تحديث تلقائي: العامل الجديد بيتفعّل ويعيد تحميل الصفحة مرة واحدة، والصفحة بتراجع رقم النسخة كل ما تتفتح */
+  if (STANDALONE && 'serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
+    let reloaded = false; const hadCtl = !!navigator.serviceWorker.controller;
+    navigator.serviceWorker.addEventListener('controllerchange', () => { if (hadCtl && !reloaded) { reloaded = true; location.reload(); } });
+    let REG = null; navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).then(r => { REG = r; r.update(); setInterval(() => r.update(), 30 * 60000); }).catch(() => {});
+    const chk = () => fetch('version.json?t=' + Date.now(), { cache: 'no-store' }).then(x => x.json()).then(j => { if (j.v && window.__BUILD_ID__ && j.v !== window.__BUILD_ID__) { toast('فيه نسخة جديدة، بننزّلها وهتتحدث لوحدها…'); if (REG) REG.update(); } }).catch(() => {});
+    chk(); document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') chk(); });
+  }
 })();
