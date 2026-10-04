@@ -1379,6 +1379,31 @@ const PHOTO_CREDITS = {
 "by": "TheHungryTiger at English Wikipedia",
 "lic": "CC0",
 "src": "commons:File:Dropper loop knot.jpg"
+},
+"eg_82": {
+"by": "Sarah Faulwetter",
+"lic": "CC-BY",
+"src": "inat:222165464"
+},
+"eg_128": {
+"by": "andrewruddock",
+"lic": "CC-BY-NC",
+"src": "inat:22447310"
+},
+"eg_159": {
+"by": "paolofon",
+"lic": "CC-BY-NC",
+"src": "inat:578433515"
+},
+"eg_18": {
+"by": "Jean-Paul Boerekamps",
+"lic": "CC0",
+"src": "inat:470827850"
+},
+"eg_137": {
+"by": "Mathieu Pélissié",
+"lic": "CC-BY-NC",
+"src": "inat:423313194"
 }
 };
 /* فيديوهات قصيرة مضمّنة (vids.json بمعرّف النوع): مقاطع 8 ثواني بلا صوت من Pixabay (رخصة Pixabay: استخدام مجاني بلا إلزام بنسب)، اتراجعت لقطاتها يدويًا: بلا علامات مائية ولا أشخاص */
