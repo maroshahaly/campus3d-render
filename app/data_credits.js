@@ -1574,6 +1574,226 @@ const PHOTO_CREDITS = {
 "by": "USFWS Mountain-Prairie",
 "lic": "CC BY 2.0",
 "src": "commons:File:Bow Hunting for Fish (15665842788).jpg"
+},
+"sp_gandofli": {
+"by": "Liva Erkul",
+"lic": "CC-BY",
+"src": "inat:224702804"
+},
+"sp_murex": {
+"by": "Francesco Santoro",
+"lic": "CC-BY",
+"src": "inat:252877721"
+},
+"sp_conomurex": {
+"by": "Dr. Nasser Halaweh",
+"lic": "CC-BY",
+"src": "inat:60950660"
+},
+"sp_spiderconch": {
+"by": "Cricket Raspet",
+"lic": "CC-BY",
+"src": "inat:371128911"
+},
+"sp_trochus": {
+"by": "ajott",
+"lic": "CC-BY",
+"src": "inat:65707547"
+},
+"sp_noahsark": {
+"by": "katunchik",
+"lic": "CC-BY",
+"src": "inat:9820124"
+},
+"sp_spondylus": {
+"by": "Fotios Christodoulou",
+"lic": "CC-BY",
+"src": "inat:377684295"
+},
+"sp_glycymeris": {
+"by": "Nicolas Olejnik",
+"lic": "CC-BY",
+"src": "inat:14807241"
+},
+"sp_chicoreus": {
+"by": "Georgina Jones",
+"lic": "CC-BY-SA",
+"src": "inat:102008641"
+},
+"sp_cone": {
+"by": "Robin White",
+"lic": "CC-BY",
+"src": "inat:250664247"
+},
+"sp_anadara": {
+"by": "Igor Balashov",
+"lic": "CC-BY",
+"src": "inat:53601682"
+},
+"sp_helmet": {
+"by": "Justin Philbois",
+"lic": "CC0",
+"src": "inat:263053435"
+},
+"gt_hook_j": {
+"by": "daniel jaeger",
+"lic": "CC BY-SA 2.5",
+"src": "https://commons.wikimedia.org/w/index.php?curid=4525602"
+},
+"gt_hook_long": {
+"by": "Oolmadefoto",
+"lic": "Pixabay",
+"src": "pixabay:7418284"
+},
+"gt_hook_treble": {
+"by": "PublicDomainPictures",
+"lic": "Pixabay",
+"src": "pixabay:71527"
+},
+"gt_float_pencil": {
+"by": "artellliii72",
+"lic": "Pixabay",
+"src": "pixabay:7552506"
+},
+"gt_float_oval": {
+"by": "PublicDomainPictures",
+"lic": "Pixabay",
+"src": "pixabay:70797"
+},
+"gt_spoon_cast": {
+"by": "Podknox",
+"lic": "CC BY 2.0",
+"src": "https://www.flickr.com/photos/91198056@N00/3290794236"
+},
+"gt_spoon_troll": {
+"by": "Podknox",
+"lic": "CC BY 2.0",
+"src": "https://www.flickr.com/photos/91198056@N00/3292776135"
+},
+"gt_wob_minnow": {
+"by": "TheDigitalWay",
+"lic": "Pixabay",
+"src": "pixabay:1563251"
+},
+"gt_wob_sink": {
+"by": "www.ilkkajukarainen.fi",
+"lic": "CC BY-SA 2.0",
+"src": "https://www.flickr.com/photos/130333033@N08/48419926716"
+},
+"gt_wob_popper": {
+"by": "Podknox",
+"lic": "CC BY 2.0",
+"src": "https://www.flickr.com/photos/91198056@N00/2540046136"
+},
+"gt_wob_stick": {
+"by": "u_14282vb65e",
+"lic": "Pixabay",
+"src": "pixabay:8340486"
+},
+"gt_wob_crank": {
+"by": "oraswet",
+"lic": "Pixabay",
+"src": "pixabay:5722036"
+},
+"gt_reel_spin": {
+"by": "France1978",
+"lic": "CC BY-SA 2.0",
+"src": "https://www.flickr.com/photos/51764518@N02/24684570229"
+},
+"gt_reel_bc": {
+"by": "Podknox",
+"lic": "CC BY 2.0",
+"src": "https://www.flickr.com/photos/91198056@N00/3479815662"
+},
+"gt_reel_conv": {
+"by": "paulbr75",
+"lic": "Pixabay",
+"src": "pixabay:1738378"
+},
+"gt_rod_surf": {
+"by": "paulbr75",
+"lic": "Pixabay",
+"src": "pixabay:1721058"
+},
+"gt_rod_boat": {
+"by": "K_Malik",
+"lic": "Pixabay",
+"src": "pixabay:5541327"
+},
+"gt_rod_spin": {
+"by": "chemid",
+"lic": "Pixabay",
+"src": "pixabay:3302535"
+},
+"gt_rod_fly": {
+"by": "stevepb",
+"lic": "Pixabay",
+"src": "pixabay:474095"
+},
+"gt_hook_circle": {
+"by": "Western Pacific Regional Fishery Management Council",
+"lic": "CC BY-SA 3.0",
+"src": "commons:curid=47650702"
+},
+"gt_mold_pour": {
+"by": "Enlightening_Images",
+"lic": "Pixabay",
+"src": "pixabay:4507122"
+},
+"gt_sw_barrel": {
+"by": "User:Raboe001",
+"lic": "CC BY-SA 2.5",
+"src": "commons:File:Angeln zubehoer wirbel 01.jpg"
+},
+"gt_sw_snap": {
+"by": "User:Raboe001",
+"lic": "CC BY-SA 2.5",
+"src": "commons:File:Angeln zubehoer wirbel 01.jpg"
+},
+"gt_ld_wire": {
+"by": "Raboe001",
+"lic": "CC BY-SA 2.5",
+"src": "commons:File:Angeln zubehoer wirbel 02.jpg"
+},
+"gt_sk_pyramid": {
+"by": "Chemicalinterest (talk)",
+"lic": "Public domain",
+"src": "commons:File:Lead sinker.JPG"
+},
+"gt_sk_split": {
+"by": "User:Raboe001",
+"lic": "CC BY-SA 2.5",
+"src": "commons:File:Angeln zubehoer gewichtsblei 01.jpg"
+},
+"gt_sk_egg": {
+"by": "Junyu-K",
+"lic": "CC BY-SA 4.0",
+"src": "commons:File:202510 Fishing sinkers (Close-up photography from Taiwan).jpg"
+},
+"gt_sk_flat": {
+"by": "User:Raboe001",
+"lic": "CC BY-SA 2.5",
+"src": "commons:File:Angeln zubehoer grundblei 01.jpg"
+},
+"gt_sk_tube": {
+"by": "User:Raboe001",
+"lic": "CC BY-SA 2.5",
+"src": "commons:File:Angeln zubehoer grundblei 01.jpg"
+},
+"gt_sk_all": {
+"by": "Ruff tuff cream puff",
+"lic": "CC0",
+"src": "commons:File:Fishing weights smaller sizes.jpg"
+},
+"gt_hook_worm": {
+"by": "Mike Cline",
+"lic": "CC BY-SA 3.0",
+"src": "commons:File:FloatingWormHook.jpg"
+},
+"gt_hook_sizes": {
+"by": "Support.and.Defend",
+"lic": "CC BY-SA 3.0",
+"src": "commons:File:11-0 and 6-0 hooks.JPG"
 }
 };
 /* فيديوهات قصيرة مضمّنة (vids.json بمعرّف النوع): مقاطع 8 ثواني بلا صوت من Pixabay (رخصة Pixabay: استخدام مجاني بلا إلزام بنسب)، اتراجعت لقطاتها يدويًا: بلا علامات مائية ولا أشخاص */

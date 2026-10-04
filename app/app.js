@@ -228,7 +228,9 @@
         '<a class="qcard" href="#/trip">' + ico('fish', 26) + '<b>خطة رحلة اليوم</b><span>الطُّعم والعدة وأقرب مكان</span></a>' +
         '<a class="qcard" href="#/egypt">' + ico('pin', 26) + '<b>مناطق الصيد في مصر</b><span>' + EG_SPOTS.length + ' مكان ونسب الأنواع</span></a>' +
         '<a class="qcard" href="#/track">' + ico('tools', 26) + '<b>رحلتي والطوارئ</b><span>تتبع، سجل، ونداء استغاثة</span></a>' +
-        '<a class="qcard" href="#/tools?t=gear">' + ico('tools', 26) + '<b>أدوات الصيد</b><span>الأنواع والمقاسات بالصور</span></a></section>' +
+        '<a class="qcard" href="#/tools?t=gear">' + ico('tools', 26) + '<b>أدوات الصيد</b><span>الأنواع والمقاسات بالصور</span></a>' +
+        '<a class="qcard" href="#/tackle">' + ico('fish', 26) + '<b>عدة كل سمكة</b><span>الخيط والسنارة والمكنة بالوزن</span></a>' +
+        '<a class="qcard" href="#/tackle?calc=1">' + ico('tools', 26) + '<b>وزن السمكة من طولها</b><span>وحاسبة ضبط الفرامل</span></a></section>' +
       '<section class="card stack"><h2 class="h2" style="margin:0">اليوم</h2>' +
       '<div class="row" style="flex-wrap:nowrap">' + moonSvg(di.ph) + '<div class="now" style="flex:1;min-width:0"><div><b class="num">' + T(di.sun.rise) + '</b><span>شروق الشمس</span></div><div><b class="num">' + T(di.sun.set) + '</b><span>غروب الشمس</span></div><div><b>' + Astro.phaseName(di.ph.phase).split(' ')[0] + '</b><span>القمر ' + Math.round(di.ph.fraction * 100) + '%</span></div></div></div></section>' +
       '<section><div class="tiles">' +
@@ -379,6 +381,12 @@
   function drawTool() {
     const el = $('#toolbody'); if (!el) return;
     ({ knots: toolKnots, gear: toolGear, today: toolToday, sea: toolSea, bft: toolBft, conv: toolConv, log: toolLog, chk: toolChk }[toolTab] || toolToday)(el);
+    if (toolTab === 'log') { /* وزن تقريبي من الطول للسمك اللي له معادلة */
+      const up = () => { const n = (($('#lsp') || {}).value || '').trim(), L = +(($('#llen') || {}).value || '').replace(',', '.'), w = $('#lwt'); if (!w) return;
+        const s = SG.find(x => x.ar === n || x.ar.split(' (')[0] === n) || null, m = s && FT_MORE[s.id];
+        w.placeholder = m && m.lw && L > 0 ? 'تقريبًا ' + (tkW(m.lw, L) / 1000).toFixed(2) : ''; };
+      ['lsp', 'llen'].forEach(i => { const e = $('#' + i); if (e) e.addEventListener('input', up); });
+    }
   }
   function toolKnots(el) {
     el.innerHTML = '<div class="stack"><p class="muted" style="margin:0">أهم عقد الصيد: بتستخدم في إيه وإزاي تتربط خطوة بخطوة. لمشاهدة الرسوم المتحركة لكل عقدة اضغط «شوف الحركة».</p><div class="geargrid">' +
@@ -392,15 +400,49 @@
   const GRP_ORDER = ['tackle', 'nets', 'traps', 'spear', 'elec', 'boats', 'safety'];
   const GRP_DESC = { nets: 'الطرّاحة، الغزل والدبة والمنسوجة، وشبكة الرفع', traps: 'الجوابي والقفاص، مصايد الكابوريا والإستاكوزا، والحوش', spear: 'البندقية (الهاربون)، الحربة والنبلة، وقوس صيد السمك', elec: 'أنواع السونار وخواصها، والمسح الجانبي، والملاحة', boats: 'أنواع القوارب ومسافات الإبحار والمواد والمحركات والجاهزية', safety: 'سترة النجاة، الطوق، حبل الإنقاذ، مسدس الإشارة، اللاسلكي وغيرها' };
   const EXTRA_PH = { boats: [['gear_boat', 'مراكب الصيد قدام قلعة قايتباي في إسكندرية'], ['gear_boat2', 'فلوكة صيد في بحيرة']], spear: [['gear_speargun2', 'بندقية صيد تحت المياه وصيدها'], ['gear_bowfish2', 'صيد السمك بالقوس من على الشط']] };
-  const shapesHtml = id => GEAR_SHAPES[id] ? '<div class="shpgrid">' + GEAR_SHAPES[id].map(x => '<div class="shp"><div class="shpart">' + x[1] + '</div><b>' + esc(x[0]) + '</b><span class="small">' + esc(x[2]) + '</span><span class="tag ok small">' + esc(x[3]) + '</span></div>').join('') + '</div>' : '';
+  const shapesHtml = id => GEAR_SHAPES[id] ? '<div class="shpgrid">' + GEAR_SHAPES[id].map((x, i) => { const pk = (TYPE_PH[id] || [])[i], ph = pk && IMGS[pk]; return '<div class="shp">' + (ph ? '<div class="shpph"><img class="bgb" alt="" aria-hidden="true" decoding="async" src="' + ph + '"><img class="fg" loading="lazy" decoding="async" alt="' + esc(x[0]) + '" src="' + ph + '" data-zoom="' + pk + '"><span class="shpmini">' + x[1] + '</span>' + (PHOTO_CREDITS[pk] && !/^(CC0|Pixabay)$/.test(PHOTO_CREDITS[pk].lic) ? '<span class="gearcr">' + credit(pk) + '</span>' : '') + '</div>' : '<div class="shpart">' + x[1] + '</div>') + '<b>' + esc(x[0]) + '</b><span class="small">' + esc(x[2]) + '</span><span class="tag ok small">' + esc(x[3]) + '</span></div>'; }).join('') + '</div>' : '';
   const infoHtml = inf => (inf.types ? '<dl class="kv" style="margin:0">' + inf.types.map(t => '<dt>' + esc(t[0]) + '</dt><dd>' + esc(t[1]) + '</dd>').join('') + '</dl>' : '') +
     (inf.sizes ? '<div class="tbl"><table><thead><tr>' + inf.sizes.h.map(h => '<th>' + esc(h) + '</th>').join('') + '</tr></thead><tbody>' + inf.sizes.r.map(r => '<tr>' + r.map(c => '<td>' + esc(c) + '</td>').join('') + '</tr>').join('') + '</tbody></table></div>' : '') +
     (inf.note ? '<div class="notice info">' + esc(inf.note) + '</div>' : '');
-  const fishTackleHtml = () => '<section class="card stack" id="fishtackle"><h2 class="h2" style="margin:0">ترشيح العدة لكل سمكة (بالوزن)</h2><p class="muted small" style="margin:0">الخيط والطرف والسنارة ومقاس المكنة حسب الوزن الشائع لكل سمكة. لو بتدوّر على الكبيرة اطلع درجة.</p><div class="tbl"><table><thead><tr><th>السمكة</th><th>الوزن الشائع</th><th>الخيط</th><th>الطرف (الليدر)</th><th>السنارة</th><th>المكنة</th><th>الرصاص / الطُّعم</th></tr></thead><tbody>' +
-    FISH_TACKLE.map(r => { const s = SPECIES_G.find(x => x.id === r[0]); return s ? '<tr><td><a href="#/sp/' + s.id + '">' + esc(s.ar) + '</a></td>' + r.slice(1).map(c => '<td>' + esc(c) + '</td>').join('') + '</tr>' : ''; }).join('') + '</tbody></table></div></section>';
+
+  /* ---------- عدة كل سمكة (صفحة مستقلة) ---------- */
+  const tkWater = s => s.h === 'f' ? 'fw' : (s.R.has('redsea') && !s.R.has('med') ? 'red' : 'med');
+  const tkSpots = id => { if (typeof EG_PRES === 'undefined') return []; const L = []; for (const k in EG_PRES) { const r = EG_PRES[k].find(x => x[0] === id); if (r) L.push([k, r[1]]); } L.sort((x, y) => y[1] - x[1]); return L.slice(0, 4).map(([k, v]) => { const sp = EG_SPOTS.find(z => z[0] === k); return sp ? '<a class="chip" href="#/egypt/' + k + '">' + esc(sp[1]) + ' <span class="num">' + v + '%</span></a>' : ''; }); };
+  const tkW = (lw, L) => lw ? lw[0] * Math.pow(L, lw[1]) : null;
+  const fmtW = g => g >= 1000 ? (g / 1000).toFixed(g >= 10000 ? 0 : 1) + ' كجم' : Math.round(g) + ' جم';
+  V.tackle = function (a, qs) {
+    const rows = FISH_TACKLE.map(r => ({ r, s: BYG[r[0]], m: FT_MORE[r[0]] || {} })).filter(x => x.s);
+    const opts = rows.filter(x => x.m.lw).map(x => '<option value="' + x.s.id + '"' + (qs.f === x.s.id ? ' selected' : '') + '>' + esc(x.s.ar) + '</option>').join('');
+    const card = x => { const r = x.r, s = x.s, m = x.m, w = tkWater(s), sp = tkSpots(s.id);
+      return '<details class="acc tk" data-w="' + w + '" data-n="' + esc((s.ar + ' ' + s.en + ' ' + (s.names ? Object.values(s.names).join(' ') : '')).toLowerCase()) + '" id="tk-' + s.id + '"' + (qs.f === s.id ? ' open' : '') + '><summary>' + (IMGS['sp_' + s.id] ? '<img class="tkph" loading="lazy" alt="" src="' + IMGS['sp_' + s.id] + '">' : '<span class="tkph"></span>') + '<span class="tkt"><b>' + esc(s.ar) + '</b><span class="muted small">الوزن الشائع: ' + esc(r[1]) + '</span></span><span class="tag ' + (w === 'fw' ? 'ok' : 'info') + '">' + ({ fw: 'مياه عذبة', red: 'البحر الأحمر', med: 'المتوسط' })[w] + '</span></summary>' +
+        '<dl class="kv tkkv"><dt>الخيط الرئيسي</dt><dd>' + esc(r[2]) + '</dd><dt>الطرف (الليدر)</dt><dd>' + esc(r[3]) + '</dd><dt>السنارة</dt><dd>' + esc(r[4]) + '</dd><dt>المكنة</dt><dd>' + esc(r[5]) + '</dd>' + (m.rod ? '<dt>القصبة</dt><dd>' + esc(m.rod) + '</dd>' : '') + '<dt>الرصاص / الطُّعم الصناعي</dt><dd>' + esc(r[6]) + '</dd>' + (m.bait ? '<dt>الطُّعم الطبيعي</dt><dd>' + esc(m.bait) + '</dd>' : '') + (DIET[s.id] ? '<dt>بياكل إيه في الطبيعة</dt><dd>' + esc(DIET[s.id]) + '</dd>' : '') + (m.cook ? '<dt>أحسن طبخة</dt><dd>' + esc(m.cook) + '</dd>' : '') + '</dl>' +
+        (sp.length ? '<div class="stack" style="gap:6px"><b class="small">أكتر أماكن بتطلع فيها في مصر</b><div class="chips">' + sp.join('') + '</div></div>' : '') +
+        '<div class="row"><a class="btn ghost small" href="#/sp/' + s.id + '">صفحة السمكة كاملة</a>' + (m.lw ? '<button class="btn ghost small" data-act="tkcalc" data-id="' + s.id + '">احسب وزنها من طولها</button>' : '') + '</div></details>'; };
+    return '<div class="stack-lg"><header><div class="eyebrow">' + rows.length + ' سمكة</div><h1 class="h1">عدة كل سمكة</h1><p class="muted" style="margin:4px 0 0">الخيط والطرف والسنارة والمكنة والقصبة والطُّعم المناسب لكل سمكة حسب وزنها، وأماكنها في مصر، وأحسن طبخة ليها.</p></header>' +
+      '<section class="card stack" id="tkcalcs"><h2 class="h2" style="margin:0">حاسبات سريعة</h2>' +
+        '<div class="tkgrid"><div class="stack" style="gap:6px"><b>وزن السمكة من طولها</b><label class="field"><span class="small">السمكة</span><select id="tkf">' + opts + '</select></label><label class="field"><span class="small">الطول من البوز لآخر الديل (سم)</span><input id="tkl" type="number" inputmode="decimal" min="3" max="400" value="35"></label><div class="tkres" id="tkwout">—</div><span class="muted small">تقديري من معادلات علمية متوسطة؛ السمكة التخينة أو اللي فيها بيض أتقل.</span></div>' +
+        '<div class="stack" style="gap:6px"><b>ضبط الفرامل (الدراج)</b><label class="field"><span class="small">قوة الخيط (كجم) — مكتوبة على البكرة</span><input id="tkd" type="number" inputmode="decimal" min="1" max="100" value="8"></label><div class="tkres" id="tkdout">—</div><span class="muted small">القاعدة: الفرامل ربع لتلت قوة الخيط. علّق زجاجة مياه بالوزن ده في الخيط واضبط لحد ما الخيط يبدأ يطلع.</span></div></div></section>' +
+      '<div class="stack" style="gap:8px"><input class="search" id="tkq" type="search" placeholder="دوّر على سمكة (مثلًا: دنيس، قاروص، بلطي)"><div class="chips" id="tkw">' + [['all', 'الكل'], ['med', 'المتوسط'], ['red', 'البحر الأحمر'], ['fw', 'المياه العذبة']].map((c, i) => '<button class="chip" data-tkw="' + c[0] + '" aria-pressed="' + (i === 0) + '">' + c[1] + '</button>').join('') + '</div></div>' +
+      '<div class="stack" id="tklist">' + rows.map(card).join('') + '</div>' +
+      '<div class="notice info">المقاسات إرشادية من خبرة الصيادين وبتختلف بالماركة والمكان. لو المكان فيه صخر أو السمك كبير، كبّر الطرف درجة.</div></div>';
+  };
+  function drawTackle() {
+    const upW = () => { const id = $('#tkf') && $('#tkf').value, L = +($('#tkl') || {}).value, m = FT_MORE[id]; const o = $('#tkwout'); if (!o) return; if (!m || !(L > 0)) { o.textContent = '—'; return; } const g = tkW(m.lw, L); o.innerHTML = 'حوالي <b class="num">' + fmtW(g) + '</b> <span class="muted small">(بين ' + fmtW(g * 0.85) + ' و' + fmtW(g * 1.15) + ')</span>'; };
+    const upD = () => { const k = +($('#tkd') || {}).value, o = $('#tkdout'); if (!o) return; o.innerHTML = k > 0 ? 'اضبطها على <b class="num">' + (k / 4).toFixed(1) + '–' + (k / 3).toFixed(1) + ' كجم</b>' + '<br><span class="muted small">وللشد الأقصى مع سمكة كبيرة لحد ' + (k / 2).toFixed(1) + ' كجم بس.</span>' : '—'; };
+    ['tkf', 'tkl'].forEach(i => { const e = $('#' + i); if (e) { e.addEventListener('input', upW); e.addEventListener('change', upW); } });
+    const d = $('#tkd'); if (d) d.addEventListener('input', upD); upW(); upD();
+    let wf = 'all';
+    const filt = () => { const q = (($('#tkq') || {}).value || '').trim().toLowerCase(); $$('#tklist .tk').forEach(el => { el.hidden = !((wf === 'all' || el.dataset.w === wf) && (!q || el.dataset.n.indexOf(q) > -1)); }); };
+    const qi = $('#tkq'); if (qi) qi.addEventListener('input', filt);
+    $$('#tkw [data-tkw]').forEach(b => b.addEventListener('click', () => { wf = b.dataset.tkw; $$('#tkw [data-tkw]').forEach(x => x.setAttribute('aria-pressed', x === b)); filt(); }));
+    const op = document.querySelector('#tklist .tk[open]'); if (op) setTimeout(() => op.scrollIntoView({ block: 'start' }), 80);
+    if (/calc=1/.test(location.hash)) setTimeout(() => $('#tkcalcs').scrollIntoView({ block: 'start' }), 80);
+  }
+  document.addEventListener('click', e => { const b = e.target.closest('[data-act="tkcalc"]'); if (!b) return; const f = $('#tkf'); if (f) { f.value = b.dataset.id; f.dispatchEvent(new Event('change')); $('#tkcalcs').scrollIntoView({ behavior: 'smooth', block: 'start' }); } });
   function toolGear(el) {
     const tackle = GEAR.filter(g => !g.grp || g.grp === 'tackle');
     el.innerHTML = '<div class="stack"><p class="muted" style="margin:0">كل اللي بيستخدمه الصياد. اضغط على أي أداة أو مجموعة تفتح صفحتها بالصور والأنواع والمقاسات.</p>' +
+      '<a class="card bothlink" href="#/tackle"><b>عدة كل سمكة ←</b><span class="muted small">اختار السمكة وشوف العدة كاملة بالمقاسات والوزن، وحاسبة وزن السمكة من طولها</span></a>' +
       '<h2 class="h2" style="margin:0">' + esc(GEAR_GRP.tackle) + '</h2><div class="geargrid">' + tackle.map((g, i) =>
         '<a class="card gearcard" href="#/gear/' + g.id + '" style="text-decoration:none"><div class="gearimg">' + gearPic(g) + '</div>' +
         '<div class="stack" style="gap:6px"><h3 class="h3"><span class="gearn">' + (i + 1) + '</span>' + esc(g.t) + '</h3><p style="margin:0">' + esc(g.d) + '</p><p class="muted small" style="margin:0"><b>الاستخدام: </b>' + esc(g.u) + '</p>' + (GEAR_INFO[g.id] ? '<span class="tag ok" style="align-self:flex-start">الأنواع والمقاسات ←</span>' : '') + '</div></a>').join('') + '</div>' +
@@ -427,10 +469,10 @@
       (g.id === 'sabiki' ? '<section class="card stack"><h2 class="h2" style="margin:0">شكل تركيب السبحة</h2>' + RigArt.render(GENRIGS.sabha, esc) + '<a class="btn ghost small" href="#/tech?t=sabha">شرح السبحة كامل من الملف</a></section>' : '') +
       (g.id === 'sabiki' ? '<section class="card stack"><h2 class="h2" style="margin:0">السبحة شكلها في المياه</h2><div class="sbreal">' + SABIKI_REAL + '</div><p class="muted small" style="margin:0">خيط رئيسي، مدوّرة فوق، أفرع قصيرة عليها سنانير بجلد سمك لامع، ورصاصة في الآخر. بتنزّلها لحد ما تحس بالسرب وتهزّها بالراحة.</p></section>' : '') +
       (GEAR_SHAPES[g.id] ? '<section class="card stack"><h2 class="h2" style="margin:0">أشكال الأنواع ومقاساتها واستخدامها</h2>' + shapesHtml(g.id) + '</section>' : '') +
-      (g.id === 'sinker' ? '<section class="card stack"><h2 class="h2" style="margin:0">صب الرصاص في البيت خطوة بخطوة</h2><div class="notice warn">' + esc(SINKER_CAST.warn) + '</div><ol class="knotsteps">' + SINKER_CAST.steps.map(x => '<li><b>' + esc(x[0]) + ': </b>' + esc(x[1]) + '</li>').join('') + '</ol></section>' : '') +
+      (g.id === 'sinker' ? '<section class="card stack"><h2 class="h2" style="margin:0">صب الرصاص في البيت خطوة بخطوة</h2>' + ['gt_sk_all', 'gt_mold_pour'].filter(k => IMGS[k]).map((k, i) => '<figure class="wph" style="margin:0"><img loading="lazy" alt="" src="' + IMGS[k] + '" data-zoom="' + k + '"><figcaption class="muted small">' + (i ? 'صب المعدن السايح في القالب (صورة توضيحية من مسبك)' : 'تشكيلة رصاص صيد بأشكال وأوزان مختلفة') + (PHOTO_CREDITS[k] ? ' · ' + credit(k) : '') + '</figcaption></figure>').join('') + '<div class="notice warn">' + esc(SINKER_CAST.warn) + '</div><ol class="knotsteps">' + SINKER_CAST.steps.map(x => '<li><b>' + esc(x[0]) + ': </b>' + esc(x[1]) + '</li>').join('') + '</ol></section>' : '') +
       (inf.types ? '<section class="card stack"><h2 class="h2" style="margin:0">الأنواع</h2><dl class="kv" style="margin:0">' + inf.types.map(t => '<dt>' + esc(t[0]) + '</dt><dd>' + esc(t[1]) + '</dd>').join('') + '</dl></section>' : '') +
       (inf.sizes ? '<section class="card stack"><h2 class="h2" style="margin:0">المقاسات</h2><div class="tbl"><table><thead><tr>' + inf.sizes.h.map(h => '<th>' + esc(h) + '</th>').join('') + '</tr></thead><tbody>' + inf.sizes.r.map(r => '<tr>' + r.map(c => '<td>' + esc(c) + '</td>').join('') + '</tr>').join('') + '</tbody></table></div>' + (inf.note ? '<div class="notice info">' + esc(inf.note) + '</div>' : '') + '</section>' : (inf.note ? '<div class="notice info">' + esc(inf.note) + '</div>' : '')) +
-      (/^(reel|line|rod|leader|hook)$/.test(g.id) ? fishTackleHtml() : '') +
+      (/^(reel|line|rod|leader|hook|sinker)$/.test(g.id) ? '<a class="card bothlink" href="#/tackle"><b>عدة كل سمكة ←</b><span class="muted small">الخيط والطرف والسنارة والمكنة المناسبين لكل سمكة حسب وزنها</span></a>' : '') +
       '<div class="row between">' + (prev ? '<a class="btn ghost small" href="#/gear/' + prev.id + '">→ ' + esc(prev.t.split(' (')[0]) + '</a>' : '<span></span>') + (next ? '<a class="btn ghost small" href="#/gear/' + next.id + '">' + esc(next.t.split(' (')[0]) + ' ←</a>' : '') + '</div></div>';
   };
   function toolToday(el) {
@@ -867,6 +909,7 @@
       (real ? '<div class="legend"><span><i style="background:var(--lv0)"></i>0%</span><span><i style="background:var(--lv1)"></i>33%</span><span><i style="background:var(--lv2)"></i>66%</span><span><i style="background:var(--lv3)"></i>100%</span></div>' : '<div class="muted small">تدرّج رمادي عمدًا لأنه تقدير افتراضي غير مرتبط بمنطقتك الحالية.</div>') +
       '<div class="muted small">' + (egyptReal && hem === 'n' ? 'هذه نسب ميدانية حقيقية من ملف «مساعد الصيد» في مصر (نفس بيانات صفحته التفصيلية)، وليست تقديرًا عامًا — لذلك قد تختلف عن أنواع أخرى تعرض تقديرًا تقريبيًا فقط. ' : 'الشهور ' + (hem === 's' ? 'مقلوبة لنصف الكرة الجنوبي.' : 'لنصف الكرة الشمالي.')) + (Math.abs(loc.lat) < 6 && real && !egyptReal ? ' قرب خط الاستواء الموسمية ضعيفة فتُعرض متوسطة طوال السنة.' : '') + '</div></section>' +
       bothFor(s.id) +
+      (FISH_TACKLE.some(r => r[0] === s.id) ? '<a class="card bothlink" href="#/tackle?f=' + s.id + '"><b>العدة المناسبة لـ' + esc(s.ar) + ' ←</b><span class="muted small">الخيط والطرف والسنارة والمكنة والطُّعم، وحاسبة وزنها من طولها</span></a>' : '') +
       (DIET[s.id] ? '<section class="card stack diet"><h2 class="h2" style="margin:0">بياكل إيه؟ (غذاؤه الأساسي)</h2><p style="margin:0">' + esc(DIET[s.id]) + '</p><p class="muted small" style="margin:0">أحسن طُعم غالبًا هو اللي بيشبه أكله الطبيعي في المكان والموسم.</p></section>' : '') +
       '<section class="card stack"><h2 class="h2" style="margin:0">أين يعيش؟</h2>' + mapHtml('map-sp', { sp: s.id, span: 360, h: 330 }) + legendMap + '<div class="muted small">' + (occPts(s.id) ? 'كل نقطة ذهبية مشاهدة حقيقية موثقة للنوع (مقرّبة لخلية ≈ 5 كم)، والصناديق المنقطة الباهتة أقاليم تواجده العامة. ' : 'الظل الذهبي أقاليم تواجد النوع (صناديق تقريبية). ') + '<b>البيئة:</b> ' + esc(habText(s)) + '. النقطة الحمرا مكانك.</div>' + egSpHtml(s.id) + '</section>' +
       (howHtml ? '<section class="card stack"><h2 class="h2" style="margin:0">طريقة الصيد</h2>' + howHtml + '</section>' : '') +
@@ -1484,7 +1527,7 @@
     const nm = name;
     $$('.nav a').forEach(a => a.setAttribute('aria-current', a.dataset.m.split('|').indexOf(nm) > -1 ? 'page' : 'false'));
     if ($('#knotbody')) toolKnots($('#knotbody'));
-    if (nm === 'fishlist') drawFishList(); if (nm === 'tools') drawTool(); if (nm === 'links') drawLinks(); if (nm === 'here') drawHere(); if (nm === 'species') drawSpList(); if (nm === 'compare') drawCompare();
+    if (nm === 'fishlist') drawFishList(); if (nm === 'tools') drawTool(); if (nm === 'links') drawLinks(); if (nm === 'here') drawHere(); if (nm === 'species') drawSpList(); if (nm === 'tackle') drawTackle(); if (nm === 'compare') drawCompare();
     window.scrollTo(0, 0);
     document.title = nm === 'fish' && BY[+r.args[0]] ? BY[+r.args[0]].name + ' — الصنّارة' : nm === 'sp' && BYG[r.args[0]] ? BYG[r.args[0]].ar + ' — الصنّارة' : 'الصنّارة';
   }

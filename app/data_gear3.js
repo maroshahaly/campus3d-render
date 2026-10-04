@@ -159,3 +159,18 @@ Object.assign(GEAR_SHAPES, {
     ['سترة النجاة', SR_('<path d="M40 10h12l8 14 8-14h12l8 20v40H32V30z" fill="#FF7A1A"/><path d="M60 24v46" stroke="#B34700" stroke-width="2"/><path d="M34 46h52" stroke="#1C2329" stroke-width="4"/><rect x="56" y="43" width="8" height="6" fill="#9AA7B1"/>'), 'لازم تكون مقاسك وتتقفل كويس.', 'طفو 100N للساحل، 150N للبحر المفتوح']
   ]
 });
+/* صور حقيقية لكل نوع (بنفس ترتيب GEAR_SHAPES)؛ لو مفيش صورة بيظهر الرسم */
+const TYPE_PH = {
+  hook: ['gt_hook_j', 'gt_hook_circle', 'gt_hook_long', 'gt_hook_treble', 'gt_hook_worm', 'gt_hook_jig'],
+  swivel: ['gt_sw_barrel', 'gt_sw_ball', 'gt_sw_snap', 'gt_sw_3way'],
+  sinker: ['gt_sk_pyramid', 'gt_sk_egg', 'gt_sk_split', 'gt_sk_grapnel', 'gt_sk_flat', 'gt_sk_tube'],
+  float: ['gt_float_pencil', 'gt_float_oval', 'gt_float_slide', 'gt_float_light'],
+  line: ['gt_line_mono', 'gt_line_fluoro', 'gt_line_braid'],
+  leader: ['gt_ld_fluoro', 'gt_ld_wire', 'gt_ld_mono'],
+  spoons: ['gt_spoon_cast', 'gt_spoon_troll', 'gt_spoon_spinner'],
+  wobbler: ['gt_wob_minnow', 'gt_wob_sink', 'gt_wob_popper', 'gt_wob_stick', 'gt_wob_crank'],
+  rod: ['gt_rod_spin', 'gt_rod_surf', 'gt_rod_tele', 'gt_rod_boat', 'gt_rod_bc', 'gt_rod_fly'],
+  reel: ['gt_reel_spin', 'gt_reel_bc', 'gt_reel_conv'],
+  sabiki: ['gt_sab_skin', 'gt_sab_feather', 'gt_sab_bait'],
+  gaff: ['gt_gaff_hand', 'gt_gaff_long', 'gt_gaff_fly', 'gt_gaff_lip']
+};

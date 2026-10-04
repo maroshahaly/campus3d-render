@@ -1,4 +1,4 @@
-const V='sayad-SYD-20261004-27295732',TILES='sayad-tiles-v1',CORE=['./','index.html','manifest.webmanifest','icon-180.png','icon-192.png','icon-512.png'];
+const V='sayad-SYD-20261004-10A3E199',TILES='sayad-tiles-v1',CORE=['./','index.html','manifest.webmanifest','icon-180.png','icon-192.png','icon-512.png'];
 const TILE_HOSTS=/(server\.arcgisonline\.com)$/;
 const TILE_CAP=600; /* أقصى عدد بلاطات خريطة محفوظة، لمنع تضخّم التخزين */
 async function trimTiles(){const c=await caches.open(TILES),ks=await c.keys();if(ks.length>TILE_CAP)for(const k of ks.slice(0,ks.length-TILE_CAP))await c.delete(k);}
