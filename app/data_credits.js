@@ -1324,6 +1324,61 @@ const PHOTO_CREDITS = {
 "by": "MARC MARTIN SOLA",
 "lic": "CC-BY-NC",
 "src": "inat:743883318"
+},
+"w_t_cast": {
+"by": "dsbago",
+"lic": "Pixabay",
+"src": "pixabay:6942656"
+},
+"w_t_bottom": {
+"by": "stux",
+"lic": "Pixabay",
+"src": "pixabay:974778"
+},
+"w_t_float": {
+"by": "artellliii72",
+"lic": "Pixabay",
+"src": "pixabay:7552506"
+},
+"w_t_troll": {
+"by": "ako9",
+"lic": "Pixabay",
+"src": "pixabay:3254130"
+},
+"w_t_jig": {
+"by": "u_14282vb65e",
+"lic": "Pixabay",
+"src": "pixabay:8340486"
+},
+"w_t_live": {
+"by": "pixaoppa",
+"lic": "Pixabay",
+"src": "pixabay:2463531"
+},
+"w_t_comm": {
+"by": "HieuNghiaMini",
+"lic": "Pixabay",
+"src": "pixabay:8270211"
+},
+"w_t_popper": {
+"by": "Kevin Behrendt",
+"lic": "CC BY-SA 4.0",
+"src": "commons:File:Popper zum Angeln.jpg"
+},
+"w_l_braid": {
+"by": "George Chernilevsky",
+"lic": "CC BY 4.0",
+"src": "commons:File:Fishing lines 2025 G1.jpg"
+},
+"w_k_clinch": {
+"by": "StromBer",
+"lic": "CC BY-SA 2.0",
+"src": "commons:File:KlammerknotenLose.JPG"
+},
+"w_k_dropper": {
+"by": "TheHungryTiger at English Wikipedia",
+"lic": "CC0",
+"src": "commons:File:Dropper loop knot.jpg"
 }
 };
 /* فيديوهات قصيرة مضمّنة (vids.json بمعرّف النوع): مقاطع 8 ثواني بلا صوت من Pixabay (رخصة Pixabay: استخدام مجاني بلا إلزام بنسب)، اتراجعت لقطاتها يدويًا: بلا علامات مائية ولا أشخاص */
