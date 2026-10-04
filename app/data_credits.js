@@ -591,9 +591,9 @@ const PHOTO_CREDITS = {
 "src": "pixabay:1007936"
 },
 "gear_lifering": {
-"by": "Naval History & Heritage Command from Wa",
-"lic": "CC BY 2.0",
-"src": "commons:File:Life Ring, VP-43 (22551383358).jpg"
+"by": "webandi",
+"lic": "Pixabay",
+"src": "pixabay"
 },
 "gear_boat": {
 "by": "Dennis G. Jarvis",
@@ -1441,9 +1441,9 @@ const PHOTO_CREDITS = {
 "src": "commons:File:Acaraú (2007) 02.jpg"
 },
 "gear_bowfish": {
-"by": "USFWS Mountain-Prairie",
-"lic": "CC BY 2.0",
-"src": "commons:File:Bow Hunting for Fish (15665842788).jpg"
+"by": "TheDigitalWay",
+"lic": "Pixabay",
+"src": "pixabay"
 },
 "gear_spearfish": {
 "by": "Johnmartindavies",
@@ -1456,9 +1456,9 @@ const PHOTO_CREDITS = {
 "src": "commons:File:BiminiKnotReep5WindgAlles.JPG"
 },
 "gear_polespear": {
-"by": "Dorieo",
-"lic": "CC BY-SA 4.0",
-"src": "commons:File:Arpones filipinos. Museo de América.jpg"
+"by": "ParaScubaSailor",
+"lic": "CC BY-NC-SA 2.0",
+"src": "flickr:5418279474"
 },
 "w_k_fg": {
 "by": "Aen Tan",
@@ -1569,6 +1569,11 @@ const PHOTO_CREDITS = {
 "by": "MP Zhou",
 "lic": "CC-BY-NC",
 "src": "inat:134016604"
+},
+"gear_bowfish2": {
+"by": "USFWS Mountain-Prairie",
+"lic": "CC BY 2.0",
+"src": "commons:File:Bow Hunting for Fish (15665842788).jpg"
 }
 };
 /* فيديوهات قصيرة مضمّنة (vids.json بمعرّف النوع): مقاطع 8 ثواني بلا صوت من Pixabay (رخصة Pixabay: استخدام مجاني بلا إلزام بنسب)، اتراجعت لقطاتها يدويًا: بلا علامات مائية ولا أشخاص */

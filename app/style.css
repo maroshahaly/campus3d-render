@@ -444,7 +444,7 @@ a.card:hover, a.card:focus-visible { transform: translateY(-2px); box-shadow: 0 
 .fishgrid .fcard .strip { display: none; }
 @media (max-width: 560px) { .fishgrid { grid-template-columns: 1fr; } }
 /* ===== مربعات الحوار: تدرّج من الكحلي للّبني + إطار ذهبي رفيع ===== */
-.card, .fcard, .qcard, details.acc, .grpcard, .bothlink {
+.card, .fcard, .qcard, details.acc, .grpcard, .bothlink, .linkitem, .tile {
   --surface: rgba(255,255,255,.06); --surface2: rgba(255,255,255,.10); --ink: #F3F8FB; --ink2: #C6DCE8; --line: rgba(232,190,80,.35);
   --teal: #8FDDEE; --teal-ink: #06202C; --tealsoft: rgba(143,221,238,.14);
   --ok: #6FE0A4; --oksoft: rgba(79,203,138,.18); --warn: #FFD27A; --warnsoft: rgba(240,181,74,.18); --bad: #FFA39B; --badsoft: rgba(255,138,128,.16);
@@ -454,7 +454,7 @@ a.card:hover, a.card:focus-visible { transform: translateY(-2px); box-shadow: 0 
   box-shadow: 0 1px 0 rgba(255,255,255,.06) inset, 0 8px 22px rgba(6,24,44,.22);
 }
 .card a:not(.btn):not(.chip):not(.card), details.acc a:not(.btn):not(.chip) { color: #9FE3F2; }
-.card .muted, .fcard .muted, details.acc .muted, .qcard span { color: var(--ink2) !important; }
+.card .muted, .fcard .muted, details.acc .muted, .qcard span, .linkitem .muted, .tile span { color: var(--ink2) !important; }
 .card .field input, .card .field select, .card .field textarea, .card input, .card select, .card textarea { background: #F7FBFD; color: #0A2230; border-color: rgba(232,190,80,.6); }
 .card .notice { color: var(--ink); }
 .card .notice.info { background: rgba(143,221,238,.12); border-color: rgba(143,221,238,.35); }
@@ -521,3 +521,9 @@ a.card.gearcard, a.card.gearcard h3, a.card.gearcard p { color: var(--ink); }
 .card .chip[aria-pressed="true"], .card .chip.on, details.acc .chip[aria-pressed="true"], details.acc .chip.on { background: #F5C542 !important; color: #0A2342 !important; border-color: #F5C542 !important; font-weight: 700; box-shadow: 0 0 0 2px rgba(245,197,66,.35); }
 .hemseg { display: inline-flex; border: 1px solid rgba(232,190,80,.8); border-radius: 999px; padding: 3px; gap: 3px; background: rgba(0,0,0,.18); }
 .hemseg .chip { border-radius: 999px; border-color: transparent !important; min-height: 34px; padding: 4px 12px; }
+
+.linkitem { display: block; border-radius: 16px; padding: 14px 16px; text-decoration: none; overflow-wrap: anywhere; }
+.linkitem b { color: #9FE3F2; } .linkitem p { color: var(--ink); }
+.linkitem .url { color: #C6DCE8; font-size: .78rem; direction: ltr; text-align: left; margin-top: 6px; white-space: normal; word-break: break-all; }
+.linkitem .tag { background: rgba(245,197,66,.18); color: #FFE08A; border: 1px solid rgba(245,197,66,.5); }
+.tile b { color: var(--ink); }
