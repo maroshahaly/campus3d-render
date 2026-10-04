@@ -346,7 +346,7 @@
     let body = '';
     const wph = (k, cap) => IMGS[k] ? '<figure class="wph" style="margin:0"><img loading="lazy" alt="" src="' + IMGS[k] + '">' + (cap || PHOTO_CREDITS[k] && !/^(CC0|Pixabay)$/.test(PHOTO_CREDITS[k].lic) ? '<figcaption class="muted small">' + (cap ? esc(cap) + ' ' : '') + (PHOTO_CREDITS[k] && !/^(CC0|Pixabay)$/.test(PHOTO_CREDITS[k].lic) ? credit(k) : '') + '</figcaption>' : '') + '</figure>' : '';
     const TECH_PH = [['w_t_cast'], ['w_t_bottom'], ['w_k_dropper', 'حلقة الفرع (دروبر لوب) اللي بتتعلّق فيها سنانير السبحة.'], ['w_t_float'], ['w_t_troll'], ['w_t_jig'], ['w_t_popper'], ['w_t_live', 'سرب سمك صغير، وده الطُّعم الحي اللي بيتصاد ويتركب.'], ['w_t_comm']];
-    const LINE_PH = ['gear_line', '', 'w_l_braid', 'gear_leader', 'gear_hook', 'gear_sinker'];
+    const LINE_PH = ['gear_line', 'w_l_fluoro', 'w_l_braid', 'gear_leader', 'gear_hook', 'gear_sinker'];
     if (worldTab === 'tech') body = '<div>' + TECHNIQUES.map((t, i) => '<details class="acc"' + (i === 0 ? ' open' : '') + '><summary><span>' + esc(t.t) + '<br><span class="muted small latin">' + esc(t.en) + '</span></span></summary><div class="body stack">' + (TECH_PH[i] ? wph(TECH_PH[i][0], TECH_PH[i][1]) : '') + '<p>' + esc(t.what) + '</p>' +
       '<dl class="kv" style="margin:0"><dt>الوقت</dt><dd>' + esc(t.when) + '</dd><dt>العدة</dt><dd>' + esc(t.gear) + '</dd></dl><ul style="margin:0;padding-inline-start:20px">' + t.tips.map(x => '<li>' + esc(x) + '</li>').join('') + '</ul></div></details>').join('') + '</div>';
     else if (worldTab === 'knots') body = '<div id="knotbody"></div>';
@@ -375,7 +375,7 @@
   }
   function toolKnots(el) {
     el.innerHTML = '<div class="stack"><p class="muted" style="margin:0">أهم عقد الصيد: بتستخدم في إيه وإزاي تتربط خطوة بخطوة. لمشاهدة الرسوم المتحركة لكل عقدة اضغط «شوف الحركة».</p><div class="geargrid">' +
-      FKNOTS.map((k, i) => '<article class="card knotcard stack">' + (({ 'Improved Clinch Knot': 'w_k_clinch', 'Dropper Loop': 'w_k_dropper', 'Bimini Twist': 'w_k_bimini' })[k.en] ? '<div class="knotphoto"><img loading="lazy" alt="' + esc(k.t) + ' (صورة حقيقية)" src="' + IMGS[({ 'Improved Clinch Knot': 'w_k_clinch', 'Dropper Loop': 'w_k_dropper', 'Bimini Twist': 'w_k_bimini' })[k.en]] + '"></div>' : '') + '<div class="knotart"><svg viewBox="' + (k.flip ? '-70 0 380 120' : '0 0 310 120') + '" role="img" aria-label="' + esc(k.t) + '">' + k.svg + '</svg></div>' +
+      FKNOTS.map((k, i) => '<article class="card knotcard stack">' + (({ 'Improved Clinch Knot': 'w_k_clinch', 'Dropper Loop': 'w_k_dropper', 'Bimini Twist': 'w_k_bimini', 'FG Knot': 'w_k_fg' })[k.en] ? '<div class="knotphoto"><img loading="lazy" alt="' + esc(k.t) + ' (صورة حقيقية)" src="' + IMGS[({ 'Improved Clinch Knot': 'w_k_clinch', 'Dropper Loop': 'w_k_dropper', 'Bimini Twist': 'w_k_bimini', 'FG Knot': 'w_k_fg' })[k.en]] + '"></div>' : '') + '<div class="knotart"><svg viewBox="' + (k.flip ? '-70 0 380 120' : '0 0 310 120') + '" role="img" aria-label="' + esc(k.t) + '">' + k.svg + '</svg></div>' +
         '<h2 class="h3"><span class="gearn">' + (i + 1) + '</span>' + esc(k.t) + ' <span class="muted small latin">' + esc(k.en) + '</span></h2><p style="margin:0">' + esc(k.use) + '</p>' +
         '<ol class="knotsteps">' + k.steps.map(t => '<li>' + esc(t) + '</li>').join('') + '</ol>' +
         '<a class="btn ghost small" target="_blank" rel="noopener" href="' + KNOT_BASE + k.u + '">شوف الحركة خطوة بخطوة</a></article>').join('') + '</div>' +

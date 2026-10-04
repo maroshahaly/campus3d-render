@@ -1454,6 +1454,21 @@ const PHOTO_CREDITS = {
 "by": "User:StromBer",
 "lic": "CC BY-SA 3.0",
 "src": "commons:File:BiminiKnotReep5WindgAlles.JPG"
+},
+"gear_polespear": {
+"by": "ParaScubaSailor",
+"lic": "CC BY-NC-SA 2.0",
+"src": "flickr:5418279474"
+},
+"w_k_fg": {
+"by": "Aen Tan",
+"lic": "CC BY-NC-SA 2.0",
+"src": "flickr:3903405424"
+},
+"w_l_fluoro": {
+"by": "Aen Tan",
+"lic": "CC BY-NC-SA 2.0",
+"src": "flickr:3903405424"
 }
 };
 /* فيديوهات قصيرة مضمّنة (vids.json بمعرّف النوع): مقاطع 8 ثواني بلا صوت من Pixabay (رخصة Pixabay: استخدام مجاني بلا إلزام بنسب)، اتراجعت لقطاتها يدويًا: بلا علامات مائية ولا أشخاص */
