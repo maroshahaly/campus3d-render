@@ -404,12 +404,14 @@
   function allFacts() {
     const loc = getLoc(), key = loc.lat.toFixed(2) + loc.lng.toFixed(2); if (FCACHE && FCACHE.k === key) return FCACHE.L;
     const L = [], add = (c, x) => { if (x) L.push([c, x]); };
-    spotsByDist(loc).forEach(o => { const s = o.s, P = (EG_PRES[s[0]] || []).filter(r => BYG[r[0]]), nm = s[1].split(' (')[0];
-      add('مكان', nm + ' على بُعد ' + fmtKm(o.km) + ' منك (' + WATER_L[s[4]] + '): ' + s[6]);
-      if (P.length) add('مكان', 'أكتر الأنواع تواجدًا في ' + nm + ': ' + P.slice(0, 4).map(r => spName(r[0]) + ' ' + r[1] + '%').join('، ') + '.');
-      if (P.length > 4) add('مكان', 'في ' + nm + ' كمان: ' + P.slice(4, 9).map(r => spName(r[0])).join('، ') + '.');
-      add('مكان', 'طبيعة ' + nm + ': ' + s[5].split(',').map(x => SPOT_T[x]).join(' و') + (s[4] === 'fw' ? '؛ مياه عذبة أو قليلة الملوحة.' : '؛ مياه مالحة.'));
-      const top = P[0] && BYG[P[0][0]]; if (top) add('مكان', 'لو رايح ' + nm + ' عشان ' + spName(top.id) + '، الطُّعم المناسب: ' + listNames(top.bt, BAIT).slice(0, 3).join('، ') + '.');
+    /* معلومات الأماكن: بس الأماكن القريبة منك فعلًا (أقل من 150 كم)، وكل معلومة فيها حاجة تعملها: إيه اللي بيطلع وتاخد إيه معاك */
+    const near = spotsByDist(loc).filter(o => o.km <= 150).slice(0, 6), dir = (a, b) => { const d = Math.atan2((b[1] - a[1]) * Math.cos(a[0] * Math.PI / 180), b[0] - a[0]) * 180 / Math.PI; return ['الشمال', 'الشمال الشرقي', 'الشرق', 'الجنوب الشرقي', 'الجنوب', 'الجنوب الغربي', 'الغرب', 'الشمال الغربي'][Math.round(((d + 360) % 360) / 45) % 8]; };
+    const tk = id => (typeof FISH_TACKLE !== 'undefined' && FISH_TACKLE.find(r => r[0] === id)) || null;
+    near.forEach((o, n) => { const s = o.s, nm = s[1].split(' (')[0], P = (EG_PRES[s[0]] || []).filter(r => BYG[r[0]]);
+      const inSeason = P.filter(r => BYG[r[0]].pk && BYG[r[0]].pk.indexOf(CUR + 1) > -1), top = (inSeason.length ? inSeason : P).slice(0, 3);
+      add('قريب منك', (n ? '' : 'أقرب مكان صيد ليك: ') + nm + ' — ' + fmtKm(o.km) + ' ناحية ' + dir([loc.lat, loc.lng], [s[2], s[3]]) + '. ' + (top.length ? (inSeason.length ? 'بيطلع فيه الموسم ده: ' : 'أكتر حاجة بتطلع فيه: ') + top.map(r => spName(r[0])).join('، ') + '.' : s[6]));
+      const t = top[0] && BYG[top[0][0]], r = t && tk(t.id), m = t && typeof FT_MORE !== 'undefined' && FT_MORE[t.id];
+      if (t) add('قريب منك', 'لو رايح ' + nm + ' عشان ' + spName(t.id) + ': ' + (r ? 'خيط ' + r[2] + '، سنارة ' + r[4] + '، ' + r[6] + '، ' : '') + 'وطُعم ' + (m && m.bait ? m.bait : listNames(t.bt, BAIT).slice(0, 3).join(' أو ')) + (t.tod ? '. أحسن وقت: ' + todText(t) : '') + '.');
     });
     const regs = regionsAt(loc), lv = s => { const m = monthScores(s, loc, { m: regs.m, f: regs.f }, null); return m ? m[CUR] : -1; };
     SG.slice().sort((a, b) => lv(b) - lv(a)).forEach(s => { const n = spName(s.id);
@@ -425,16 +427,16 @@
     FACTS.forEach(x => add('عامة', x));
     FCACHE = { k: key, L }; return L;
   }
-  function factHtml() { const L = allFacts(), i = store.get('fi', hashN(dayKey(), Math.min(40, L.length))) % L.length, on = store.get('fnote', false);
-    return '<section class="card fact" data-fi="' + i + '"><div class="row between"><b>🤔 هل تعرف؟ <span class="tag gold fcat">' + L[i][0] + '</span></b><span class="muted small num fcnt">' + (i + 1) + ' / ' + L.length + '</span></div>' +
-      '<p class="factx" style="margin:0">' + esc(L[i][1]) + '</p><div class="row between"><div class="row" style="gap:6px"><button class="btn ghost small" data-act="factstep" data-d="-1">→ السابقة</button><button class="btn ghost small" data-act="factstep" data-d="1">التالية ←</button></div>' +
+  function factHtml() { const L = allFacts(), i = store.get('fi', hashN(dayKey(), Math.min(12, L.length))) % L.length, on = store.get('fnote', false);
+    return '<section class="card fact" data-fi="' + i + '"><div class="row between"><b>🤔 هل تعرف؟ <span class="tag gold fcat">' + L[i][0] + '</span></b><span class="fnav"><button class="fstep" data-act="factstep" data-d="-1" aria-label="المعلومة السابقة">›</button><button class="fstep" data-act="factstep" data-d="1" aria-label="المعلومة التالية">‹</button></span></div>' +
+      '<p class="factx" style="margin:0">' + esc(L[i][1]) + '</p><div class="row between">' +
       '</div><div class="row" style="gap:8px;align-items:center"><label for="fint" class="small">🔔 إشعار بمعلومة:</label><select id="fint" class="finsel">' +
       FINT.map(o => '<option value="' + o[0] + '"' + (String(on ? store.get('fint', 1440) : 0) === String(o[0]) ? ' selected' : '') + '>' + o[1] + '</option>').join('') +
       (on && !FINT.some(o => o[0] === store.get('fint', 1440)) ? '<option value="' + store.get('fint') + '" selected>كل ' + store.get('fint') + ' دقيقة</option>' : '') + '</select></div></section>'; }
   const FINT = [[0, 'مقفولة'], [3, 'كل 3 دقايق'], [5, 'كل 5 دقايق'], [10, 'كل 10 دقايق'], [15, 'كل 15 دقيقة'], [30, 'كل نص ساعة'], [60, 'كل ساعة'], [180, 'كل 3 ساعات'], [300, 'كل 5 ساعات'], [600, 'كل 10 ساعات'], [900, 'كل 15 ساعة'], [1440, 'مرة في اليوم'], ['c', 'مدة تختارها انت…']];
   document.addEventListener('click', e => {
     const b = e.target.closest('[data-act="factstep"]');
-    if (b) { const c = b.closest('.fact'), L = allFacts(), i = (+c.dataset.fi + +b.dataset.d + L.length) % L.length; c.dataset.fi = i; store.set('fi', i); const p = c.querySelector('.factx'); p.style.opacity = 0; setTimeout(() => { p.textContent = L[i][1]; c.querySelector('.fcat').textContent = L[i][0]; c.querySelector('.fcnt').textContent = (i + 1) + ' / ' + L.length; p.style.opacity = 1; }, 160); return; }
+    if (b) { const c = b.closest('.fact'), L = allFacts(), i = (+c.dataset.fi + +b.dataset.d + L.length) % L.length; c.dataset.fi = i; store.set('fi', i); const p = c.querySelector('.factx'); p.style.opacity = 0; setTimeout(() => { p.textContent = L[i][1]; c.querySelector('.fcat').textContent = L[i][0]; p.style.opacity = 1; }, 160); return; }
   });
   document.addEventListener('change', async e => {
     if (e.target.id !== 'fint') return; let v = e.target.value;

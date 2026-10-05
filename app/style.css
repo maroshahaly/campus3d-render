@@ -450,7 +450,7 @@ a.card:hover, a.card:focus-visible { transform: translateY(-2px); box-shadow: 0 
   --ok: #6FE0A4; --oksoft: rgba(79,203,138,.18); --warn: #FFD27A; --warnsoft: rgba(240,181,74,.18); --bad: #FFA39B; --badsoft: rgba(255,138,128,.16);
   --goldsoft: rgba(245,197,66,.16); --lv0: rgba(255,255,255,.14); --lv1: #3E8FB0; --lv2: #6CC3DB; --lv3: #B7ECF7;
   background: linear-gradient(165deg, #0A2342 0%, #123E66 48%, #2F7FB0 100%) !important;
-  border: 1px solid rgba(232,190,80,.85) !important; color: var(--ink);
+  border: 2px solid rgba(232,190,80,.9) !important; color: var(--ink);
   box-shadow: 0 1px 0 rgba(255,255,255,.06) inset, 0 8px 22px rgba(6,24,44,.22);
 }
 .card a:not(.btn):not(.chip):not(.card), details.acc a:not(.btn):not(.chip) { color: #9FE3F2; }
@@ -494,7 +494,7 @@ a.card:hover, .fcard:hover, .qcard:hover { border-color: #F5C542 !important; box
 #main > div > .card, #main > div > section, #main .fishgrid > a, #main .geargrid > a, #main .grpgrid > a { animation: fadeUp .45s ease both; }
 #main .fishgrid > a:nth-child(2n), #main .geargrid > a:nth-child(2n) { animation-delay: .05s; }
 #main > div > :nth-child(2) { animation-delay: .05s; } #main > div > :nth-child(3) { animation-delay: .1s; } #main > div > :nth-child(4) { animation-delay: .15s; } #main > div > :nth-child(5) { animation-delay: .2s; }
-.hero::after { content: ""; position: absolute; inset: auto -20% -30px -20%; height: 60px; background: radial-gradient(60% 30px at 50% 0, rgba(245,197,66,.18), transparent); animation: shimmer 6s ease-in-out infinite; pointer-events: none; }
+.hero::after { content: none; }
 @keyframes shimmer { 50% { transform: translateX(8%); } }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 .finsel{min-height:36px;border-radius:10px;padding:2px 8px;background:#F7FBFD;color:#0A2230;border:1px solid rgba(232,190,80,.6)}
@@ -543,3 +543,8 @@ details.acc.tk { padding: 12px 14px; } details.acc.tk[open] summary { margin-bot
 .shpph .shpmini { position: absolute; z-index: 2; top: 4px; inset-inline-end: 4px; width: 46px; height: 31px; padding: 2px; border-radius: 7px; background: rgba(6,24,44,.78); color: #E6F1F4; border: 1px solid rgba(245,197,66,.6); }
 .shpph .shpmini svg { width: 100%; height: 100%; display: block; }
 .shpph .gearcr { z-index: 2; bottom: 3px; font-size: 8px !important; }
+/* أزرار المعلومة السابقة/التالية: صغيرة */
+.fnav { display: inline-flex; gap: 6px; }
+.fstep { width: 30px; height: 30px; border-radius: 50%; border: 1px solid rgba(232,190,80,.75); background: rgba(255,255,255,.06); color: #F3F8FB; font-size: 18px; line-height: 1; cursor: pointer; display: grid; place-items: center; padding: 0; }
+.fstep:hover { background: rgba(245,197,66,.22); }
+.hero { border: 2px solid rgba(232,190,80,.9); }
