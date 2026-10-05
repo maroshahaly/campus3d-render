@@ -872,7 +872,11 @@
     const loc = getLoc(), regs = regionsAt(loc), toks = norm(spQ).split(' ').filter(Boolean), qf = norm(spQ).replace(/ /g, '').length <= 2 ? 'nameHay' : 'hay';
     let rows = SG.filter(s => toks.every(t => s[qf].indexOf(t) > -1)).map(s => ({ s, sc: monthScores(s, loc, regs, null) }));
     if (spF === 'mine') rows = rows.filter(r => r.sc); else if (spF === 'now') rows = rows.filter(r => r.sc && r.sc[CUR] === 3); else if (spF === 'm') rows = rows.filter(r => r.s.h !== 'f' && grpOf(r.s) !== 'orn'); else if (spF === 'f') rows = rows.filter(r => r.s.h !== 'm' && grpOf(r.s) !== 'orn'); else if (spF === 'egypt') rows = rows.filter(r => inEgypt(r.s) && grpOf(r.s) !== 'orn'); else if (spF === 'redsea') rows = rows.filter(r => r.s.R.has('redsea')); else if (['shell', 'shark', 'crt', 'orn', 'mam'].indexOf(spF) > -1) rows = rows.filter(r => grpOf(r.s) === spF);
-    rows.sort((x, y) => ((y.sc ? y.sc[CUR] : -1) - (x.sc ? x.sc[CUR] : -1)) || x.s.ar.localeCompare(y.s.ar, 'ar'));
+    /* ترتيب البحث بالأهمية: الاسم مطابق تمامًا ← الاسم بيبدأ بالكلمة ← في الاسم ← في الأسماء التانية ← في الوصف */
+    const dl = t => norm(t).split(' ').map(w => w.replace(/^ال(?=..)/, '')).join(' '), qq = dl(spQ);
+    const rel = s => { if (!qq) return 0; const ar = dl(s.ar), main = dl(s.ar.split(' (')[0]); if (main === qq) return 0; if (main.indexOf(qq) === 0) return 1; if (ar.indexOf(qq) > -1) return 2; if (dl(s.nameHay).indexOf(qq) > -1) return 3; return 4; };
+    rows.forEach(r => { r.rel = rel(r.s); });
+    rows.sort((x, y) => (x.rel - y.rel) || ((y.sc ? y.sc[CUR] : -1) - (x.sc ? x.sc[CUR] : -1)) || x.s.ar.localeCompare(y.s.ar, 'ar'));
     const famKey = s => (s.fam || 'غير مصنّف').split(' — ')[0];
     if (spF === 'fam') rows.sort((x, y) => famKey(x.s).localeCompare(famKey(y.s), 'ar') || x.s.ar.localeCompare(y.s.ar, 'ar'));
     let lastFam = '';
@@ -1686,16 +1690,23 @@
   const addScript = src => new Promise((ok, no) => { const e = document.createElement('script'); e.src = src; e.onload = ok; e.onerror = no; document.head.appendChild(e); });
   /* نفس معالجة التدريب: الصورة كلها بدون قص داخل مربع 224 بخلفية رمادية، ومعاها نسخة معكوسة، والنتيجة متوسط البصمتين */
   async function embed2(sess, im) {
+    /* 3 لقطات (الصورة كاملة + قصّتين من النص) وكل لقطة معكوسة = 6 صور، ومتوسط البصمات عشان النتيجة تبقى ثابتة */
+    const VIEWS = [1, 0.86, 0.74], P = 224 * 224, N = VIEWS.length * 2, a = new Float32Array(N * 3 * P);
     const c = document.createElement('canvas'); c.width = c.height = 224; const x = c.getContext('2d', { willReadFrequently: true });
-    const w = im.naturalWidth || im.width, h = im.naturalHeight || im.height, k = 224 / Math.max(w, h);
-    x.fillStyle = '#808080'; x.fillRect(0, 0, 224, 224); x.drawImage(im, (224 - w * k) / 2, (224 - h * k) / 2, w * k, h * k);
-    const d = x.getImageData(0, 0, 224, 224).data, P = 224 * 224, a = new Float32Array(2 * 3 * P);
-    for (let y = 0; y < 224; y++) for (let xx = 0; xx < 224; xx++) { const o = (y * 224 + xx) * 4, i = y * 224 + xx, j = y * 224 + (223 - xx); for (let ch = 0; ch < 3; ch++) { a[ch * P + i] = d[o + ch] / 255; a[3 * P + ch * P + j] = d[o + ch] / 255; } }
-    const r = await sess.run({ x: new ort.Tensor('float32', a, [2, 3, 224, 224]) }), e = r.e.data, D = e.length / 2, v = new Float32Array(D);
-    let nn = 0; for (let i = 0; i < D; i++) { v[i] = e[i] + e[D + i]; nn += v[i] * v[i]; } nn = Math.sqrt(nn) || 1; for (let i = 0; i < D; i++) v[i] /= nn;
+    x.imageSmoothingEnabled = true; x.imageSmoothingQuality = 'high';
+    const W0 = im.naturalWidth || im.width, H0 = im.naturalHeight || im.height;
+    VIEWS.forEach((s, vi) => {
+      const cw = W0 * s, ch = H0 * s, sx = (W0 - cw) / 2, sy = (H0 - ch) / 2, k = 224 / Math.max(cw, ch);
+      x.fillStyle = '#808080'; x.fillRect(0, 0, 224, 224); x.drawImage(im, sx, sy, cw, ch, (224 - cw * k) / 2, (224 - ch * k) / 2, cw * k, ch * k);
+      const d = x.getImageData(0, 0, 224, 224).data, o1 = vi * 2 * 3 * P, o2 = o1 + 3 * P;
+      for (let y = 0; y < 224; y++) for (let xx = 0; xx < 224; xx++) { const o = (y * 224 + xx) * 4, i = y * 224 + xx, j = y * 224 + (223 - xx); for (let ch2 = 0; ch2 < 3; ch2++) { a[o1 + ch2 * P + i] = d[o + ch2] / 255; a[o2 + ch2 * P + j] = d[o + ch2] / 255; } }
+    });
+    const r = await sess.run({ x: new ort.Tensor('float32', a, [N, 3, 224, 224]) }), e = r.e.data, D = e.length / N, v = new Float32Array(D);
+    for (let n = 0; n < N; n++) { let q = 0; for (let i = 0; i < D; i++) q += e[n * D + i] * e[n * D + i]; q = Math.sqrt(q) || 1; for (let i = 0; i < D; i++) v[i] += e[n * D + i] / q; }
+    let nn = 0; for (let i = 0; i < D; i++) nn += v[i] * v[i]; nn = Math.sqrt(nn) || 1; for (let i = 0; i < D; i++) v[i] /= nn;
     return [v];
   }
-  let CLSW = null, CLSP = null;
+  let CLSW = null, CLSP = null, CLS_SIM = 1;
   function classify(vs) {
     if (!CLSW) { const bs = atob(SPCLS.w), q = new Int8Array(bs.length); for (let i = 0; i < bs.length; i++) q[i] = bs.charCodeAt(i) << 24 >> 24; CLSW = q; }
     const C = SPCLS.ids.length, D = SPCLS.d, z = new Float64Array(C);
@@ -1705,30 +1716,57 @@
       const best = new Float64Array(C).fill(-1e9), v = vs[0];
       for (let j = 0; j < SPCLS.pc.length; j++) { let d = 0; const o = j * D; for (let k = 0; k < D; k++) d += v[k] * CLSP[o + k]; d *= SPCLS.psc; const c = SPCLS.pc[j]; if (d > best[c]) best[c] = d; }
       for (let c = 0; c < C; c++) z[c] += SPCLS.pa * best[c];
+      let bm = -1; best.forEach(x => { if (x > bm) bm = x; }); CLS_SIM = bm;
     }
     let mx = -1e9; z.forEach(v => { mx = Math.max(mx, v); }); let sum = 0; const p = Array.from(z, v => { const e = Math.exp(v - mx); sum += e; return e; });
     return p.map((v, i) => ({ id: SPCLS.ids[i], p: v / sum })).sort((x, y) => y.p - x.p);
   }
   const matchCard = (s, src) => '<a class="card" href="#/sp/' + s.id + '" style="padding:6px;text-decoration:none"><img loading="lazy" src="' + src + '" alt="' + esc(s.ar) + '" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:8px"><div class="small" style="font-weight:600">' + esc(dispName(s)) + '</div><div class="muted small latin">' + esc(s.en) + '</div></a>';
+  /* قبل تحميل الـ90 ميجا: نسأل المستخدم، ونراعي الواي فاي */
+  const netType = () => { const c = navigator.connection || navigator.mozConnection || navigator.webkitConnection; return c ? (c.type || (c.saveData ? 'save' : '') || '') : ''; };
+  function askModel(box) {
+    const pref = store.get('mdlpref', ''), t = netType();
+    if (pref === 'always' || (pref === 'wifi' && (t === 'wifi' || t === 'ethernet'))) return Promise.resolve(true);
+    return new Promise(res => {
+      const net = t === 'wifi' || t === 'ethernet' ? '<span class="tag ok">انت متصل بواي فاي ✓</span>' : t === 'cellular' ? '<span class="tag warn">انت على باقة الموبايل</span>' : '';
+      box.innerHTML = '<div class="card stack" style="gap:8px"><b>التعرّف الدقيق محتاج تحميل نموذج مرة واحدة بس (حوالي 90 ميجا)</b><span class="small">بعد كده بيشتغل على طول ومن غير إنترنت. ' + net + '</span>' +
+        '<div class="row" style="gap:8px;flex-wrap:wrap"><button class="btn small" data-mdl="now">حمّل دلوقتي</button><button class="btn ghost small" data-mdl="wifi">حمّل لما أكون على واي فاي</button><button class="btn ghost small" data-mdl="no">لا، مقارنة سريعة بس</button></div>' +
+        '<label class="small row" style="gap:6px"><input type="checkbox" id="mdlrem"> افتكر اختياري</label></div>';
+      box.querySelectorAll('[data-mdl]').forEach(b => b.addEventListener('click', () => { const v = b.dataset.mdl, rem = box.querySelector('#mdlrem').checked;
+        if (v === 'now') { if (rem) store.set('mdlpref', 'always'); res(true); }
+        else if (v === 'wifi') { store.set('mdlpref', 'wifi'); if (t === 'wifi' || t === 'ethernet') res(true); else { toast('تمام، هنحمّله أول ما تستخدم التعرّف وانت على واي فاي.'); res(false); } }
+        else res(false); }, { once: true }));
+    });
+  }
+  document.addEventListener('click', e => { const b = e.target.closest('[data-act="photoqretry"]'); if (!b) return; const box = b.closest('.photoqres'), im = box && box.parentElement.querySelector('img'); if (im) { store.set('mdlpref', 'always'); photoMatch(im.src, box); } });
   async function photoMatch(url, box) {
     const im = await loadImg(url); if (!im) { box.innerHTML = '<div class="notice">تعذّر قراءة الصورة.</div>'; return; }
     try {
       if (typeof SPCLS === 'undefined') throw new Error('nocls');
       const cached = !!(await idbGet(MDL_KEY).catch(() => null));
-      box.innerHTML = '<div class="muted small">' + (cached ? 'جاري التعرّف…' : 'أول مرة بس: بنحمّل نموذج التعرّف (حوالي 90 ميجا) وبيتخزن على جهازك… <b class="mprog">0%</b>') + '</div>';
+      if (!cached) { const ok = await askModel(box); if (!ok) throw new Error('declined'); }
+      box.innerHTML = '<div class="muted small">' + (cached ? 'جاري التعرّف…' : 'بنحمّل نموذج التعرّف (حوالي 90 ميجا) مرة واحدة وبيتخزن على جهازك… <b class="mprog">0%</b>') + '</div>';
       const sess = await visModel(pc => { const e = box.querySelector('.mprog'); if (e) e.textContent = pc + '%'; });
       box.innerHTML = '<div class="muted small">جاري التعرّف…</div>';
       const vs = await embed2(sess, im);
-      const res = classify(vs).filter(r => BYG[r.id]).slice(0, 5), p0 = res[0].p;
-      const head = p0 >= 0.6 ? 'غالبًا دي: <b>' + esc(dispName(BYG[res[0].id])) + '</b>' : p0 >= 0.3 ? 'الأقرب: <b>' + esc(dispName(BYG[res[0].id])) + '</b> (مش متأكد تمامًا، قارن بالبدائل)' : 'مش متأكد: ممكن النوع مش ضمن الـ ' + SPCLS.ids.length + ' نوع في الدليل أو الصورة مش واضحة';
-      box.innerHTML = '<h3 class="h3" style="margin:0">نتيجة التعرّف</h3><div>' + head + '</div><div class="muted small">بنقارن شكل سمكتك وزعانفها ونقوشها بحوالي 10 آلاف صورة حقيقية لأنواع الدليل (مع 8 صور مرجعية لكل نوع للمطابقة المباشرة)، والتعرّف كله بيتم على جهازك. النسبة = درجة الثقة.</div>' +
-        '<div class="vargrid">' + res.map(r => { const sp = BYG[r.id], src = deckPhoto(sp) || img('sp_' + sp.id); return matchCard(sp, src).replace('</a>', '<div class="small" style="font-weight:700">' + Math.round(r.p * 100) + '%</div></a>'); }).join('') + '</div>';
+      const res = classify(vs).filter(r => BYG[r.id]).slice(0, 5), p0 = res[0].p, p1 = res[1] ? res[1].p : 0;
+      /* صارمين: بنقول اسم السمكة بس لو الثقة عالية وواضح إنها أحسن بكتير من التانية */
+      const fishy = CLS_SIM >= 0.55, sure = fishy && p0 >= 0.9 && p0 >= 5 * p1, maybe = fishy && !sure && p0 >= 0.45;
+      const n0 = '<a href="#/sp/' + res[0].id + '"><b>' + esc(dispName(BYG[res[0].id])) + '</b></a>';
+      const head = sure ? '<div class="notice ok">✓ غالبًا دي: ' + n0 + ' <span class="num">(' + Math.round(p0 * 100) + '%)</span></div>'
+        : maybe ? '<div class="notice info"><b>مش متأكد.</b> أقرب احتمال ' + n0 + '، بس ممكن تكون واحدة من التانيين. قارن الشكل والزعانف والنقوش بالصور تحت قبل ما تحكم.</div>'
+        : !fishy ? '<div class="notice warn"><b>مش شايف سمكة أعرفها في الصورة.</b> يا إما الصورة مش لسمكة، يا إما السمكة مش من ضمن الـ ' + SPCLS.ids.length + ' نوع اللي البرنامج يعرفهم. صوّر السمكة كاملة من الجنب في نور كويس.</div>'
+        : '<div class="notice warn"><b>مش قادر أحدد النوع بثقة.</b> ممكن النوع مش من ضمن الـ ' + SPCLS.ids.length + ' نوع اللي البرنامج يعرفهم، أو الصورة مش واضحة. جرّب صورة للسمكة كاملة من الجنب على خلفية سادة. دي أقرب الأشكال بس:</div>';
+      box.innerHTML = '<h3 class="h3" style="margin:0">نتيجة التعرّف</h3>' + head +
+        (fishy ? '<div class="vargrid">' + res.slice(0, 3).map(r => { const sp = BYG[r.id], src = deckPhoto(sp) || img('sp_' + sp.id); return matchCard(sp, src).replace('</a>', '<div class="small" style="font-weight:700">' + Math.round(r.p * 100) + '%</div></a>'); }).join('') + '</div>' : '') +
+        '<div class="muted small">التعرّف بالصورة بيساعد بس ومش نهائي: اتأكد من الشكل قبل ما تاكل أي سمكة، خصوصًا الأسماك السامة زي الأرنب.</div>';
     } catch (err) {
       try { console.warn('photoMatch fallback:', err && (err.stack || err.message || err)); } catch (e) {}
       const f = imgFeat(im), all = await spFeats();
       const top = all.map(e => ({ e, v: featSim(f, e.f) })).sort((a, b) => b.v - a.v).slice(0, 8);
-      box.innerHTML = '<h3 class="h3" style="margin:0">ترشيحات تقريبية (بدون إنترنت)</h3><div class="muted small">نموذج التعرّف محتاج إنترنت أول مرة بس عشان يتحمّل. لحد ما يتحمّل، دي مقارنة بسيطة باللون والنقوش فقط ودقتها ضعيفة، فاعتبرها بداية للبحث بس.</div>' +
-        '<div class="vargrid">' + top.map(x => matchCard(x.e.s, x.e.src)).join('') + '</div>';
+      const why = err && err.message === 'declined' ? 'اخترت ماتحمّلش نموذج التعرّف دلوقتي.' : 'نموذج التعرّف ماتحمّلش (محتاج إنترنت أول مرة بس).';
+      box.innerHTML = '<h3 class="h3" style="margin:0">مقارنة سريعة بالألوان (مش تعرّف)</h3><div class="notice warn">' + why + ' دي مقارنة بسيطة باللون والنقوش بس ومابتحددش النوع، فماتعتمدش عليها.</div>' +
+        '<div class="vargrid">' + top.slice(0, 4).map(x => matchCard(x.e.s, x.e.src)).join('') + '</div>' + '<button class="btn small" data-act="photoqretry">حمّل النموذج وجرّب التعرّف الدقيق</button>';
     }
   }
   function showPhotoQ(file, form) {

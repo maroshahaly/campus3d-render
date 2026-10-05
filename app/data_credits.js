@@ -1874,6 +1874,26 @@ const PHOTO_CREDITS = {
 "by": "サミー",
 "lic": "Public domain",
 "src": "commons:File:スプーン.jpg"
+},
+"sp_hake": {
+"by": "Gianmaria Bonari",
+"lic": "CC-BY",
+"src": "inat:337201610"
+},
+"sp_sole": {
+"by": "Roland Gromes",
+"lic": "CC-BY",
+"src": "inat:328665587"
+},
+"sp_horsemackerel": {
+"by": "invertebratist",
+"lic": "CC-BY",
+"src": "inat:107176950"
+},
+"sp_hairtail": {
+"by": "karimhaddad",
+"lic": "CC-BY",
+"src": "inat:34427090"
 }
 };
 /* فيديوهات قصيرة مضمّنة (vids.json بمعرّف النوع): مقاطع 8 ثواني بلا صوت من Pixabay (رخصة Pixabay: استخدام مجاني بلا إلزام بنسب)، اتراجعت لقطاتها يدويًا: بلا علامات مائية ولا أشخاص */
