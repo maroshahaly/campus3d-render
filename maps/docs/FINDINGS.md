@@ -171,3 +171,7 @@ Config `Navi_sd.inf` (DiskA/application/navi):
 - Diagnostic pack tests2/Egypt_Tests2.zip (MD5 179fef01...): 1_C_empty, 2_K_korean_tiles (real Korean parcels w/o road table cycled into Egypt slots),
   3_E_noL6 (v1.1 L0-L5), 4_D_L0-3. Awaiting device results.
 - install.exe (MIPS WinCE updater): verifies package header/data/option checksums (MD5 via CryptoAPI, install.crc, partition.opt), formats DiskA*/DiskA3; no runtime check of SD map files -> boot loop is not a map checksum failure.
+- DEVICE RESULT: all 4 tests (C empty, K korean tiles, E noL6, D L0-3) reboot too -> parcel content is NOT the cause.
+  Remaining: (1) spare card itself (copy problem / card binding) - control Z0 = untouched Korean hafp on spare card never tested;
+  (2) Egypt bbox/center in header (car now inside map, other files Korean); (3) our index writer. Next tests: Z0, then Z1 (maps/make_test_Z1.py:
+  original Korean hafp with only bbox+center patched).
