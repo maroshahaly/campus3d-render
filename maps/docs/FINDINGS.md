@@ -170,3 +170,4 @@ Config `Navi_sd.inf` (DiskA/application/navi):
 - MAP.hdr covers only DiskA2 files (no SD map files) -> no checksum on hafp there.
 - Diagnostic pack tests2/Egypt_Tests2.zip (MD5 179fef01...): 1_C_empty, 2_K_korean_tiles (real Korean parcels w/o road table cycled into Egypt slots),
   3_E_noL6 (v1.1 L0-L5), 4_D_L0-3. Awaiting device results.
+- install.exe (MIPS WinCE updater): verifies package header/data/option checksums (MD5 via CryptoAPI, install.crc, partition.opt), formats DiskA*/DiskA3; no runtime check of SD map files -> boot loop is not a map checksum failure.
