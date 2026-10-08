@@ -1,7 +1,7 @@
 /* موصل — service worker: التطبيق يفتح من غير نت بعد أول زيارة.
    غيّر VERSION مع أي تعديل في الملفات عشان الموبايلات تاخد التحديث. */
-const VERSION = "mosel-v3.0.0";
-const SHELL = ["./", "./index.html", "./app.js", "./data/conditions.js", "./manifest.json", "./icons/icon.svg", "./icons/icon-192.png"];
+const VERSION = "mosel-v3.0.1";
+const SHELL = ["./", "./index.html", "./app.js", "./data/conditions.js", "./manifest.json", "./icons/icon.svg", "./icons/icon-192.png", "./assets/body-male.jpg", "./assets/body-female.jpg"];
 
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(VERSION).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));
