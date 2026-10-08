@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>موصل — دليلك الطبي الأول</title>
-<meta name="description" content="موصل: حدد مكان الألم وأعراضك، واعرف الاحتمالات الأقرب والتخصص المناسب ومستوى الاستعجال — مع مراجع طبية لكل مرض.">
+<meta name="description" content="موصل: حدّد موضع الألم وأعراضك، واعرف الاحتمالات الأقرب والتخصص المناسب ومستوى الاستعجال، مع مراجع طبية لكل مرض.">
 <meta name="theme-color" content="#0D5C53" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0E1513" media="(prefers-color-scheme: dark)">
 <meta name="color-scheme" content="light dark">
@@ -162,6 +162,13 @@ a{color:var(--brand-ink);}
 .stage-head span{font-size:12px; color:var(--ink-3);}
 .body-wrap{position:relative; width:62%; max-width:250px; aspect-ratio:300/700; margin:0 auto;}
 .body-wrap > svg{width:100%; height:100%; display:block; overflow:visible;}
+.body-wrap.photo{aspect-ratio:1/2; width:70%; max-width:280px;}
+.body-wrap.photo img{position:absolute; inset:0; width:100%; height:100%; object-fit:fill; border-radius:18px; user-select:none; -webkit-user-drag:none;}
+.body-wrap.photo > svg{position:absolute; inset:0;}
+@media (prefers-color-scheme: light){ .body-wrap.photo img{mix-blend-mode:multiply;} }
+.body-wrap.photo .region{opacity:0;}
+.body-wrap.photo .region:hover, .body-wrap.photo .region:focus-visible, .body-wrap.photo .region.hot{opacity:.38;}
+.body-wrap.photo .leader{stroke-width:.35; stroke-dasharray:1 1; vector-effect:none;}
 .region{cursor:pointer; opacity:.16; transition:opacity .18s ease;}
 .region:hover, .region:focus-visible, .region.hot{opacity:.5; outline:none;}
 .pulse-dot{fill:#E5484D;}
@@ -355,7 +362,7 @@ a{color:var(--brand-ink);}
   <div class="cta-bar" id="ctaBar" hidden><button class="btn btn-primary btn-block" id="ctaBtn"></button></div>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
-<noscript><p style="padding:20px">التطبيق محتاج تفعيل JavaScript.</p></noscript>
+<noscript><p style="padding:20px">يحتاج التطبيق إلى تفعيل JavaScript.</p></noscript>
 
 <script src="data/conditions.js"></script>
 <script src="app.js"></script>

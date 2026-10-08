@@ -14,10 +14,10 @@ const MENTAL_HOTLINE = "08008880700";           // الخط الساخن للص�
 const PROFILE_KEY = "moselProfile";
 const MAX_FOLLOWUP_ROUNDS = 4;
 const QUICK_ACCESS = [
-  { key: "skin", title: "مشكلة في الجلد أو الشعر؟", sub: "حكة، طفح، حبوب، تساقط شعر" },
-  { key: "mental", title: "الصحة النفسية", sub: "قلق، اكتئاب، نوم، نوبات هلع" },
-  { key: "geriatric", title: "كبار السن", sub: "نسيان، توازن، وقعات، لخبطة مفاجئة" },
-  { key: "congenital", title: "عيوب خلقية ووراثية", sub: "أعراض من الولادة أو تاريخ عائلي" }
+  { key: "skin", title: "مشكلة في الجلد أو الشعر؟", sub: "حكة، طفح، حبوب، تساقط الشعر" },
+  { key: "mental", title: "الصحة النفسية", sub: "قلق، اكتئاب، أرق، نوبات هلع" },
+  { key: "geriatric", title: "صحة كبار السن", sub: "النسيان، التوازن، السقوط، التشوش المفاجئ" },
+  { key: "congenital", title: "العيوب الخلقية والوراثية", sub: "أعراض منذ الولادة أو تاريخ عائلي" }
 ];
 const CHRONIC_OPTIONS = ["سكر", "ضغط", "قلب", "ربو", "كلى", "كبد", "حساسية مزمنة"];
 
@@ -55,7 +55,7 @@ const normAr = s => String(s || "").toLowerCase()
 
 /* =========================================================
    رسمة الجسم (SVG) — viewBox 300×700، منظر أمامي
-   يمين المريض = شمال الصورة (زي أي أطلس تشريح)
+   يمين المريض = يسار الصورة (كما في أطالس التشريح)
    ========================================================= */
 const G = {
   torso: "M150 94 C128 94 104 96 94 108 C86 118 88 134 94 152 C100 176 110 200 113 222 C112 246 104 266 103 286 L105 302 C122 310 140 309 150 303 C160 309 178 310 195 302 L197 286 C196 266 188 246 187 222 C190 200 200 176 206 152 C212 134 214 118 206 108 C196 96 172 94 150 94 Z",
@@ -110,11 +110,17 @@ function bodyFigure(id, detailed) {
     <circle cx="150" cy="232" r="2.6" fill="var(--skin-line)" opacity=".7"/>` : ""}`;
 }
 
+/* مواضع العلامات والتسميات في الرسم البديل (SVG) — إحداثيات viewBox 300×700 */
+const SVG_GEO = {
+  head: { a: [150, 52], l: [252, 40] }, chest: { a: [150, 140], l: [252, 128] }, abdomen: { a: [150, 215], l: [252, 210] },
+  arm: { a: [60, 230], l: [36, 170] }, pelvis: { a: [150, 290], l: [44, 292] }, leg: { a: [128, 470], l: [40, 450] }
+};
+
 function bodyMapSvg() {
   const id = "bm";
   const r = Object.fromEntries(REGIONS.map(x => [x.key, x]));
   const reg = (key, inner) => `<g class="region" data-region="${key}" tabindex="0" role="button" aria-label="${esc(r[key].name)}" fill="${r[key].color}">${inner}</g>`;
-  return `<svg viewBox="0 0 300 700" role="group" aria-label="خريطة الجسم — دوس على مكان الألم">
+  return `<svg viewBox="0 0 300 700" role="group" aria-label="خريطة الجسم — اضغط على موضع الألم">
     ${bodyFigure(id, true)}
     <defs>
       <clipPath id="${id}-cT"><path d="${G.torso}"/></clipPath>
@@ -126,24 +132,86 @@ function bodyMapSvg() {
     ${reg("chest", `<rect x="80" y="100" width="140" height="84" clip-path="url(#${id}-cT)"/>`)}
     ${reg("abdomen", `<rect x="80" y="184" width="140" height="84" clip-path="url(#${id}-cT)"/>`)}
     ${reg("pelvis", `<rect x="90" y="268" width="120" height="58" clip-path="url(#${id}-cP)"/>`)}
-    <g class="pulse-g" aria-hidden="true">
-      ${REGIONS.map(x => `
-        <line class="leader" x1="${x.anchor.x}" y1="${x.anchor.y}" x2="${x.label.x}" y2="${x.label.y}"/>
-        <circle class="pulse-ring" cx="${x.anchor.x}" cy="${x.anchor.y}" r="5" style="animation-delay:${(REGIONS.indexOf(x) * .37).toFixed(2)}s"/>
-        <circle class="pulse-dot" cx="${x.anchor.x}" cy="${x.anchor.y}" r="4.5"/>`).join("")}
-    </g>
+    ${pulses(SVG_GEO, 5)}
   </svg>`;
 }
 
+function pulses(geo, r) {
+  return `<g class="pulse-g" aria-hidden="true">${REGIONS.map((x, i) => {
+    const g = geo[x.key];
+    return `<line class="leader" x1="${g.a[0]}" y1="${g.a[1]}" x2="${g.l[0]}" y2="${g.l[1]}"/>
+      <circle class="pulse-ring" cx="${g.a[0]}" cy="${g.a[1]}" r="${r}" style="animation-delay:${(i * .37).toFixed(2)}s"/>
+      <circle class="pulse-dot" cx="${g.a[0]}" cy="${g.a[1]}" r="${r * .9}"/>`;
+  }).join("")}</g>`;
+}
+
+/* =========================================================
+   خريطة الجسم الواقعية (صورة فوتوغرافية)
+   ---------------------------------------------------------
+   الصور في assets/ بنسبة 1:2 (عرض:ارتفاع). المناطق مرسومة فوقها
+   في نظام إحداثيات 100×200، فتبقى مطابقة لأي حجم شاشة.
+   إن لم تتوفر الصورة يعود التطبيق تلقائيًا إلى الرسم البديل.
+   ========================================================= */
+const BODY_PHOTOS = { male: "assets/body-male.jpg", female: "assets/body-female.jpg" };
+const PHOTO_GEO = {
+  male: {
+    shapes: {
+      head: '<ellipse cx="50" cy="18" rx="11" ry="17"/>',
+      chest: '<rect x="29" y="34" width="42" height="28" rx="7"/>',
+      abdomen: '<rect x="30" y="62" width="40" height="34" rx="6"/>',
+      pelvis: '<rect x="29" y="96" width="42" height="28" rx="6"/>',
+      arm: '<polygon points="29,35 21,40 18,70 15,96 13,114 21,119 24,100 27,74 30,52"/><polygon points="71,35 79,40 82,70 85,96 87,114 79,119 76,100 73,74 70,52"/>',
+      leg: '<polygon points="30,124 49,124 47,160 45,196 33,196 33,160"/><polygon points="70,124 51,124 53,160 55,196 67,196 67,160"/>'
+    },
+    geo: { head: { a: [50, 18], l: [80, 12] }, chest: { a: [50, 46], l: [86, 40] }, abdomen: { a: [50, 78], l: [86, 74] },
+           arm: { a: [21, 80], l: [10, 62] }, pelvis: { a: [50, 106], l: [14, 104] }, leg: { a: [40, 160], l: [14, 152] } }
+  },
+  female: {
+    shapes: {
+      head: '<ellipse cx="50" cy="20" rx="10" ry="17"/>',
+      chest: '<rect x="30" y="36" width="40" height="28" rx="7"/>',
+      abdomen: '<rect x="31" y="64" width="38" height="28" rx="6"/>',
+      pelvis: '<rect x="29" y="92" width="42" height="36" rx="6"/>',
+      arm: '<polygon points="30,37 22,42 20,70 18,96 17,114 25,116 27,96 29,72 31,54"/><polygon points="70,37 78,42 80,70 82,96 83,114 75,116 73,96 71,72 69,54"/>',
+      leg: '<polygon points="31,128 49,128 46,160 43,192 34,192 33,160"/><polygon points="69,128 51,128 54,160 57,192 66,192 67,160"/>'
+    },
+    geo: { head: { a: [50, 20], l: [80, 14] }, chest: { a: [50, 48], l: [86, 42] }, abdomen: { a: [50, 76], l: [86, 74] },
+           arm: { a: [23, 82], l: [10, 64] }, pelvis: { a: [50, 106], l: [14, 106] }, leg: { a: [40, 162], l: [14, 156] } }
+  }
+};
+const photoOK = {};
+for (const [sex, src] of Object.entries(BODY_PHOTOS)) {
+  const im = new Image();
+  im.onload = () => { photoOK[sex] = true; if (state.screen === "home") render(); };
+  im.src = src;
+}
+
+function bodyStage() {
+  const sex = state.profile.gender === "female" ? "female" : "male";
+  if (photoOK[sex]) {
+    const P = PHOTO_GEO[sex];
+    return `<div class="body-wrap photo">
+      <img src="${BODY_PHOTOS[sex]}" alt="" draggable="false">
+      <svg viewBox="0 0 100 200" preserveAspectRatio="none" role="group" aria-label="خريطة الجسم — اضغط على موضع الألم">
+        ${REGIONS.map(r => `<g class="region" data-region="${r.key}" tabindex="0" role="button" aria-label="${esc(r.name)}" fill="${r.color}">${P.shapes[r.key]}</g>`).join("")}
+        ${pulses(P.geo, 1.6)}
+      </svg>
+      ${tagLayer(P.geo, 100, 200)}
+    </div>`;
+  }
+  return `<div class="body-wrap">${bodyMapSvg()}${tagLayer(SVG_GEO, 300, 700)}</div>`;
+}
+const tagLayer = (geo, w, h) => `<div class="tag-layer">${REGIONS.map(r => `<button class="tag" data-region="${r.key}" style="left:${geo[r.key].l[0] / w * 100}%;top:${geo[r.key].l[1] / h * 100}%"><i style="background:${r.color}"></i>${esc(r.name)}</button>`).join("")}</div>`;
+
 /* رسمة صغيرة لمكان العضو — نفس الجسم بالظبط عشان التناسق */
 const ORGANS = {
-  kidney: { label: "مكان الكلى: في الضهر تحت آخر ضلوع، ناحيتين", m: [{ cx: 130, cy: 214, rx: 9, ry: 13 }, { cx: 170, cy: 214, rx: 9, ry: 13 }] },
-  appendix: { label: "مكان الزائدة: أسفل يمين البطن", m: [{ cx: 128, cy: 254, rx: 8, ry: 8 }] },
-  gallbladder: { label: "مكان المرارة: تحت الضلوع يمين، تحت الكبد", m: [{ cx: 133, cy: 192, rx: 8, ry: 10 }] },
-  liver: { label: "مكان الكبد: أعلى يمين البطن", m: [{ cx: 136, cy: 182, rx: 22, ry: 14 }] },
-  stomach: { label: "مكان المعدة: أعلى نص البطن مايل للشمال", m: [{ cx: 164, cy: 192, rx: 14, ry: 12 }] },
-  heart: { label: "مكان القلب: نص الصدر مايل للشمال", m: [{ cx: 158, cy: 150, rx: 13, ry: 15 }] },
-  lungs: { label: "مكان الرئتين: ناحيتين الصدر", m: [{ cx: 127, cy: 148, rx: 13, ry: 26 }, { cx: 173, cy: 148, rx: 13, ry: 26 }] }
+  kidney: { label: "موضع الكليتين: في الظهر أسفل الضلوع على الجانبين", m: [{ cx: 130, cy: 214, rx: 9, ry: 13 }, { cx: 170, cy: 214, rx: 9, ry: 13 }] },
+  appendix: { label: "موضع الزائدة الدودية: أسفل يمين البطن", m: [{ cx: 128, cy: 254, rx: 8, ry: 8 }] },
+  gallbladder: { label: "موضع المرارة: أسفل الضلوع اليمنى تحت الكبد", m: [{ cx: 133, cy: 192, rx: 8, ry: 10 }] },
+  liver: { label: "موضع الكبد: أعلى يمين البطن", m: [{ cx: 136, cy: 182, rx: 22, ry: 14 }] },
+  stomach: { label: "موضع المعدة: أعلى منتصف البطن مائلًا إلى اليسار", m: [{ cx: 164, cy: 192, rx: 14, ry: 12 }] },
+  heart: { label: "موضع القلب: منتصف الصدر مائلًا إلى اليسار", m: [{ cx: 158, cy: 150, rx: 13, ry: 15 }] },
+  lungs: { label: "موضع الرئتين: جانبا الصدر", m: [{ cx: 127, cy: 148, rx: 13, ry: 26 }, { cx: 173, cy: 148, rx: 13, ry: 26 }] }
 };
 let organSeq = 0;
 function organTag(key) {
@@ -327,7 +395,7 @@ function allowedZone(k) {
 /* =========================================================
    الشريط العلوي
    ========================================================= */
-const STEPS = ["المكان", "التخصص", "الأعراض", "النتيجة"];
+const STEPS = ["الموضع", "التخصص", "الأعراض", "النتيجة"];
 function stepIndex() {
   return { sections: 1, symptoms: 2, followup: 2, results: 3 }[state.screen];
 }
@@ -337,16 +405,16 @@ function renderTopbar() {
   if (state.screen === "home") {
     $topbar.innerHTML = `<div class="bar-row">
       <div class="brand"><div class="logo">${ico(I.pulse, 2.4).replace('stroke="currentColor"', 'stroke="#fff"')}</div>
-        <div><div class="brand-name">موصل</div><div class="brand-sub">حدد مكان الألم واعرف تتوجه لمين</div></div></div>
+        <div><div class="brand-name">موصل</div><div class="brand-sub">حدّد موضع الألم واعرف الطبيب المناسب</div></div></div>
       <button class="icon-btn" data-act="about" aria-label="عن موصل والمصادر">${ico(I.info)}</button>
     </div>`;
     return;
   }
   const z = ZONE[state.zone], r = REGIONS.find(x => x.key === state.region);
   const title = {
-    sections: `اختار القسم — ${r ? r.name : ""}`,
+    sections: `اختر التخصص — ${r ? r.name : ""}`,
     symptoms: z ? z.name : "",
-    followup: "أسئلة للتأكيد",
+    followup: "أسئلة للتأكد",
     results: "النتيجة",
     about: "عن موصل والمصادر"
   }[state.screen] || "";
@@ -382,15 +450,15 @@ function renderOnboarding() {
   $content.innerHTML = `<div class="fade-in">
     <div class="onb-hero">
       <div class="brand"><div class="logo">${ico(I.pulse, 2.4)}</div><div class="brand-name">موصل</div></div>
-      <h1>${state.editingProfile ? "تعديل بياناتك" : "اعرف أعراضك بتشاور على إيه — وتروح لمين"}</h1>
-      <p>3 خطوات: حدد مكان الألم، اختار أعراضك، وخد احتمالات مرتبة بمستوى الاستعجال والتخصص المناسب.</p>
+      <h1>${state.editingProfile ? "تعديل بياناتك" : "اعرف دلالة أعراضك والطبيب المناسب لحالتك"}</h1>
+      <p>ثلاث خطوات: حدّد موضع الألم، واختر أعراضك، واحصل على احتمالات مرتبة مع مستوى الاستعجال والتخصص المناسب.</p>
       <div class="trust-row">
-        <span>${ico(I.lock)} بياناتك على جهازك بس</span>
-        <span>${ico(I.book)} أكواد ICD-10 ومراجع</span>
+        <span>${ico(I.lock)} بياناتك على جهازك فقط</span>
+        <span>${ico(I.book)} رموز ICD-10 ومراجع</span>
         <span>${ico(I.clock)} أقل من دقيقتين</span>
       </div>
     </div>
-    <div class="field"><span class="flabel" id="lg">النوع</span>
+    <div class="field"><span class="flabel" id="lg">الجنس</span>
       <div class="seg" role="group" aria-labelledby="lg">
         <button data-gender="male" aria-pressed="${p.gender === "male"}">ذكر</button>
         <button data-gender="female" aria-pressed="${p.gender === "female"}">أنثى</button>
@@ -398,17 +466,17 @@ function renderOnboarding() {
     <div class="field"><div class="nums">
       ${fld("age", "العمر", "سنة", "35")}${fld("height", "الطول", "سم", "170")}${fld("weight", "الوزن", "كجم", "70")}
     </div></div>
-    <div class="field"><span class="flabel" id="lc">أمراض مزمنة <span class="muted small">(اختياري — بتحسّن دقة الترشيح)</span></span>
+    <div class="field"><span class="flabel" id="lc">الأمراض المزمنة <span class="muted small">(اختياري — تزيد دقة الترشيح)</span></span>
       <div class="chips" role="group" aria-labelledby="lc">${CHRONIC_OPTIONS.map(c => `<button class="chip" data-chronic="${esc(c)}" aria-pressed="${p.chronic.includes(c)}">${esc(c)}</button>`).join("")}</div></div>
     ${state.editingProfile ? "" : `<label class="consent"><input type="checkbox" id="consent" ${state.consent ? "checked" : ""}>
-      <span>فاهم إن موصل <b>أداة توجيه أولية مش تشخيص طبي</b>، ومايغنيش عن الكشف. في الطوارئ هتصل بالإسعاف ${EMERGENCY_NUMBER}.</span></label>`}
-    ${state.editingProfile ? `<div style="text-align:center;margin-top:8px"><button class="link-btn" data-act="cancel-edit">رجوع من غير حفظ</button></div>` : ""}
+      <span>أُقرّ بأن «موصل» <b>أداة توجيه أولية وليس تشخيصًا طبيًا</b>، ولا يغني عن زيارة الطبيب، وفي الطوارئ سأتصل بالإسعاف ${EMERGENCY_NUMBER}.</span></label>`}
+    ${state.editingProfile ? `<div style="text-align:center;margin-top:8px"><button class="link-btn" data-act="cancel-edit">رجوع دون حفظ</button></div>` : ""}
   </div>`;
   updateOnboardCta();
 }
 function updateOnboardCta() {
   const ok = profileValid(state.profile) && (state.editingProfile || state.consent);
-  setCta(state.editingProfile ? "حفظ التعديلات" : "يلا نبدأ", submitProfile, !ok);
+  setCta(state.editingProfile ? "حفظ التعديلات" : "ابدأ الآن", submitProfile, !ok);
 }
 function submitProfile() {
   if (!profileValid(state.profile)) return;
@@ -416,7 +484,7 @@ function submitProfile() {
   const wasEditing = state.editingProfile;
   state.editingProfile = false;
   go("home");
-  if (wasEditing) toast("اتحفظت بياناتك");
+  if (wasEditing) toast("حُفظت بياناتك");
 }
 
 function renderHome() {
@@ -442,34 +510,32 @@ function renderHome() {
     <div class="search" role="search">
       ${ico(I.search)}
       <label for="q" class="sr-only">ابحث عن عرض</label>
-      <input id="q" type="search" placeholder="ابحث عن عرض… مثلًا: حرقان، دوخة، ألم صدر" value="${esc(state.query)}" autocomplete="off">
+      <input id="q" type="search" placeholder="ابحث عن عرض… مثل: حرقان، دوخة، ألم في الصدر" value="${esc(state.query)}" autocomplete="off">
       <div id="qres" aria-live="polite"></div>
     </div>
 
     <div class="stage">
-      <div class="stage-head"><b>فين الألم؟</b><span>دوس على المكان في الجسم</span></div>
-      <div class="body-wrap">${bodyMapSvg()}
-        <div class="tag-layer">${REGIONS.map(r => `<button class="tag" data-region="${r.key}" style="left:${r.label.x / 300 * 100}%;top:${r.label.y / 700 * 100}%"><i style="background:${r.color}"></i>${esc(r.name)}</button>`).join("")}</div>
-      </div>
+      <div class="stage-head"><b>أين تشعر بالألم؟</b><span>اضغط على الموضع في الجسم</span></div>
+      ${bodyStage()}
     </div>
 
-    <div class="label">أو اختار من غير ما تحدد مكان</div>
+    <div class="label">أو اختر مباشرة دون تحديد موضع</div>
     ${quick}
 
     <details class="redflags">
-      <summary>${ico(I.alert)}علامات خطر — اتصل بالإسعاف ${EMERGENCY_NUMBER} فورًا${ico(I.chevD).replace("<svg", '<svg class="chev"')}</summary>
+      <summary>${ico(I.alert)}علامات الخطر — اتصل بالإسعاف ${EMERGENCY_NUMBER} فورًا${ico(I.chevD).replace("<svg", '<svg class="chev"')}</summary>
       <ul>
-        <li>ألم أو ضغط في الصدر أكتر من 15 دقيقة، أو بيوصل للدراع أو الفك مع عرق بارد</li>
-        <li>اعوجاج مفاجئ في الوش، ضعف أو تنميل في ناحية واحدة من الجسم، أو صعوبة في الكلام</li>
-        <li>صعوبة شديدة في التنفس، أو تورم في الشفايف أو اللسان</li>
-        <li>نزيف شديد مش بيقف، أو ترجيع دم، أو براز أسود</li>
-        <li>إغماء أو تشنجات أو لخبطة مفاجئة في الوعي</li>
+        <li>ألم أو ضغط في الصدر يستمر أكثر من 15 دقيقة، أو يمتد إلى الذراع أو الفك مع عرق بارد</li>
+        <li>اعوجاج مفاجئ في الوجه، أو ضعف أو خدر في جانب واحد من الجسم، أو صعوبة في الكلام</li>
+        <li>صعوبة شديدة في التنفس، أو تورّم في الشفتين أو اللسان</li>
+        <li>نزيف شديد لا يتوقف، أو قيء دموي، أو براز أسود</li>
+        <li>إغماء أو تشنجات أو تشوّش مفاجئ في الوعي</li>
         <li>أفكار عن إيذاء النفس</li>
       </ul>
       <a class="btn btn-danger btn-block" href="tel:${EMERGENCY_NUMBER}">${ico(I.phone)} اتصل بالإسعاف ${EMERGENCY_NUMBER}</a>
     </details>
 
-    <div class="disclaimer">${ico(I.shield)}<span>موصل أداة توجيه أولية وليست تشخيصًا طبيًا. النتايج مبنية على الأعراض اللي بتختارها ومراجع طبية عامة، والقرار النهائي للطبيب. <button class="link-btn" style="padding:0" data-act="about">إزاي بيشتغل؟</button></span></div>
+    <div class="disclaimer">${ico(I.shield)}<span>«موصل» أداة توجيه أولية وليس تشخيصًا طبيًا؛ فالنتائج مبنية على الأعراض التي تختارها وعلى مراجع طبية عامة، والقرار النهائي للطبيب. <button class="link-btn" style="padding:0" data-act="about">كيف يعمل؟</button></span></div>
     <div class="foot">الإصدار ${version}</div>
   </div>`;
   setCta(null);
@@ -504,25 +570,25 @@ function renderSearch() {
   box.innerHTML = `<div class="results-pop">${hits.length ? hits.slice(0, 8).map(h => h.s
     ? `<button data-zone="${h.z.key}" data-preset="${h.s.id}"><span>${hl(h.s.label)}</span><span class="z">${esc(h.z.name)}</span></button>`
     : `<button data-zone="${h.z.key}"><span>${ico(I.book).replace("<svg", '<svg style="width:16px;height:16px;flex:0 0 auto;color:var(--ink-3)"')} ${hl(h.c.name)}</span><span class="z">${esc(h.z.name)}</span></button>`
-  ).join("") : `<div class="empty">مالقيناش "${esc(state.query)}". جرّب كلمة تانية أو دوس على مكان الألم في الجسم.</div>`}</div>`;
+  ).join("") : `<div class="empty">لم نجد نتائج لـ«${esc(state.query)}». جرّب كلمة أخرى أو اضغط على موضع الألم في الجسم.</div>`}</div>`;
 }
 
 function renderSections() {
   const r = REGIONS.find(x => x.key === state.region);
   const zones = r.specialties.filter(allowedZone);
   $content.innerHTML = `<div class="fade-in">
-    <h1 class="h1">${esc(r.name)}: الأقرب لعرضك إيه؟</h1>
-    <p class="lead">اختار التخصص اللي شبه شكوتك. مش متأكد؟ ابدأ بالأول وتقدر ترجع.</p>
+    <h1 class="h1">${esc(r.name)}: أي التخصصات أقرب إلى شكواك؟</h1>
+    <p class="lead">اختر التخصص الأقرب إلى شكواك. إن لم تكن متأكدًا فابدأ بالأول، ويمكنك الرجوع لاحقًا.</p>
     <div class="zone-grid">${zones.map(k => {
       const z = ZONE[k];
       return `<button class="zone" data-zone="${k}"><span class="zi">${ico(z.icon)}</span><b>${esc(z.name)}</b>
-        <small>${DATA[k].conditions.length} حالة · ${DATA[k].symptoms.length} عرض</small>${statusBadge(z)}</button>`;
+        <small>${DATA[k].conditions.length} حالة · ${DATA[k].symptoms.length} عَرَضًا</small>${statusBadge(z)}</button>`;
     }).join("")}</div>
   </div>`;
   setCta(null);
 }
 const statusBadge = z => z.status === "validated"
-  ? `<span class="badge ok">${ico(I.check, 3)}متراجع على مصادر</span>`
+  ? `<span class="badge ok">${ico(I.check, 3)}مُراجَع وفق مصادر</span>`
   : `<span class="badge pending">${ico(I.clock)}قيد المراجعة الطبية</span>`;
 
 function symButton(s, attr) {
@@ -533,31 +599,31 @@ function symButton(s, attr) {
 function renderSymptoms() {
   const d = DATA[state.zone], z = ZONE[state.zone];
   $content.innerHTML = `<div class="fade-in">
-    <h1 class="h1">إيه الأعراض اللي عندك؟</h1>
-    <p class="lead">اختار كل اللي ينطبق عليك — كل ما تختار أدق، النتيجة تبقى أدق.</p>
-    ${z.status !== "validated" ? `<div class="info-note">${ico(I.info)}<span>القسم ده لسه قيد المراجعة الطبية — استخدم النتيجة كتوجيه مبدئي بس.</span></div>` : ""}
+    <h1 class="h1">ما الأعراض التي تشعر بها؟</h1>
+    <p class="lead">اختر كل ما ينطبق عليك؛ فكلما كان اختيارك أدق كانت النتيجة أدق.</p>
+    ${z.status !== "validated" ? `<div class="info-note">${ico(I.info)}<span>هذا القسم ما زال قيد المراجعة الطبية؛ فاستخدم النتيجة توجيهًا مبدئيًا فقط.</span></div>` : ""}
     <div role="group" aria-label="الأعراض">${d.symptoms.map(s => symButton(s, "data-sym")).join("")}</div>
   </div>`;
   const n = state.checked.size;
-  setCta(n ? `شوف النتيجة (${n} ${n === 1 ? "عرض" : "أعراض"})` : "اختار عرض واحد على الأقل", evaluate, !n);
+  setCta(n ? `اعرض النتيجة (${n} ${n === 1 ? "عَرَض" : "أعراض"})` : "اختر عَرَضًا واحدًا على الأقل", evaluate, !n);
 }
 
 function renderFollowup() {
   $content.innerHTML = `<div class="fade-in">
-    <h1 class="h1">كام سؤال عشان نفرّق بين الاحتمالات</h1>
-    <div class="info-note">${ico(I.bulb)}<span>فيه أكتر من احتمال قريب من بعض. إجابتك هنا — حتى لو "لأ" — بتساعد نستبعد اللي مش مناسب.</span></div>
+    <h1 class="h1">أسئلة قليلة للتمييز بين الاحتمالات</h1>
+    <div class="info-note">${ico(I.bulb)}<span>هناك أكثر من احتمال متقارب، وإجابتك — حتى لو كانت «لا» — تساعدنا على استبعاد غير المناسب.</span></div>
     ${state.followup.map(q => {
       const a = state.answers[q.id];
       return `<div class="q"><p>${esc(q.label)}${q.red ? ` <span class="badge pending" style="background:var(--danger-bg);color:var(--danger-ink)">علامة خطر</span>` : ""}</p>
         <div class="opts" role="group" aria-label="${esc(q.label)}">
-          <button class="yes" data-ans="yes" data-q="${q.id}" aria-pressed="${a === "yes"}">أيوه</button>
-          <button class="no" data-ans="no" data-q="${q.id}" aria-pressed="${a === "no"}">لأ</button>
-          <button class="unsure" data-ans="unsure" data-q="${q.id}" aria-pressed="${a === "unsure"}">مش متأكد</button>
+          <button class="yes" data-ans="yes" data-q="${q.id}" aria-pressed="${a === "yes"}">نعم</button>
+          <button class="no" data-ans="no" data-q="${q.id}" aria-pressed="${a === "no"}">لا</button>
+          <button class="unsure" data-ans="unsure" data-q="${q.id}" aria-pressed="${a === "unsure"}">لست متأكدًا</button>
         </div></div>`;
     }).join("")}
-    <div style="text-align:center"><button class="link-btn" data-act="skip">تخطّى وشوف النتيجة دلوقتي</button></div>
+    <div style="text-align:center"><button class="link-btn" data-act="skip">تخطَّ واعرض النتيجة الآن</button></div>
   </div>`;
-  setCta("حدّث النتيجة", commitAnswers, false);
+  setCta("حدِّث النتيجة", commitAnswers, false);
 }
 
 /* المراجع: روابط بحث مباشر في مصادر موثوقة (مابتتكسرش) + كود ICD-10 */
@@ -571,7 +637,7 @@ function refsFor(c) {
     { name: "StatPearls", src: "NCBI Bookshelf — مرجع للأطباء", url: `https://www.ncbi.nlm.nih.gov/books/?term=${q}+StatPearls` }
   ];
   if (c.cui) list.push({ name: `UMLS · ${c.cui}`, src: "Unified Medical Language System", url: `https://uts.nlm.nih.gov/uts/umls/concept/${c.cui}` });
-  return `<details class="refs"><summary>${ico(I.book)}المراجع والأكواد (${list.length})</summary><ul>
+  return `<details class="refs"><summary>${ico(I.book)}المراجع والرموز (${list.length})</summary><ul>
     ${list.map(r => `<li>${ico(I.ext)}<a href="${r.url}" target="_blank" rel="noopener noreferrer">${esc(r.name)}</a><small>${esc(r.src)}</small></li>`).join("")}
   </ul></details>`;
 }
@@ -584,7 +650,7 @@ function condCard(c, rank, isTop) {
       <div class="kicker">
         <span class="rank">${isTop ? "الاحتمال الأقرب" : "#" + rank}</span>
         <span class="badge code">ICD-10 ${esc(c.icd10)}</span>
-        ${c.flag ? `<span class="badge" style="background:var(--danger-bg);color:var(--danger-ink)">${ico(I.alert)}ممكن تكون طارئة</span>` : ""}
+        ${c.flag ? `<span class="badge" style="background:var(--danger-bg);color:var(--danger-ink)">${ico(I.alert)}قد تكون طارئة</span>` : ""}
         ${!isTop ? ico(I.chevD).replace("<svg", '<svg class="expand" style="margin-inline-start:auto"') : ""}
       </div>
       <h3 class="cond-name">${esc(c.name)}</h3>
@@ -592,14 +658,14 @@ function condCard(c, rank, isTop) {
       <div class="meter"><div class="track"><div class="fill" style="width:${c.pct}%"></div></div><span class="pct">${c.pct}%</span><span class="lvl">${level(c.pct)}</span></div>
     </${isTop ? "div" : "button"}>
     ${open ? `<div class="cond-body">
-      ${c.reasons.length ? `<span class="risk">${ico(I.user)}زادت شوية بسبب: ${c.reasons.map(esc).join("، ")}</span>` : ""}
+      ${c.reasons.length ? `<span class="risk">${ico(I.user)}ارتفعت قليلًا بسبب: ${c.reasons.map(esc).join("، ")}</span>` : ""}
       ${c.organ ? organTag(c.organ) : ""}
-      <div class="blk why"><span class="bl">${ico(I.list)}ليه رشحناه؟</span>
-        ${c.note ? esc(c.note) : "بناءً على تطابق الأعراض دي:"}
+      <div class="blk why"><span class="bl">${ico(I.list)}لماذا رُشِّح؟</span>
+        ${c.note ? esc(c.note) : "بناءً على تطابق الأعراض التالية:"}
         <div class="matched">${c.matchedSyms.map(s => `<span>✓ ${esc(s.label)}</span>`).join("")}${c.deniedSyms.map(s => `<span class="miss">${esc(s.label)}</span>`).join("")}</div>
       </div>
-      <div class="blk def"><span class="bl">${ico(I.info)}إيه هو؟</span>${esc(c.def)}</div>
-      <div class="blk tx"><span class="bl">${ico(I.steth)}إزاي بيتعالج؟</span>${esc(c.treatment)}</div>
+      <div class="blk def"><span class="bl">${ico(I.info)}ما هو؟</span>${esc(c.def)}</div>
+      <div class="blk tx"><span class="bl">${ico(I.steth)}كيف يُعالَج؟</span>${esc(c.treatment)}</div>
       <div class="small muted" style="margin-top:8px">مستوى الاستعجال المعتاد: <b>${TRIAGE[c.triage].label}</b>${reviewPending ? " · المحتوى قيد المراجعة الطبية" : ""}</div>
       ${refsFor(c)}
     </div>` : ""}
@@ -629,56 +695,56 @@ function renderResults() {
   $content.innerHTML = `<div class="fade-in">
     <div class="print-only"><h2>تقرير موصل — ${new Date().toLocaleDateString("ar-EG")}</h2></div>
     ${tri.crisis ? `<div class="alert crisis" role="alert">${ico(I.heart).replace("<svg", '<svg class="ai"')}<div>
-      <b>إنت مش لوحدك — ومحتاج تتكلم مع حد دلوقتي</b>
-      <p>الأفكار دي ليها علاج ومساعدة. كلم الخط الساخن للصحة النفسية (مجاني وسري)، أو حد بتثق فيه. لو في خطر حالًا اتصل بالإسعاف ${EMERGENCY_NUMBER}.</p>
+      <b>لست وحدك — تحدّث مع أحد الآن</b>
+      <p>لهذه الأفكار علاج ومساعدة متاحة. اتصل بالخط الساخن للصحة النفسية (مجاني وسري)، أو بشخص تثق به. وإذا كنت في خطر الآن فاتصل بالإسعاف ${EMERGENCY_NUMBER}.</p>
       <div class="btn-row"><a class="btn" href="tel:${MENTAL_HOTLINE}">${ico(I.phone)} ${MENTAL_HOTLINE}</a><a class="btn" href="tel:${EMERGENCY_NUMBER}">${ico(I.phone)} ${EMERGENCY_NUMBER}</a></div></div></div>` : ""}
     ${isEmergency ? `<div class="alert danger" role="alert">${ico(I.alert).replace("<svg", '<svg class="ai"')}<div>
-      <b>الأعراض دي محتاجة طوارئ</b>
-      <p>${tri.redSym.length ? "اخترت علامة خطر: " + tri.redSym.map(s => esc(s.label)).join("، ") + "." : "فيه احتمال لحالة طارئة."} ماتستناش — اتصل بالإسعاف أو روح أقرب مستشفى.</p>
+      <b>هذه الأعراض تستدعي الطوارئ</b>
+      <p>${tri.redSym.length ? "اخترت علامة خطر: " + tri.redSym.map(s => esc(s.label)).join("، ") + "." : "هناك احتمال لحالة طارئة."} لا تنتظر؛ اتصل بالإسعاف أو توجّه إلى أقرب مستشفى.</p>
       <a class="btn" href="tel:${EMERGENCY_NUMBER}">${ico(I.phone)} اتصل ${EMERGENCY_NUMBER}</a></div></div>` : ""}
 
-    <section class="triage t-${T.tone}" aria-label="الخطوة الجاية">
-      <div class="tl">${ico(toneIcon)}الخطوة الجاية</div>
+    <section class="triage t-${T.tone}" aria-label="الخطوة التالية">
+      <div class="tl">${ico(toneIcon)}الخطوة التالية</div>
       <h2>${T.label}</h2>
       <p>${T.action}</p>
       <div class="spec">${ico(I.steth)}<span>التخصص المقترح: <b>${esc(z.name)}</b></span></div>
     </section>
 
     <div class="summary-card">
-      <div class="sh"><span>الأعراض اللي اخترتها (${picked.length})</span><button class="link-btn" style="padding:0;font-size:12.5px" data-act="edit-sym">تعديل</button></div>
+      <div class="sh"><span>الأعراض التي اخترتها (${picked.length})</span><button class="link-btn" style="padding:0;font-size:12.5px" data-act="edit-sym">تعديل</button></div>
       <div class="sel-chips">${picked.map(s => `<span class="sel-chip">${esc(s.label)}<button data-remove="${s.id}" aria-label="شيل ${esc(s.label)}">${ico(I.x, 2.6)}</button></span>`).join("")}</div>
     </div>
 
-    ${top ? condCard(top, 1, true) : `<div class="card"><b>مفيش تطابق واضح</b><p class="muted small" style="margin:6px 0 0">الأعراض اللي اخترتها مش بتشاور على حالة محددة في القسم ده. جرّب ترجع وتختار أعراض تانية، أو اكشف عند ${esc(z.name)}.</p></div>`}
+    ${top ? condCard(top, 1, true) : `<div class="card"><b>لا يوجد تطابق واضح</b><p class="muted small" style="margin:6px 0 0">لا تشير الأعراض التي اخترتها إلى حالة محددة في هذا القسم. جرّب الرجوع واختيار أعراض أخرى، أو راجع طبيبًا في تخصص ${esc(z.name)}.</p></div>`}
 
-    ${rest.length ? `<div class="more-hd"><b>احتمالات تانية</b><span class="muted small">دوس عشان التفاصيل</span></div>
+    ${rest.length ? `<div class="more-hd"><b>احتمالات أخرى</b><span class="muted small">اضغط لعرض التفاصيل</span></div>
       ${rest.map((c, i) => condCard(c, i + 2, false)).join("")}` : ""}
 
     <div class="btn-row no-print" style="margin-top:16px">
-      <button class="btn btn-ghost" data-act="share">${ico(I.share)} شارك التقرير</button>
-      <button class="btn btn-ghost" data-act="print">${ico(I.print)} اطبع للدكتور</button>
+      <button class="btn btn-ghost" data-act="share">${ico(I.share)} مشاركة التقرير</button>
+      <button class="btn btn-ghost" data-act="print">${ico(I.print)} طباعة للطبيب</button>
     </div>
     <button class="btn btn-primary btn-block no-print" style="margin-top:10px" data-act="restart">${ico(I.restart)} فحص جديد</button>
 
-    <div class="disclaimer">${ico(I.shield)}<span>النسب دي درجة تطابق بين أعراضك والأعراض المعروفة لكل حالة — مش احتمال إحصائي ولا تشخيص. ${z.status === "validated" ? "القسم ده اتراجع على مصادر طبية" : "القسم ده لسه قيد المراجعة الطبية"}. افتح "المراجع" تحت أي حالة عشان تقرا من المصدر.</span></div>
+    <div class="disclaimer">${ico(I.shield)}<span>هذه النسب درجة تطابق بين أعراضك والأعراض المعروفة لكل حالة، وليست احتمالًا إحصائيًا ولا تشخيصًا. ${z.status === "validated" ? "راجعنا هذا القسم وفق مصادر طبية" : "هذا القسم ما زال قيد المراجعة الطبية"}. افتح «المراجع» أسفل أي حالة للقراءة من المصدر.</span></div>
   </div>`;
   setCta(null);
 }
 
 function renderAbout() {
-  const zoneRows = ZONES.map(z => `<tr><td>${esc(z.name)}</td><td>${DATA[z.key].conditions.length}</td><td>${z.status === "validated" ? `<span class="badge ok">متراجع</span>` : `<span class="badge pending">قيد المراجعة</span>`}</td></tr>`).join("");
+  const zoneRows = ZONES.map(z => `<tr><td>${esc(z.name)}</td><td>${DATA[z.key].conditions.length}</td><td>${z.status === "validated" ? `<span class="badge ok">مُراجَع</span>` : `<span class="badge pending">قيد المراجعة</span>`}</td></tr>`).join("");
   const total = ZONES.reduce((a, z) => a + DATA[z.key].conditions.length, 0);
   const sources = Object.entries(ZONE_SOURCES).flatMap(([k, arr]) => arr.map(s => `<li><a href="${s.url}" target="_blank" rel="noopener noreferrer">${esc(s.name)}</a> <span class="muted small">(${esc(ZONE[k].name)})</span></li>`)).join("");
   $content.innerHTML = `<div class="fade-in about">
-    <h1 class="h1">إزاي موصل بيشتغل؟</h1>
-    <p>موصل بيقارن الأعراض اللي بتختارها بمكتبة فيها <b>${total} حالة</b> في <b>${ZONES.length} تخصص</b>، كل حالة مربوطة بكود <b>ICD-10</b> العالمي من منظمة الصحة العالمية.</p>
+    <h1 class="h1">كيف يعمل «موصل»؟</h1>
+    <p>يقارن «موصل» الأعراض التي تختارها بمكتبة تضم <b>${total} حالة</b> في <b>${ZONES.length} تخصصًا</b>، وكل حالة مرتبطة برمز <b>ICD-10</b> الدولي الصادر عن منظمة الصحة العالمية.</p>
     <h2>خطوات التقييم</h2>
     <ol>
-      <li><b>التطابق:</b> كل عرض ليه وزن (1–3) حسب قد إيه هو مميز للحالة.</li>
-      <li><b>التفسير:</b> الحالة اللي بتفسر أعراض أكتر من اللي اخترتها بتاخد درجة أعلى.</li>
-      <li><b>الاستبعاد:</b> لو جاوبت "لأ" على سؤال تأكيدي، الحالات اللي بتعتمد على العرض ده بتنزل.</li>
-      <li><b>عوامل الخطورة:</b> السن والنوع والوزن والأمراض المزمنة بتزوّد الدرجة شوية (لحد 10%) — وبس لو فيه تطابق أعراض أصلًا.</li>
-      <li><b>الحد الأقصى 95%:</b> الأعراض لوحدها عمرها ما تأكد تشخيص — الفحص والتحاليل هم اللي بيأكدوا.</li>
+      <li><b>التطابق:</b> لكل عرض وزن من 1 إلى 3 بحسب درجة تمييزه للحالة.</li>
+      <li><b>التفسير:</b> الحالة التي تفسّر عددًا أكبر من الأعراض المختارة تنال درجة أعلى.</li>
+      <li><b>الاستبعاد:</b> إذا أجبت بـ«لا» عن سؤال تأكيدي، تنخفض درجة الحالات المعتمدة على ذلك العرض.</li>
+      <li><b>عوامل الخطورة:</b> العمر والجنس والوزن والأمراض المزمنة ترفع الدرجة قليلًا (حتى 10%)، وذلك فقط عند وجود تطابق في الأعراض.</li>
+      <li><b>الحد الأقصى 95%:</b> الأعراض وحدها لا تؤكد تشخيصًا أبدًا؛ فالفحص والتحاليل هي التي تؤكده.</li>
     </ol>
     <h2>مستويات الاستعجال</h2>
     <div class="legend-t">${Object.values(TRIAGE).map(t => `<div class="t-${t.tone}"><b>${t.label}:</b> ${t.action}</div>`).join("")}</div>
@@ -692,9 +758,9 @@ function renderAbout() {
       ${sources}
     </ul>
     <h2>خصوصيتك</h2>
-    <p>بياناتك (السن والطول والوزن والأمراض المزمنة) بتتحفظ على جهازك بس ومش بتتبعت لأي سيرفر. الأعراض مش بتتحفظ خالص.</p>
-    <div class="btn-row"><button class="btn btn-ghost" data-act="edit">${ico(I.user)} تعديل بياناتي</button><button class="btn btn-ghost" data-act="wipe">${ico(I.x)} امسح بياناتي</button></div>
-    <div class="disclaimer">${ico(I.shield)}<span>موصل أداة توجيه وتثقيف صحي، مش جهاز طبي ومش بديل عن الطبيب. المحتوى محتاج مراجعة واعتماد أطباء متخصصين قبل الاستخدام الواسع.</span></div>
+    <p>تُحفظ بياناتك (العمر والطول والوزن والأمراض المزمنة) على جهازك فقط ولا تُرسَل إلى أي خادم، ولا تُحفظ الأعراض إطلاقًا.</p>
+    <div class="btn-row"><button class="btn btn-ghost" data-act="edit">${ico(I.user)} تعديل بياناتي</button><button class="btn btn-ghost" data-act="wipe">${ico(I.x)} حذف بياناتي</button></div>
+    <div class="disclaimer">${ico(I.shield)}<span>«موصل» أداة توجيه وتثقيف صحي، وليس جهازًا طبيًا ولا بديلًا عن الطبيب، ويحتاج محتواه إلى مراجعة أطباء متخصصين واعتمادهم قبل الاستخدام الواسع.</span></div>
     <div class="foot">الإصدار ${version}</div>
   </div>`;
   setCta(null);
@@ -710,9 +776,9 @@ function reportText() {
     `${p.gender === "male" ? "ذكر" : "أنثى"}، ${p.age} سنة، ${p.height} سم، ${p.weight} كجم${p.chronic.length ? "، أمراض مزمنة: " + p.chronic.join("، ") : ""}`,
     `التخصص: ${z.name}`,
     `الأعراض: ${d.symptoms.filter(s => state.checked.has(s.id)).map(s => s.label).join("، ")}`,
-    state.denied.size ? `نفى: ${d.symptoms.filter(s => state.denied.has(s.id)).map(s => s.label).join("، ")}` : "",
+    state.denied.size ? `أعراض نفاها: ${d.symptoms.filter(s => state.denied.has(s.id)).map(s => s.label).join("، ")}` : "",
     `الاحتمالات: ${scored.map(c => `${c.name} (${c.en}, ICD-10 ${c.icd10}) ${c.pct}%`).join(" | ")}`,
-    `الخطوة الجاية: ${tri.label}`,
+    `الخطوة التالية: ${tri.label}`,
     `— أداة توجيه وليست تشخيصًا.`
   ].filter(Boolean).join("\n");
 }
@@ -721,8 +787,8 @@ async function shareReport() {
   try {
     if (navigator.share) { await navigator.share({ title: "تقرير موصل", text }); return; }
   } catch (e) { if (e && e.name === "AbortError") return; }
-  try { await navigator.clipboard.writeText(text); toast("اتنسخ التقرير — الصقه في أي رسالة"); }
-  catch (e) { toast("مقدرناش ننسخ — جرّب الطباعة"); }
+  try { await navigator.clipboard.writeText(text); toast("نُسخ التقرير؛ يمكنك لصقه في أي رسالة"); }
+  catch (e) { toast("تعذّر النسخ؛ جرّب الطباعة"); }
 }
 
 /* =========================================================
@@ -775,7 +841,7 @@ document.addEventListener("click", e => {
     case "share": return shareReport();
     case "print": return window.print();
     case "wipe":
-      if (!confirm("هتمسح بياناتك من الجهاز ده؟")) return;
+      if (!confirm("هل تريد حذف بياناتك من هذا الجهاز؟")) return;
       try { localStorage.removeItem(PROFILE_KEY); } catch (err) { /* ignore */ }
       state.profile = { gender: null, age: "", height: "", weight: "", chronic: [] };
       state.consent = false; resetCase(); return go("onboarding");
