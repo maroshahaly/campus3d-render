@@ -52,7 +52,7 @@ open(OUT + '/artifact.html', 'w', encoding='utf-8').write(frag)
 # 2) Standalone
 head = ('<!doctype html>\n<html lang="ar" dir="rtl">\n<head>\n<meta charset="utf-8">\n'
         '<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">\n'
-        '<meta name="theme-color" content="#0A3B4C">\n<title>' + TITLE + '</title>\n'
+        '<meta name="theme-color" content="#0A3B4C">\n<meta name="copyright" content="© 2026 Maro Shahaly — جميع الحقوق محفوظة">\n<title>' + TITLE + '</title>\n'
         '<meta name="mobile-web-app-capable" content="yes">\n'
         '<meta name="apple-mobile-web-app-capable" content="yes">\n'
         '<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">\n'

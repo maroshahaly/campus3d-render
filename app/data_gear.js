@@ -1,3 +1,4 @@
+/*! الصنّارة (دليل الصياد) — © 2026 Maro Shahaly. جميع الحقوق محفوظة. يُمنع النسخ أو إعادة النشر دون إذن كتابي. */
 /* قائمة «أدوات الصياد» مرتّبة من الأصغر للأكبر. img = صورة حقيقية مضمّنة (imgs.json بمفتاح gear_<id>)، svg = رسم توضيحي نظيف للأدوات اللي مالقيناش لها صورة حقيقية بلا علامات ولا أشخاص */
 const GEAR_SVG = {
   swivel: '<g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"><ellipse cx="60" cy="60" rx="14" ry="22"/><path d="M60 38V22M60 82v16"/><circle cx="60" cy="14" r="8"/><path d="M60 98c-12 0-14 14-4 18l10 4"/><path d="M68 104l-6 14"/></g>',

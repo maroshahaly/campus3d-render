@@ -1,3 +1,4 @@
+/*! الصنّارة (دليل الصياد) — © 2026 Maro Shahaly. جميع الحقوق محفوظة. يُمنع النسخ أو إعادة النشر دون إذن كتابي. */
 /* عقد الصيد: رسومات مرسومة خصيصًا للتطبيق (مش منقولة)، ولكل عقدة رابط للرسوم المتحركة خطوة بخطوة على animatedknots.com */
 const KNOT_BASE = 'https://www.animatedknots.com/';
 const KNOT_EYE = (x, y) => '<g fill="none" stroke="#7E8894" stroke-width="5"><ellipse cx="' + x + '" cy="' + y + '" rx="14" ry="10"/></g><path d="M' + (x + 14) + ' ' + y + ' H' + (x + 70) + '" stroke="#7E8894" stroke-width="6" stroke-linecap="round"/>';
