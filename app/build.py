@@ -18,6 +18,19 @@ vids = js_json(json.load(open(SP + '/vids.json', encoding='utf-8'))) if os.path.
 css = rd(A + '/leaflet.css') + '\n' + rd(A + '/style.css')
 code = rd(A + '/leaflet.js') + '\n' + '\n'.join(rd(A + '/' + f) for f in ['astro.js', 'data_mask.js', 'data_geo.js', 'data_species.js', 'data_art.js', 'data_links.js', 'data_world.js', 'data_credits.js', 'data_gear.js', 'rigs.js', 'data_rigs.js', 'data_variants.js', 'data_knots.js', 'data_gear2.js', 'data_gear3.js', 'data_diet.js', 'data_tackle.js', 'data_both.js', 'data_egmask.js', 'data_egspots.js', 'data_egpres.js', 'data_egobs.js', 'data_occ.js'] + (['data_cls.js'] if os.path.exists(A + '/data_cls.js') else []))
 app = rd(A + '/app.js').replace('  /*@@TRIP@@*/', rd(A + '/trip.js'))
+# بصمة ملكية غير مرئية: محارف صفرية العرض تُشفّر «SINNARA|Maro Shahaly|2026» بعد أول مسافة في كل نص عربي طويل.
+# لا تُرى ولا تغيّر شكل الحروف، وتبقى مع النص إذا نُسخ ولُصق في أي مكان (أداة الكشف: app/fingerprint.py)
+import re as _re
+_OWNER = 'SINNARA|Maro Shahaly|2026'
+_MARK = ''.join('\u2060' if b == '1' else '\u200b' for b in ''.join(format(x, '08b') for x in _OWNER.encode()))
+def _fp_strings(src):
+    def put(m):
+        q, body = m.group(1), m.group(2)
+        if not _re.match(r'[\u0600-\u06FF]', body) or ' ' not in body: return m.group(0)
+        i = body.index(' ') + 1
+        return q + body[:i] + _MARK + body[i:] + q
+    return _re.sub(r"(['\"])([^'\"\\\n]{40,})\1", put, src)
+code = _fp_strings(code)
 # module.exports guard in astro is harmless in browsers
 
 # بصمة إصدار: تاريخ البناء + هاش قصير من محتوى الشيفرة، لإثبات ملكية أي نسخة موزّعة عند التنازع
