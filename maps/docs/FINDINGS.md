@@ -175,3 +175,8 @@ Config `Navi_sd.inf` (DiskA/application/navi):
   Remaining: (1) spare card itself (copy problem / card binding) - control Z0 = untouched Korean hafp on spare card never tested;
   (2) Egypt bbox/center in header (car now inside map, other files Korean); (3) our index writer. Next tests: Z0, then Z1 (maps/make_test_Z1.py:
   original Korean hafp with only bbox+center patched).
+- DEVICE RESULTS (header bisection on ORIGINAL Korean hafp): Z0 untouched copy = OK; Z1 bbox+center->Egypt = REBOOT;
+  Z4 lonMax+1 unit = OK (no header checksum); Z2 center->Cairo only = OK; Z3 bbox->Egypt only = REBOOT.
+  => The crash is triggered by the hafp bbox (@0x80) covering Egypt. Content/index/writer are not the cause.
+  Next: Z5 = Korean bbox shifted +32 deg lon (car still outside) to split "car inside map bbox while hafr/haft/etc are Korean"
+  vs "bbox inconsistent with other files".
