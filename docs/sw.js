@@ -1,17 +1,17 @@
-const V='sayad-SYD-20261008-11F6058B',TILES='sayad-tiles-v1',CORE=['./','index.html','manifest.webmanifest','icon-180.png','icon-192.png','icon-512.png','imgs-a746b00449.json','vids-facf17267b.json'];
+const V='sayad-SYD-20261102-2B4B8413',TILES='sayad-tiles-v1',CORE=['./','index.html','manifest.webmanifest','icon-180.png','icon-192.png','icon-512.png','imgs-a746b00449.json','vids-facf17267b.json'];
 const TILE_HOSTS=/(server\.arcgisonline\.com)$/;
 const TILE_CAP=600; /* أقصى عدد بلاطات خريطة محفوظة، لمنع تضخّم التخزين */
 async function trimTiles(){const c=await caches.open(TILES),ks=await c.keys();if(ks.length>TILE_CAP)for(const k of ks.slice(0,ks.length-TILE_CAP))await c.delete(k);}
-self.addEventListener('install',e=>{e.waitUntil(caches.open(V).then(c=>c.addAll(CORE.map(x=>new Request(x,{cache:'reload'})))).then(()=>self.skipWaiting()))});
+self.addEventListener('install',e=>{e.waitUntil(caches.open(V).then(c=>c.addAll(CORE.map(x=>new Request(x,{cache:/\.json$/.test(x)?'default':'reload'})))).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==V&&x!==TILES&&x!=='sayad-offmap').map(x=>caches.delete(x)))).then(()=>self.clients.claim()))});
 self.addEventListener('fetch',e=>{
   const r=e.request; if(r.method!=='GET')return; const u=new URL(r.url);
   if(u.hostname.endsWith('open-meteo.com'))return;              /* التوقعات الحية: بدون تخزين هنا */
   if(TILE_HOSTS.test(u.hostname)){                               /* بلاطات الخريطة الحقيقية وصور الأقمار الصناعية: تُحفظ لتظهر بلا إنترنت لاحقًا */
-    e.respondWith(caches.open(TILES).then(c=>caches.match(r,{ignoreVary:true}).then(h=>{
+    e.respondWith(caches.open('sayad-offmap').then(o=>o.match(r,{ignoreVary:true})).then(off=>off||caches.open(TILES).then(c=>caches.match(r,{ignoreVary:true}).then(h=>{
       const n=fetch(r).then(x=>{ if(x&&x.ok) c.put(r,x.clone()).then(trimTiles); return x; }).catch(()=>h);
       return h||n;
-    })));
+    }))));  /* المنطقة المنزّلة بتتعرض من غير ما تتحمّل تاني */
     return;
   }
   if(/version\.json$/.test(u.pathname)){e.respondWith(fetch(r,{cache:'no-store'}));return}  /* رقم النسخة دايمًا من الإنترنت */
